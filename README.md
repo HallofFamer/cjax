@@ -3,8 +3,8 @@
 ## Requirements
 
 +    PHP 5.4+
-+    javascript enabled
-+    curl, eval, ini_set functions enabled
++    javascript enabled on browser
++    curl, eval, ini_get, ini_set functions enabled
 
 
 ## Links
