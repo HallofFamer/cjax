@@ -16,21 +16,42 @@
 *   Website: http://cjax.sourceforge.net                     $      
 *   Email: cjxxi@msn.com    
 *   Date: 2/12/2007                           $     
-*   File Last Changed:  04/06/2016           $     
+*   File Last Changed:  04/18/2016           $     
 **####################################################################################################    */   
 
 namespace CJAX\Core;
 
+/**
+ * The CJAX class that is the core public API used to create AJAX requests/events.
+ * By default CJAX follows singleton pattern, which will be changed to DI in future.
+ * @category CJAX
+ * @package Core
+ * @author CJ Galindo <cjxxi@msn.com>
+ * @copyright (c) 2008, CJ Galindo
+ * @link https://github.com/ajaxboy/cjax
+ * @version 6.0
+ * @since 1.0
+ */
+
 class CJAX extends Framework{
 
+	/**
+	 * The CJAX property, stores the singleton instance of CJAX. 
+     * @access private
+	 * @var CJAX
+     * @static
+	 */      
 	private static $CJAX;
 		
         
 	/**
-	* get an instance of CJAX
-	* with singleton pattern 
-	* @return CJAX_FRAMEWORK OBJECT
-	*/
+     * The static method getInstance, acquires the singleton instance for CJAX class.
+     * This method will be deprecated in future and removed in CJAX 7.0.
+     * @access public
+     * @return CJAX
+     * @static
+     * @api
+     */
 	public static function getInstance(){
 		if(self::$CJAX){
 			return self::$CJAX;
@@ -112,16 +133,25 @@ class CJAX extends Framework{
 				die(sprintf('Restriction <b>open_basedir</b> is turned on. File or directory %s will not be accessible while this setting is on due to security directory range.', $match[2]));
 			}
 		}
-		$ajax->js($jsDir);
-		
+		$ajax->js($jsDir);		
 		return self::$CJAX = $ajax;
 	}
 
+	/**
+     * The initiateRequest method, initiates an AJAX request.
+     * @access public
+     * @return void
+     */	      
     public function initiateRequest(){
         if(!$this->handleModRewrite()) return;
         $this->handleFriendlyURLs();        
     }
 
+ 	/**
+     * The handleModRewrite method, handles mod rewrite with server variables.
+     * @access private
+     * @return void
+     */	      
     private function handleModRewrite(){
         if(isset($_SERVER['REDIRECT_QUERY_STRING']) && $_SERVER['REDIRECT_QUERY_STRING']){
         	$_SERVER['QUERY_STRING'] = $_SERVER['REDIRECT_QUERY_STRING'];
@@ -140,6 +170,11 @@ class CJAX extends Framework{
         return true;
     }
 
+ 	/**
+     * The handleFriendlyURLs method, handles friendly urls with server variables.
+     * @access private
+     * @return void
+     */	          
     private function handleFriendlyURLs(){
         if(isset($_SERVER['QUERY_STRING']) && $query = $_SERVER['QUERY_STRING']){
         	$packet = explode('/' ,rtrim($query,'/'));
@@ -156,12 +191,24 @@ class CJAX extends Framework{
         }
     }
 
+ 	/**
+     * The handlePlugin method, handles additional actions for plugins.
+     * @param mixed  $isPlugin
+     * @access private
+     * @return void
+     */	      
     private function handlePlugin($isPlugin = null){
 	    if($plugin = $this->isPlugin($isPlugin) && !defined('AJAX_VIEW')){
 		    define('AJAX_VIEW', true);
 	    }        
     }
 
+ 	/**
+     * The handlePController method, handles additional actions for controllers.
+     * @param array  $packet
+     * @access private
+     * @return void
+     */	       
     private function handleController($packet = null){
 	    if($packet && count(array_keys($packet)) >= 2 && $packet[0] && $packet[1]){
 		    $_REQUEST['controller'] = $packet[0];
@@ -186,8 +233,4 @@ class CJAX extends Framework{
 			}
 	    }        
     }
-}
-
-function ajax(){
-	return CJAX::getInstance();
 }

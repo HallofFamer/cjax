@@ -17,7 +17,9 @@
 - Updated examples and Added new examples for Mouse and Drag-Drop events
 - Updated readme.md, changelog.md
 - Updated versions for third party libraries such as sizzle
-- Removed unused and deprecated files, classes and code
+- Removed ajax() function, users should use CJAX::getInstance() instead
+- Removed CJAXSingleton and InstanceFactory classes, as they are never used
+- Removed arc.php and chat.php files from examples, as they are never used
 - Other fixes and improvements.
 
 
@@ -32,7 +34,7 @@
 - Advanced selectors (Sizzle, JQuery selectors allowed)
 - Fixed issue when passing multiple url values
 - Fixed issue in processing that was introduced in previous release
-- Added support for main properties for tables tr,td,thead,tbody, etc.
+- Added support for main properties for tables tr, td, thead, tbody, etc.
 
 
 ## CJAX 5.6 - September 19, 2013
@@ -49,7 +51,7 @@
 - Plugin uploadify now included in main release package
 - Plugin validate now included in main release package
 - Plugin autocomplete now included in main release package
-- Plugin ExamplePlugin now included in main release package
+- Plugin examplePlugin now included in main release package
 
 
 ## CJAX 5.5 - April 10, 2013

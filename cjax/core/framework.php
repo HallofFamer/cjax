@@ -408,7 +408,7 @@ class Framework Extends CoreEvents{
 	}
 		
 	public function dialog($content, $title = null, $options = []){
-		$content = $this->format->_dialog($content, $title);
+		$content = $this->format->output($content, $title);
 		return $this->overlayContent($content, $options);
 	}
 	

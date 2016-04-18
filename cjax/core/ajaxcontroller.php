@@ -16,19 +16,51 @@
 *   Website: http://cjax.sourceforge.net                     $      
 *   Email: cjxxi@msn.com    
 *   Date: 2/12/2007                           $     
-*   File Last Changed:  04/15/2016           $     
+*   File Last Changed:  04/18/2016           $     
 **####################################################################################################    */ 
 
 namespace CJAX\Core;
 
+/**
+ * The abstract AJAXController class that every CJAX controllers should extend.
+ * By extending this class, child controller classes acquire an instance of CJAX through dependency injection.
+ * Creation of this class marks the deprecation the singleton CJAX::getInstance() in future.
+ * @category CJAX
+ * @package Core
+ * @author Ordland Euroboros <halloffamer@mysidiarpg.com>
+ * @copyright (c) 2008, CJ Galindo
+ * @link https://github.com/ajaxboy/cjax
+ * @version 6.0
+ * @since 6.0
+ * @abstract
+ * @api
+ */
+
 abstract class AJAXController{
 	
+	/**
+	 * The ajax property, stores an instance of CJAX for child controllers to use easily.
+     * @access protected
+	 * @var CJAX
+	 */       
 	protected $ajax;
 	
+    
+	/**
+     * The constructor for AJAXController class, it instantiates controller class with property $ajax through DI.
+	 * @param CJAX  $ajax
+     * @access public
+     * @return AJAXController
+     */	    
 	public function __construct(CJAX $ajax){
         $this->ajax = $ajax;
     }
 
+	/**
+     * The getCJAX method, acquires the instance of $ajax from controller.
+     * @access public
+     * @return CJAX
+     */	      
     public function getAJAX(){
         return $this->ajax;
     }

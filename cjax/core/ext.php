@@ -16,14 +16,32 @@
 *   Website: http://cjax.sourceforge.net                     $      
 *   Email: cjxxi@msn.com    
 *   Date: 2/12/2007                           $     
-*   File Last Changed:  04/05/2016           $     
+*   File Last Changed:  04/18/2016           $     
 **####################################################################################################    */ 
 
 namespace CJAX\Core;
 
+/**
+ * The Ext class, defines an extensible class whose properties can be dynamically added/removed.
+ * Ext serves as base class for many CJAX objects to allow convenient Xml and settings/options manipulation.
+ * @category CJAX
+ * @package Core
+ * @author CJ Galindo <cjxxi@msn.com>
+ * @copyright (c) 2008, CJ Galindo
+ * @link https://github.com/ajaxboy/cjax
+ * @version 6.0
+ * @since 1.0
+ */
+
 class Ext{
 	
-	function __construct($array = []){
+	/**
+     * The constructor for Ext class, dynamically creates an object with its properties from an array parameter.
+     * @param array  $array
+     * @access public
+     * @return Ext
+     */	    
+	public function __construct($array = []){
 		if($array && is_array($array) || is_object($array)){
 			foreach($array as $k => $v){
 				$this->{$k} = $v;
@@ -31,13 +49,26 @@ class Ext{
 		}
 	}
 	
-	function __set($setting, $value){
-		$this->$setting = $value;
-	}
-	
-	function __get($setting){
+	/**
+     * The magic method __get, obtains a dynamically created property for Ext class if it exists.
+	 * @param string  $setting
+     * @access public
+     * @return Mixed
+     */	 	
+	public function __get($setting){
 		if(isset($this->$setting)){
 			return $this->$setting;
 		}
+	}    
+    
+	/**
+     * The magic method __set, dynamically creates properties for Ext class.
+	 * @param string  $setting
+     * @param mixed  $value
+     * @access public
+     * @return void
+     */	    
+	public function __set($setting, $value){
+		$this->$setting = $value;
 	}
 }

@@ -16,19 +16,47 @@
 *   Website: http://cjax.sourceforge.net                     $      
 *   Email: cjxxi@msn.com    
 *   Date: 2/12/2007                           $     
-*   File Last Changed:  03/12/2016           $     
+*   File Last Changed:  04/18/2016           $     
 **####################################################################################################    */ 
 
 namespace CJAX\Core;
 
+/**
+ * The Cache class, stores a cache for AJAX request.
+ * @category CJAX
+ * @package Core
+ * @author CJ Galindo <cjxxi@msn.com>
+ * @copyright (c) 2008, CJ Galindo
+ * @link https://github.com/ajaxboy/cjax
+ * @version 6.0
+ * @since 1.0
+ * @todo Implement this class and completes its methods.
+ */
+
 class Cache{
-	
+
+    /**
+     * The cache property, stores a list of the actual cache content.
+     * @access public 
+     * @var array
+     */	    
 	public $cache;
 	
+    
+	/**
+     * The add method, adds a cache from the cache list.
+     * @access public
+     * @return void
+     */        
 	public function add(){
 		
 	}
 	
+	/**
+     * The delete method, removes a cache from the cache list.
+     * @access public
+     * @return void
+     */    
 	public function delete(){
 		
 	}
