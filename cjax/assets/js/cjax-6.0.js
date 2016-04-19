@@ -188,7 +188,7 @@ function CJAX_FRAMEWORK() {
 		}
 	};
 	
-	this._fn	=	function(buffer) {
+	this._fn = function(buffer) {
 		if(typeof buffer =='object') {
 			buffer = buffer.buffer;
 		}
@@ -366,7 +366,7 @@ function CJAX_FRAMEWORK() {
 		}
 	};
 	
-	this.property  =	function (buffer) {
+	this.property = function (buffer) {
 		var element = CJAX.$(CJAX.xml('element_id',buffer));
 		
 		if(!element) {
@@ -948,7 +948,7 @@ function CJAX_FRAMEWORK() {
 	};
 	
 	
-	this.tag		=		function(tag, value) {
+	this.tag = function(tag, value) {
 		return '<'+tag+'>'+value+'</'+tag+'>';
 	};
 	
@@ -1109,7 +1109,7 @@ function CJAX_FRAMEWORK() {
 		CJAX.$('cjax_overlay').className = 'cjax_overlay';
 	};
 	
-	this.lib	=	function(element) {	
+	this.lib = function(element) {	
 		return {
 			overlayCallback: function(response,callback,options) {
 				if(callback) {
@@ -1455,7 +1455,7 @@ function CJAX_FRAMEWORK() {
 	};
 	
 	var listEvents = [];
-	this._EventCache	=	function(){
+	this._EventCache = function(){
 		return {
 			listEvents : listEvents,
 			add : function(node, sEventName, fHandler){
@@ -1533,7 +1533,7 @@ function CJAX_FRAMEWORK() {
         obj.dropEffect = evt.dataTransfer.dropEffect;
         obj.effectAllowed = evt.dataTransfer.effectAllowed;
         obj.files = evt.dataTransfer.files;
-    }
+    };
 
     this.buildMouseEvent = function(obj, evt) {
         obj.altKey = evt.altKey;
@@ -1565,7 +1565,7 @@ function CJAX_FRAMEWORK() {
     
     this.buildFocusEvent = function(obj, evt) {
         obj.oppositeComponent = evt.relatedTarget.tagName;
-    }
+    };
 
     this.registerDragHandler = function(obj, type) {
         if(type == "dragstart") {
@@ -1609,22 +1609,22 @@ function CJAX_FRAMEWORK() {
                 }               
             }               
         });       
-    }
+    };
 
-	this.tagExists =	function(tag, buffer) {
+	this.tagExists = function(tag, buffer) {
 		if(!CJAX.xml(tag, buffer)) {
 			return '';
 		}
 	};
 	
-	this._uniqid =	function(buffer) {
+	this._uniqid = function(buffer) {
 		return CJAX.xml('uniqid', buffer);
 	};
 	
 	/**
 	* Util Set
 	*/
-	this.set	=	function() {
+	this.set = function() {
 		return {
 			title: function(title) {
 				document.title = title;
@@ -1899,7 +1899,7 @@ function CJAX_FRAMEWORK() {
 	/**
 	* util Create
 	*/
-	this.create =	function() {
+	this.create = function() {
 		return{
 			input:function(id) {
 				var element = CJAX.is_element(id,false);
@@ -1992,7 +1992,7 @@ function CJAX_FRAMEWORK() {
 	/**
 	* Util php..  mimics php functions
 	*/
-	this.php =	function(){
+	this.php = function(){
 		return {
 			isNumeric: function(n) {
 				var n2 = n;
@@ -2056,14 +2056,14 @@ function CJAX_FRAMEWORK() {
 		
 	}();
 	
-	this.defined		=		function(obj) {
+	this.defined = function(obj) {
 		return (typeof obj!='undefined')? true:false;
 	};
 	
 	/**
 	* Util script
 	*/
-	this.script	=	function() {
+	this.script	= function() {
 		return {
 			loaded : function ( path ,force) {
 				if(!CJAX.defined(path)) {
@@ -2163,7 +2163,7 @@ function CJAX_FRAMEWORK() {
 	/**
 	* Process all commands
 	*/
-	this.process_all	=	function ( actions, preload, debug, is_loading) {
+	this.process_all = function ( actions, preload, debug, is_loading) {
 		var raw_actions = actions;
 		actions = CJAX.util.json(actions);
 		preload = CJAX.util.json(preload);
@@ -2361,7 +2361,7 @@ function CJAX_FRAMEWORK() {
 		CJAX.timer = 0;
 	};
 	
-	this._extendPlugin	=	function(plugin_name, plugin_buffer, settings) {
+	this._extendPlugin = function(plugin_name, plugin_buffer, settings) {
 		if(waitfor = CJAX.xml('waitfor', plugin_buffer)) {
 			if(CJAX.debug) {
 				console.info(plugin_name, 'waiting for', waitfor);
@@ -2446,7 +2446,7 @@ function CJAX_FRAMEWORK() {
 		return f;
 	};
 	
-	this.extend =	function(plugin_fn, plugin_name, buffer, callbacks, settings) {
+	this.extend = function(plugin_fn, plugin_name, buffer, callbacks, settings) {
 		if(plugin = CJAX.plugins[plugin_name]) {
 			params = plugin.params;
 			plugin.fn(params['a'],params['b'],params['c'],params['d'],params['e'],params['f']);
@@ -2649,7 +2649,7 @@ function CJAX_FRAMEWORK() {
 		return _new;
 	};
 	
-	this.processPlugin	=	function(buffer, seconds, my_plugin,callbacks) {
+	this.processPlugin = function(buffer, seconds, my_plugin,callbacks) {
 		var file = CJAX.xml('file',buffer);
 
 		var plugins_dir = __base__+'plugins/';
@@ -2682,7 +2682,7 @@ function CJAX_FRAMEWORK() {
 		}
 	};
 
-	this.importFile =	function(file, $callback, waitfor) {
+	this.importFile = function(file, $callback, waitfor) {
 		if(typeof file =='object') {//for plugins
 			if(file.files){
 				var time = 300;
@@ -2745,7 +2745,7 @@ function CJAX_FRAMEWORK() {
 	* caller, any function caller reference.
 	* uniqid - an alternative element that is being used.
 	*/	
-	this.process	=	function( buffer , obj_buffer, caller, uniqid) {
+	this.process = function( buffer , obj_buffer, caller, uniqid) {
 		if(!CJAX.defined(caller)) {
 			var caller = 'unknown';
 		}
@@ -2842,7 +2842,7 @@ function CJAX_FRAMEWORK() {
 		}
 	};
 	
-	this.xml	 =	function (start , buffer , loop , caller) {
+	this.xml = function (start , buffer , loop , caller) {
 		if(!buffer) return;
 		if(loop == null) var loop = 0;
 		if(typeof start=='undefined') return '';
@@ -2889,7 +2889,7 @@ function CJAX_FRAMEWORK() {
 		return _new_var;
 	};
 	
-	this.getbyname	=	function(name,tag){
+	this.getbyname = function(name,tag){
 		var x=document.getElementsByName(name); 
 		
 		if(x.length) {
@@ -2911,7 +2911,7 @@ function CJAX_FRAMEWORK() {
 		}
 	};
 	
-	this.css =	function(_class,title)  {
+	this.css = function(_class,title)  {
 		return {
 				add:function(_class,title) {
 				//if(typeof title=='undefined') var title = 'cjax';
@@ -3038,7 +3038,7 @@ function CJAX_FRAMEWORK() {
 	
 	}();
 	
-	this.AJAX	=	function() {
+	this.AJAX = function() {
 		xmlhttp = false;
 		
 		if (typeof XMLHttpRequest!='undefined') {
@@ -3065,12 +3065,11 @@ function CJAX_FRAMEWORK() {
 		if( ret ) { return number; } else { return 0; } 
 	};
 	
-	this.wait =	function(seconds) 
-	{
+	this.wait =	function(seconds) {
 		CJAX.timer += parseInt(seconds);
 	};
 	
-	this._wait	=	function( buffer ) {
+	this._wait = function( buffer ) {
 		if(typeof buffer=='undefined') {
 			CJAX.timer = 0;
 			CJAX.waiting = false;
@@ -3172,12 +3171,12 @@ function CJAX_FRAMEWORK() {
 	/**
 	* redirected to specified location
 	*/
-	this.location	=	function( buffer ) {
+	this.location = function( buffer ) {
 		var destination = CJAX.xml('url',buffer);
 		window.location = destination;	
 	};
 	
-	this._serialize =	function(form,include_files) {
+	this._serialize = function(form,include_files) {
 		if(typeof include_files =='undefined') {
 			var include_files = true;
 		} else {
@@ -3292,7 +3291,7 @@ function CJAX_FRAMEWORK() {
 		return url.replace(/^&/, '');
 	};
 	
-	this._form	=	function( buffer , obj_buffer) {
+	this._form = function( buffer , obj_buffer) {
 		var selector;
 		if(obj_buffer) { 
 			selector = obj_buffer.selector;
@@ -3405,12 +3404,11 @@ function CJAX_FRAMEWORK() {
 		}
 	};
 	
-	this.refresh		=		function()
-	{
+	this.refresh = function() {
 		//this is intentionally left blank.
 	};
 	
-	this._handlerFormRequest	= 	function(url, serial, args) {
+	this._handlerFormRequest = function(url, serial, args) {
 		if(CJAX.debug) {
 			console.log("Waiting for response...");
 		}
@@ -3447,7 +3445,7 @@ function CJAX_FRAMEWORK() {
 		}catch(e){console.log(e);};
 	};
 	
-	this.setHandler	=	function(name, callback_handler) {
+	this.setHandler	= function(name, callback_handler) {
 		if(CJAX.lib.isFn(callback_handler)) {
 			CJAX.handlers[name] = callback_handler;
 		} else {
@@ -3455,14 +3453,14 @@ function CJAX_FRAMEWORK() {
 		}
 	};
 	
-	this.ajaxVars	=	function(buffer) {
+	this.ajaxVars = function(buffer) {
 		vars = CJAX.xml('vars', CJAX.decode(buffer));
 		if(vars) {
 			CJAX.ajaxSettings.AjaxVars = vars;
 		}
 	};
 	
-	this.$ =	function(element_id,v) {
+	this.$ = function(element_id,v) {
 		if(!element_id) {
 			return;
 		}
@@ -3493,7 +3491,7 @@ function CJAX_FRAMEWORK() {
 	/**
 	* return an element object can pass an string as id or an object
 	**/
-	this.is_element	=	function(id_obj, verbose) {		
+	this.is_element	= function(id_obj, verbose) {		
 		var type = (typeof id_obj);
 		if( typeof verbose == 'undefined' && CJAX.debug) { verbose = true; }
 		if( type.indexOf( 'object' ) != -1) {
@@ -3522,7 +3520,7 @@ function CJAX_FRAMEWORK() {
 		return elem;
 	};
 	
-	this.elem_docs	=	function(id_obj,verbose) {
+	this.elem_docs = function(id_obj,verbose) {
 		if(typeof verbose =='undefined') verbose = true;	
 		var obj = document.getElementsByTagName(id_obj);
 		if( !obj ) {
@@ -3550,7 +3548,7 @@ function CJAX_FRAMEWORK() {
 	*    error: function(error_status) {}
 	* });
 	*/
-	this.call	=	function($mix_url, $mix_item) {
+	this.call = function($mix_url, $mix_item) {
 		if(typeof $mix_url =='object') {
 			$mix_item =  $mix_url;
 			$mix_url = $mix_item.url;
@@ -3627,7 +3625,7 @@ function CJAX_FRAMEWORK() {
 		return CJAX.call(options, options.success);
 	};
 	
-	this.get	=	function($url , container , success_callback) {
+	this.get = function($url , container , success_callback) {
 		var options = {};
 	
 		if(success_callback && !CJAX.lib.isFn(success_callback)) {
@@ -3653,7 +3651,7 @@ function CJAX_FRAMEWORK() {
 	* call:
 	* url,rel,confirm
 	*/
-	this._call =	function( buffer , obj_buffer, callback ) {
+	this._call = function( buffer , obj_buffer, callback ) {
 		if(CJAX.debug) {
 			console.log('Call executed.');
 		}
@@ -3716,7 +3714,7 @@ function CJAX_FRAMEWORK() {
 		if( !text || text==1) text = 'Loading...';
 		if(text =='no_text') text = null;
 		
-		var is_post  = (CJAX.xml('post',buffer)? CJAX.xml('post',buffer):'');
+		var is_post = (CJAX.xml('post',buffer)? CJAX.xml('post',buffer):'');
 		var args = CJAX.xml('args',buffer);
 		
 		if(args) {
@@ -3783,7 +3781,7 @@ function CJAX_FRAMEWORK() {
 		return response;
 	};
 
-	this._handleRequestHeaders	=	function(url,args) {
+	this._handleRequestHeaders = function(url,args) {
 		if(!CJAX.HTTP_REQUEST_INSTANCE) CJAX.HTTP_REQUEST_INSTANCE = CJAX.AJAX();
 		if (!CJAX.IS_POST && url.length < 1200) {
 			//reset instance
@@ -3937,7 +3935,7 @@ function CJAX_FRAMEWORK() {
 	/**
 	* Display a message in the middle of the screen
 	*/
-	this._message		=		function( buffer ) {
+	this._message = function( buffer ) {
 		var message_id;
 		var time;
 		var seconds;
@@ -3991,7 +3989,7 @@ function CJAX_FRAMEWORK() {
 		return div;
 	};
 	
-	this.message =	function(message, seconds) {
+	this.message = function(message, seconds) {
 		if(typeof message=='undefined') {
 			CJAX.$('cjax_message').innerHTML='';
 			return ;
@@ -4012,7 +4010,7 @@ function CJAX_FRAMEWORK() {
 		CJAX._message(options);
 	};
 	
-	this.info	= function(message, seconds) {
+	this.info = function(message, seconds) {
 		if(typeof message=='undefined') {
 			var message = 'Success!';
 		}
@@ -4027,7 +4025,7 @@ function CJAX_FRAMEWORK() {
 		CJAX._message($out.toString());
 	};
 	
-	this.loading =	function(message) {
+	this.loading = function(message) {
 		if(typeof message=='undefined') {
 			this._message();
 			return;
@@ -4038,7 +4036,7 @@ function CJAX_FRAMEWORK() {
 		});
 	};
 	
-	this.success	=	function(message, seconds) {
+	this.success = function(message, seconds) {
 		if(typeof message=='undefined') {
 			var message = CJAX.defaultMessages.success;;
 		}
