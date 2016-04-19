@@ -1,44 +1,86 @@
 <?php
 
-/**
- * 
- * Ajax Uploader 2.0
- * @author cj
- *
- */
+/** ################################################################################################**   
+* Copyright (c)  2008  CJ.   
+* Permission is granted to copy, distribute and/or modify this document   
+* under the terms of the GNU Free Documentation License, Version 1.2   
+* or any later version published by the Free Software Foundation;   
+* Provided 'as is' with no warranties, nor shall the author be responsible for any misuse of the same.     
+* A copy of the license is included in the section entitled 'GNU Free Documentation License'.   
+*   
+*   CJAX  6.0               $     
+*   ajax made easy with cjax                    
+*   -- DO NOT REMOVE THIS --                    
+*   -- AUTHOR COPYRIGHT MUST REMAIN INTACT -   
+*   Written by: CJ Galindo                  
+*   Website: http://cjax.sourceforge.net                     $      
+*   Email: cjxxi@msn.com    
+*   Date: 2/12/2007                           $     
+*   File Last Changed:  04/18/2016           $     
+**####################################################################################################    */  
 
 namespace CJAX\Plugins\Uploader;
 use CJAX\Core\CJAX;
 use CJAX\Core\CoreEvents;
 use CJAX\Core\Plugin; 
  
+/**
+ * The Uploader class, it provides public API for plugin Uploader.
+ * @category CJAX
+ * @package Plugins
+ * @subpackage Uploader
+ * @author CJ Calindo <cjxxi@msn.com>
+ * @copyright (c) 2008, CJ Galindo
+ * @link https://github.com/ajaxboy/cjax
+ * @version 6.0
+ * @since 5.0
+ * @api
+ */
+
 class Uploader extends Plugin{
-	
+    
+	/**
+	 * The options property, stores a list of options for uploader. 
+     * @access private 
+	 * @var array
+	 */   	
 	private $options = [];
 	
+	/**
+	 * The callbackId property, specifies the callbackId for uploading event.
+     * @access private
+	 * @var string
+	 */        
 	private $callbackId;
 	
-	/**
-	 * 
-	 * Handles right api assignments eg:
-	 * 
+    
+  	/**
+     * The rightHandler method, handles right API assignments.
+     * Below is an example of how to use this handler method:
+     * <code>
+     * <?php
 	 * $ajax->validate()->uploader();
 	 * $ajax->call()->uploader();
-	 * etc...
-	 * @param string $api - internal API name 
-	 * @param array $args
-	 */
+     * ?>
+     * </code>
+     * @param string  $api
+     * @param array  $args
+     * @param object  $xmlObj
+     * @access public
+     * @return void
+     */        
 	public function rightHandler($api, $args, $xmlObj){
 		$xmlObj->postCallback = $this;
 	}
 		
-	/**
-	 * Right handler routed
-	 * 
-	 * handles chain call $ajax->someApi->uploader();
-	 * 
-	 * @param unknown_type $value
-	 */
+  	/**
+     * The callbackHandler method, it is called to assign callback handlers for uploader.
+     * @param string  $sender
+     * @param string  $receiver
+     * @param string  $setting
+     * @access public
+     * @return void
+     */          
 	public function callbackHandler($sender, $receiver, $setting){
         $coreEvents = new CoreEvents;
 		switch($setting){
@@ -53,10 +95,17 @@ class Uploader extends Plugin{
 				$event['postCallback'] =  "<cjax>{$callbacks}</cjax>";				
 				CoreEvents::$cache[$receiver->id] = $event;				
 				$coreEvents->simpleCommit();
-			break;
+			    break;
 		}
 	}
 	
+  	/**
+     * The preview method, used to specifies preview options for uploader.
+     * @param string  $previewUrl
+     * @param array  $data
+     * @access public
+     * @return void
+     */       
 	public function preview($previewUrl, $data = []){
 		$ajax = CJAX::getInstance();
 		if($ajax->config->previewUrl){
@@ -66,7 +115,15 @@ class Uploader extends Plugin{
 		$this->options['preview_url'] = $previewUrl;
 		$ajax->save('upload_options', $this->options);
 	}
-	
+
+  	/**
+     * The onLoad method, it is called when the plugin is loaded for the first time.
+     * @param string  $btnId
+     * @param string  $targetDirectory
+     * @param array  $options
+     * @access public
+     * @return void
+     */          
 	public function onLoad($btnId =  null, $targetDirectory = null, $options = []){
 		if(is_array($btnId) && !$options){
 			$options = $btnId;
@@ -129,6 +186,15 @@ class Uploader extends Plugin{
 		$this->callback($xml);
 	}
 	
+  	/**
+     * The onAjaxLoad method, it is called when the plugin is loaded by an AJAX request.
+     * For this plugin, it simply calls onLoad method for AJAX requests, only no need to import jquery library file.
+     * @param string  $btnId
+     * @param string  $targetDirectory
+     * @param array  $options
+     * @access public
+     * @return void
+     */      
 	public function onAjaxLoad($btnId, $targetDirectory, $options = []){
 		return $this->onLoad($btnId, $targetDirectory, $options);
 	}

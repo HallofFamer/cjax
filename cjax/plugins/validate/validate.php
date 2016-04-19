@@ -47,7 +47,7 @@ class Validate extends Plugin{
 	
 
   	/**
-     * The rightHandler method, it is called to assign callback handlers for validation.
+     * The rightHandler method, handles right API assignments.
      * @param string  $api
      * @param array  $args
      * @param object  $xmlObj
@@ -127,9 +127,9 @@ class Validate extends Plugin{
 				$rules[$name][$k] = $v;
 			}
 		}
+        
 		$this->rules['rules'] = $rules;
-		$this->rules['messages'] = $messages;
-		
+		$this->rules['messages'] = $messages;		
 		$this->set('c', $this->rules);
 	}
 }
