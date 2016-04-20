@@ -180,9 +180,10 @@ class XmlItem{
 		if(isset($args['do'])){
 			return true;
 		}
+        
 		$ajax = CJAX::getInstance();		
-		if($ajax->isPlugin($fn)){
-			$lastCmd = $ajax->lastCmd;
+		if($this->coreEvents->isPlugin($fn)){
+			$lastCmd = $this->coreEvents->lastCmd;
 			$plugin = call_user_func_array([$ajax, $fn], $args);
 			if(method_exists($plugin, 'rightHandler')){
 				$plugin->rightHandler($lastCmd, $args, $this);
@@ -190,7 +191,7 @@ class XmlItem{
 			return $plugin;
 		}
 		if(in_array($fn,$this->api)){
-			$this->callback = call_user_func_array([$ajax,$fn],$args);
+			$this->callback = call_user_func_array([$ajax, $fn], $args);
 			return $this;
 		}
 		
@@ -207,7 +208,7 @@ class XmlItem{
 			}while(next($args) && next($params));
 		}		
 		$data = ['do' => '_fn', 'fn' => $fn, 'fn_data' => $pParams];
-		return $ajax->xmlItem($ajax->xml($data),'xmlItem_fn');
+		return $this->coreEvents->xmlItem($this->coreEvents->xml($data),'xmlItem_fn');
 	}
 	
  	
@@ -257,8 +258,7 @@ class XmlItem{
      * @return void
      */	     
 	public function next($xmlObj){
-		$ajax = CJAX::getInstance();
-		$xmlObjects = $ajax->xmlObjects();
+		$xmlObjects = $this->coreEvents->xmlObjects();
 		$found = false;
 		foreach($xmlObjects as $v){
 			if($v->id == $xmlObj->id){
