@@ -38,7 +38,7 @@ use CJAX\Core\AJAXController;
  */
  
 class Uploader extends AJAXController{
-
+    
 	/**
 	 * The error property, stores the error message for Uploader if action fails.
      * @access private 
@@ -82,8 +82,7 @@ class Uploader extends AJAXController{
      */  
 	public function upload(){
 		$filesFount = false;
-		$files = [];
-		
+		$files = [];		
 		$this->ajax->cacheWrapper(["<html><body>","</body></html>"]);
 		$options = $this->ajax->get('upload_options', true);
 		$this->options = $options;		
@@ -106,54 +105,7 @@ class Uploader extends AJAXController{
 			}
 		} 
         else{
-			foreach($_FILES as $k => $v){
-				if(is_array($v['error'])){
-					foreach($v['error'] as $k2 => $err){
-						$filename = $v['name'][$k2];
-						if(!$filename){
-							continue;
-						}
-						$size = $v['size'][$k2];
-						if($filename){
-							$filesFount = true;
-						}
-						if($err){
-							$this->error = $this->error($err, $filename, $size);
-							continue;
-						} 
-                        else{
-							if($filename && !$this->chkExt($filename)){
-								break;
-							}
-							
-							if($f = $this->uploadFile($v['tmp_name'][$k2],$filename)){
-								$files[] = $f;
-							}
-						}
-					}
-				} 
-                else{
-					$filename = $v['name'];
-					if(!$filename){
-						continue;
-					}
-					if($filename && !$this->chkExt($filename)){
-						break;
-					}
-					if($v['error']){
-						$this->error = $this->error($v['error'], $filename, $v['size']);
-						break;
-					} 
-                    else{
-						if($v['name']){
-							$filesFount = true;
-						}
-						if($f = $this->uploadFile($v['tmp_name'], $filename)){
-							$files[] = $f;
-						}
-					}
-				}
-			}
+            $this->uploadFiles($filesFount, $files);
 		}
 		
 		
@@ -228,7 +180,7 @@ class Uploader extends AJAXController{
 		$this->ajax->error($error, 8);		
 		exit;
 	}
-
+    
   	/**
      * The abort method, it is used to debug uploader plugin and checks server environment.
      * @param array  $options
@@ -283,6 +235,64 @@ class Uploader extends AJAXController{
 	}
 	
   	/**
+     * The uploadFiles method, handles the file uploading operation for all files.
+     * @param bool  $filesFount
+     * @param array  $files
+     * @access public
+     * @return void
+     */    
+    public function uploadFiles(&$filesFount, &$files){
+        foreach($_FILES as $k => $v){
+            if(is_array($v['error'])){
+                foreach($v['error'] as $k2 => $err){
+                    $filename = $v['name'][$k2];
+                    if(!$filename){
+                        continue;
+                    }
+                    $size = $v['size'][$k2];
+                    if($filename){
+                        $filesFount = true;
+                    }
+                    if($err){
+                        $this->error = $this->error($err, $filename, $size);
+                        continue;
+                    } 
+                    else{
+                        if($filename && !$this->chkExt($filename)){
+                            break;
+                        }
+
+                        if($f = $this->uploadFile($v['tmp_name'][$k2],$filename)){
+                            $files[] = $f;
+                        }
+                    }
+                }
+            } 
+            else{
+                $filename = $v['name'];
+                if(!$filename){
+                    continue;
+                }
+                if($filename && !$this->chkExt($filename)){
+                    break;
+                }
+                if($v['error']){
+                    $this->error = $this->error($v['error'], $filename, $v['size']);
+                    break;
+                } 
+                else{
+                    if($v['name']){
+                        $filesFount = true;
+                    }
+                    if($f = $this->uploadFile($v['tmp_name'], $filename)){
+                        $files[] = $f;
+                    }
+                }
+            }
+        }       
+    }
+    
+  	/**
      * The uploadFile method, carries out file upload operation by moving temporary files.
      * @param string  $tmpname
      * @param string  $filename
@@ -329,7 +339,7 @@ class Uploader extends AJAXController{
 			}
 		}	
 	}
-
+    
   	/**
      * The chkLength method, checks if the length of file is valid.
      * This method will not return boolean value, it terminates script execution if length check fails.
