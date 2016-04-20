@@ -149,7 +149,7 @@ require_once 'ajax.php';
 	<div style="margin-left: 15px">
 		<i><b>url</b> [string]</i> - post form to a controller or url.
 		<br />
-		<i><b>ext</b> [array]</i> - extensions allowed eg: array('gif','png','pdf')
+		<i><b>ext</b> [array]</i> - extensions allowed eg: ['gif','png','pdf'].
 		<br />
 		<i><b>form_id</b> [string]</i> - you can specify the form id, will try  detect it otherwise.
 		<br />

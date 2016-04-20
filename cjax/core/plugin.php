@@ -321,18 +321,17 @@ class Plugin extends Ext{
 		self::$_initiated = true;
 	}
 	
-	
-	/**
+  	/**
 	 * 
 	 * Handle right handlers chain apis
 	 * 
 	 * @param unknown_type $api
 	 * @param unknown_type $args
 	 */
-	function __call($api, $args){
+	public function __call($api, $args){
 		return call_user_func_array([$this->xml, $api], $args);
-	}
-	
+	}  
+    
 	/**
 	 * 
 	 * Set variables
@@ -349,7 +348,7 @@ class Plugin extends Ext{
 			$instances  = self::$_instancesIds[$this->loading];
 		}
 		
-		foreach ($instances as  $v){
+		foreach($instances as $v){
 			$this->_setVar($setting , $value, $v);
 		}
 	}

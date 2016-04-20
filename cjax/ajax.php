@@ -22,6 +22,7 @@
 require_once __DIR__."/autoloader.php";
 use CJAX\AjaxAuth;
 use CJAX\Core\CJAX; 
+use CJAX\Core\CJAXException;
 use CJAX\Core\CoreEvents;
 use CJAX\Core\Ext;
  
@@ -81,7 +82,6 @@ final class AJAX{
 			$this->abort("Invalid Controller: {$controller}");
 		}
 		if($function && preg_match("/[^a-zA-Z0-9_]/", $function)){
-			//if function is empty, it still passes.
 			$this->abort("Invalid Function: {$function}");
 		} 
 		if(file_exists($f = CJAX_HOME.'/'.'includes.php')){
@@ -225,23 +225,38 @@ final class AJAX{
 	}
     
     public static function main(){
-        $base = realpath(__DIR__.'/..');
-        defined('CJAX_ROOT') or define('CJAX_ROOT', $base);
-        defined('AJAX_BASE') or define('AJAX_BASE', "{$base}/cjax/");
-        defined('CJAX_HOME') or define('CJAX_HOME', "{$base}/cjax");
-        defined('CJAX_CORE') or define('CJAX_CORE', "{$base}/cjax/core");   
-        define('AJAX_CONTROLLER',1);
-        if(!defined('AJAX_CD')){
-	        define('AJAX_CD', 'controllers');
-        }  
+        try{
+            $base = realpath(__DIR__.'/..');
+            defined('CJAX_ROOT') or define('CJAX_ROOT', $base);
+            defined('AJAX_BASE') or define('AJAX_BASE', "{$base}/cjax/");
+            defined('CJAX_HOME') or define('CJAX_HOME', "{$base}/cjax");
+            defined('CJAX_CORE') or define('CJAX_CORE', "{$base}/cjax/core");   
+            define('AJAX_CONTROLLER',1);
+            if(!defined('AJAX_CD')){
+                define('AJAX_CD', 'controllers');
+            }  
 
-        $ajax = CJAX::getInstance();
-        $ajax->initiateRequest();
-        $ajax->initiatePlugins();
-        $controller = $ajax->input('controller');
-        if($controller){
-	        new self($controller);
-        }   
+            $ajax = CJAX::getInstance();
+            $ajax->initiateRequest();
+            $ajax->initiatePlugins();
+            $controller = $ajax->input('controller');
+            if($controller){
+                new self($controller);
+            }   
+        }
+        catch(CJAXException $cje){
+            $exitMessage = $cje->getMessage();
+            $ajax = CJAX::getInstance();
+            if($ajax->debug){
+                $exitMessage = "Exception: {$exitMessage} @ ";
+                $trace = $cje->getTrace();
+                if(!empty($trace[0]['class'])){
+                    $exitMessage .= "{$trace[0]['class']}->";
+                }
+                $exitMessage .= "{$trace[0]['function']}();";
+            }
+            exit($exitMessage);
+        }
     }
 }
 

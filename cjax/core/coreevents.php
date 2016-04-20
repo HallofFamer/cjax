@@ -22,6 +22,17 @@
 namespace CJAX\Core;
 use StdClass;
  
+/**
+ * The CoreEvents class that handles CJAX internal processes and functionality.
+ * @category CJAX
+ * @package Core
+ * @author CJ Galindo <cjxxi@msn.com>
+ * @copyright (c) 2008, CJ Galindo
+ * @link https://github.com/ajaxboy/cjax
+ * @version 6.0
+ * @since 1.0
+ */
+
 class CoreEvents{
 
 	public $a,$b,$c,$d,$e,$f,$g,$h,$i, $j;
@@ -245,12 +256,12 @@ class CoreEvents{
     
 	public function xmlItem($xml, $name){
 		if(!is_integer($xml)){
-			die("XML:{$name} ".print_r($xml,1)." is not an integer.");
+            throw new CJAXException("XML:{$name} ".print_r($xml,1)." is not an integer.");
 		}
-		$_xml = new XmlItem($this, $xml, $name);
+		$xmlItem = new XmlItem($this, $xml, $name);
         $this->xmlObjects = ($this->xmlObjects)? $this->xmlObjects: new StdClass;
-		$this->xmlObjects->{$_xml->id} = $_xml;	
-		return $_xml;
+		$this->xmlObjects->{$xmlItem->id} = $xmlItem;	
+		return $xmlItem;
 	}
 	
 	public function camelize($string, $ucfirst = true){
@@ -445,7 +456,7 @@ class CoreEvents{
 	public static function saveSCache(){
 		$ajax = CJAX::getInstance();
 		if($ajax->log && self::$cache){
-			die("Debug Info:<pre>".print_r(self::$cache,1)."</pre>");
+			throw new CJAXException("Debug Info:<pre>".print_r(self::$cache,1)."</pre>");
 		}
 		
         $coreEvents = new self;	
@@ -631,7 +642,7 @@ class CoreEvents{
 	
 	public function cacheWrapper($wrapper = []){
 		if(is_array($wrapper)){
-			self::$wrapper = implode('(!xml!)',$wrapper);
+			self::$wrapper = implode('(!xml!)', $wrapper);
 		}		
 	}
 	
@@ -817,7 +828,7 @@ class CoreEvents{
 	
 	public function fsockopen($url, $errno = null, $errstr = null){
 		if(!function_exists('fsockopen')){
-			die('You  need cURL or fsockopen enabled to connect to a remote server.');
+			throw new CJAXException('You  need cURL or fsockopen enabled to connect to a remote server.');
 		}
 		
 		$info = parse_url($url);
@@ -826,10 +837,10 @@ class CoreEvents{
 		$fp = @fsockopen($host,80,$errno,$errstr);
 		@stream_set_timeout($fp, 20);
 		if(!$fp){
-			die('Could not connect to remote server: '. $errstr);
+			throw new CJAXException('Could not connect to remote server: '. $errstr);
 		}
 		if($errstr){
-			die('Error:#'.$errno.' '.$errstr);
+			throw new CJAXException('Error:#'.$errno.' '.$errstr);
 		}
 
 		$base = "/";			
@@ -893,20 +904,16 @@ class CoreEvents{
  		$dir = rtrim($dir, '/').'/';
  		$file = $dir.$filename;
  		if(file_exists($file) && !is_writable($file) && !chmod($filename, 0666)){
- 			echo "CJAX: Error! file ($file) is not writable, Not enough permission";
- 			exit;
+ 			throw new CJAXException("CJAX: Error! file ($file) is not writable, Not enough permission");
  		}
  		if(!$fp = @fopen($file, 'w')){
- 			echo "CJAX: Error! file ($file) is not writable, Not enough permission";
- 			exit;
+ 			throw new CJAXException("CJAX: Error! file ($file) is not writable, Not enough permission");
  		}
  		if(fwrite($fp, $content) === FALSE){
- 			echo "Cannot write to file ($file)";
- 			exit;
+ 			throw new CJAXException("Cannot write to file ($file)");
  		}
  		if(!fclose($fp)){
- 			echo "Cannot close file ($file)";
- 			exit;
+ 			throw new CJAXException("Cannot close file ($file)");
  		}
  	}
  	
@@ -942,7 +949,7 @@ class CoreEvents{
 				break;
 			default:
 				if(CJAX::getInstance()->strict){
-					die("Invalid Flag Argument Prodivided");
+					throw new CJAXException("Invalid Flag Argument Prodivided");
 				}
 		}
 	}
@@ -1018,7 +1025,7 @@ class CoreEvents{
 	 * Encode special data to void conflicts with javascript
 	 *
 	 * @param string $data
-	 * @return encoded string
+	 * @return string
 	 */
 	public function encode($data){
 		return urlencode(str_replace('+', '[plus]', $data));		
@@ -1275,7 +1282,7 @@ class CoreEvents{
 			}
 		}
 		if(!function_exists('fsockopen')){
-			die('no fsockopen: be sure that php function fsockopen is enabled.');
+			throw new CJAXException('no fsockopen: be sure that php function fsockopen is enabled.');
 		}
 		
 		
@@ -1284,7 +1291,7 @@ class CoreEvents{
 			return false;
 		}
 		if($errstr){
-			die('error:'.$errstr);
+			throw new CJAXException('error:'.$errstr);
 		}
         
 		$base = "/";
@@ -1373,13 +1380,7 @@ class CoreEvents{
 		$level = ini_get('error_reporting');
 		if($level > 30719 || $level == 2048){
 			@ini_set('error_reporting', $level-E_STRICT);
-			$_level = ini_get('error_reporting');
-			if($_level > 30719 || $_level ==2048){
-				die("Cjax requirements not met. Strict Stardards must be turned off in your php.ini.");
-			} 
-            else{
-				$level = $_level;
-			}
+			$level = ini_get('error_reporting');
 		}
 		return $level;
 	}

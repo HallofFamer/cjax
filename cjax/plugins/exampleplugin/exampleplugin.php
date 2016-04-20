@@ -233,7 +233,7 @@ class ExamplePlugin extends Plugin{
 	 * waits for the previous file to fully be loaded before importing the next,
 	 * something import does not do.
 	 * 
-	 * $this->imports(array('file.css','file2.js','file3.js'); et.
+	 * $this->imports(['file.css', 'file2.js', 'file3.js']); et.
 	 * 
 	 */
 	function imports($files = [], &$data = []){

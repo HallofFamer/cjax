@@ -125,12 +125,12 @@ class CJAX extends Framework{
 				$jsDir  = "../../../cjax/assets/js/";
 			} 
             else{
-				die("Cannot find the correct path to Js directory.");
+                throw new CJAXException("Cannot find the correct path to Js directory.");
 			}
 			
 			$error = error_get_last();			
 			if($error && preg_match('%.*(open_basedir).*File\(([^\)]+)%', $error['message'], $match)){
-				die(sprintf('Restriction <b>open_basedir</b> is turned on. File or directory %s will not be accessible while this setting is on due to security directory range.', $match[2]));
+                throw new CJAXException(sprintf("Restriction <b>open_basedir</b> is turned on. File or directory %s will not be accessible while this setting is on due to security directory range.", $match[2]));
 			}
 		}
 		$ajax->js($jsDir);		
@@ -187,7 +187,7 @@ class CJAX extends Framework{
         }
 
         if(!$this->isAjaxRequest() && count(array_keys(debug_backtrace(false))) == 1 && !defined('AJAX_VIEW')){
-	        exit("Security Error. You cannot access this file directly.");
+	        throw new CJAXException("Security Error. You cannot access this file directly.");
         }
     }
 

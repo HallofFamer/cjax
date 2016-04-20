@@ -436,7 +436,7 @@ class Framework Extends CoreEvents{
 		return $this->xml($options);
 	}
 
-	public function select($element, $options = array(), $selected = null, $allowInput = false){
+	public function select($element, $options = [], $selected = null, $allowInput = false){
         $select = ['do' => 'select', 'element_id' => $element, 'selected' => $selected,
                    'options' => $options, 'allow_input' => $allowInput];	
 		return $this->xml($select);

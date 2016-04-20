@@ -60,7 +60,7 @@ Property changing in Cjax is very simple, and all changes accumulate. If you app
 
 Lets say you have a div with id "my_div" on your HTML page. You want to change the width and height of this div. Here is how you'd do it with Cjax.
 <?php echo $ajax->code("
-\$ajax->my_div = array('width' => 200,'height'=> 100);
+\$ajax->my_div = ['width' => 200,'height'=> 100];
 ");?>
 <br /><br />
 

@@ -310,7 +310,7 @@
   OR imports() - in contrast, waits for the previous files in list to fully load before loading the next one.
 
 	```php
-	$ajax->imports(array("path/To/Your/file2.js","path/To/Your/file3.js",path/To/Your/file1.css"));
+	$ajax->imports(["path/To/Your/file2.js","path/To/Your/file3.js",path/To/Your/file1.css"]);
 	```
 
 	For plugins - they all inherit local scope, say:
@@ -406,7 +406,7 @@
 	Usage Example:
 
 	```php
-	$flags = array('FLAG_WAIT'=> CJAX::FLAG_NO_WAIT, 'FLAG_ELEMENT_GETTER'=> CJAX::FLAG_ELEMENT_BY_ID);	
+	$flags = ['FLAG_WAIT' => CJAX::FLAG_NO_WAIT, 'FLAG_ELEMENT_GETTER' => CJAX::FLAG_ELEMENT_BY_ID];	
 	$ajax->setFlags(flags, 3);
 	```
 

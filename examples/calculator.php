@@ -103,7 +103,7 @@ use CJAX\\Core\\AJAXController;
 class Calc extends AJAXController{
 	
 	function math(\$action, \$buffer){
-		\$operators_signs = array('[plus]','p','m','x','d');
+		\$operators_signs = ['[plus]','p','m','x','d'];
 		\$operators = ['p','+','-','*','/'];
 		
 		\$pre_buffer = \$buffer;
