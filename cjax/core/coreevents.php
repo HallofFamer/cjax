@@ -484,7 +484,7 @@ class CoreEvents{
 		}
 	}
 	
-	public function _processScachePlugin($v,$caller = null){
+	public function _processScachePlugin($v, $caller = null){
 		if($v['data'] && is_array($v['data'])){
 			$v['data'] =  $this->mkArray($v['data']);
 		}
@@ -581,7 +581,7 @@ class CoreEvents{
 		return $plugin->isPlugin($pluginName);
 	}
 	
-	public function UpdateCache($instanceId, $data){
+	public function updateCache($instanceId, $data){
 		self::$cache[$instanceId] = $data;
 		$this->simpleCommit();
 	}

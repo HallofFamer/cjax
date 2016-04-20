@@ -26,7 +26,7 @@
 namespace CJAX\Core; 
 
 class Framework Extends CoreEvents{
-	
+	    
 	public function click($elementId, $actions = []){
         return ($actions)? $this->exec($elementId, $actions): $this->__call('click', $elementId);
 	}
@@ -145,47 +145,6 @@ class Framework Extends CoreEvents{
 		}
         return $actions;
     }
-
-	public function __get($setting){
-
-	}
-	
-	public function __call($method, $args){
-		$params = range('a','z');
-		$pParams = [];
-		if($args){
-			if(!is_array($args)){
-				$args = [$args];
-			}
-			foreach($args as $v){
-				$pParams[current($params)] =  $v;
-				next($params);
-			}
-		}
-
-		if($this->isPlugin($method)){
-			$entryId = null;
-            $pluginClass = new Plugin;
-			if($pParams) {
-				$params = func_get_args();
-                $data = ['do' => $pluginClass->method($method), 'is_plugin' => $method,
-                         'data' => $pParams, 'file' => $pluginClass->file($method)];
-				$data['filename'] = preg_replace("/.*\//",'', $data['file']);				
-				$entryId = $this->xmlItem($this->xml($data), $method)->id;
-			}
-			$plugin = Plugin::getPluginInstance($method, $params, $entryId);
-			if($pParams) {
-				$pluginClass->instanceTriggers($plugin, $pParams);
-			}
-			return $plugin;
-		} 
-        else{
-			$data = ['do' => '_fn', 'fn' => $method, 'fn_data' => $pParams];			
-			$item = $this->xmlItem($this->xml($data),'fn');
-			$item->selector = $method;
-			return  $item;
-		}
-	}
 	
 	public function waitFor($file, $waitForFile){
 		$xml = $this->import($file);		
@@ -275,7 +234,6 @@ class Framework Extends CoreEvents{
                     foreach(CoreEvents::$callbacks[$v->id] as $k2 => $v2){
                         unset(CoreEvents::$cache[$k2]);
                     }
-
                 }
                 $_actions[$v->id] = $v->xml();
                 $v->delete();
@@ -330,17 +288,15 @@ class Framework Extends CoreEvents{
 	 * @return string
 	 */
 	public function call($url, $containerId = null, $confirm = null){
-		$ajax = CJAX::getInstance();
-		
 		if(preg_match('/^https?/', $url)){
 			$out['crossdomain'] = true;
 		}
 		$out['do'] = '_call';
 		$out['url'] = $url;
 		
-		if($ajax->post){
-			if(is_array($ajax->post)){
-				$args = http_build_query($ajax->post);
+		if($this->post){
+			if(is_array($this->post)){
+				$args = http_build_query($this->post);
 				$out['args'] = $args;
 				$out['post'] = true;
 			} 
@@ -352,44 +308,20 @@ class Framework Extends CoreEvents{
 		if($containerId){
             $out['container_id'] = $containerId;
         }
-		if(is_bool($ajax->text) && $ajax->text === false){
+		if(is_bool($this->text) && $this->text === false){
 			$out['text'] = "no_text";
 		} 
-        elseif($ajax->text){
-			$out['text'] = "{$ajax->text}";
+        elseif($this->text){
+			$out['text'] = $this->text;
 		}
 		
 		if($confirm){
             $out['confirm'] = $confirm;
         }
-		if($ajax->loading){
+		if($this->loading){
 			$out['is_loading'] = true;
 		}		
 		return $this->xmlItem($this->xml($out), 'call', 'api');
-	}
-	
-	
-	public function __set($setting, $value){
-		if($this->isPlugin($setting)){
-			//is a plugin..
-			return;
-		}
-		if(is_object($value)){
-			switch($value->name){
-				case 'call':
-					$value->container_id = $setting;
-				    break;
-				case 'form':
-					$this->exec($setting, $value->id);
-				    break;
-			}
-			return $this->simpleCommit();
-		} 
-        else{
-			$xml =  $this->property($setting,$value);
-			$this->simpleCommit();
-			return $xml;
-		}
 	}
 	
 	/**
@@ -452,17 +384,16 @@ class Framework Extends CoreEvents{
      * @return unknown
      */
     public function form($url, $formId = null, $containerId = null, $confirm = null){
-        $ajax = CJAX::getInstance();       
         $out = ['do' => '_form', 'url' => $url];        
         if($formId) $out['form_id'] = $formId;
         if(!is_null($containerId)){
         	$out['container'] = $containerId;
         }
-
-    	if(!is_null($ajax->text)){
-			$out['text'] = $ajax->text;
+        
+    	if(!is_null($this->text)){
+			$out['text'] = $this->text;
 		} 
-        elseif($ajax->text===false){
+        elseif($this->text === false){
 			$out['text'] = 'Loading...';
 		}
 
@@ -470,8 +401,8 @@ class Framework Extends CoreEvents{
             $out['confirm'] = $confirm;
         }
 
-        if(is_array($ajax->post)){
-        	$args = http_build_query($ajax->post);
+        if(is_array($this->post)){
+        	$args = http_build_query($this->post);
         	$out['args'] = $args;
         	$out['post'] = true;
         }
@@ -607,7 +538,7 @@ class Framework Extends CoreEvents{
 
 	/**
 	 * Update any element on the page by specifying the element ID
-	 * Usage:  $ajax->update('element_id',$content);
+	 * Usage:  $ajax->update('element_id', $content);
 	 * @param string $elementId
 	 * @param string $data
 	 */
@@ -691,4 +622,69 @@ class Framework Extends CoreEvents{
 	public function location($url = null){		
 		return $this->xml(['do' => 'location', 'url' => $url]);
 	}
+    
+	public function __get($setting){
+
+	}
+	
+	
+	public function __set($setting, $value){
+		if($this->isPlugin($setting)){
+			//is a plugin..
+			return;
+		}
+		if(is_object($value)){
+			switch($value->name){
+				case 'call':
+					$value->container_id = $setting;
+				    break;
+				case 'form':
+					$this->exec($setting, $value->id);
+				    break;
+			}
+			return $this->simpleCommit();
+		} 
+        else{
+			$xml =  $this->property($setting,$value);
+			$this->simpleCommit();
+			return $xml;
+		}
+	}    
+    
+	public function __call($method, $args){
+		$params = range('a','z');
+		$pParams = [];
+		if($args){
+			if(!is_array($args)){
+				$args = [$args];
+			}
+			foreach($args as $v){
+				$pParams[current($params)] =  $v;
+				next($params);
+			}
+		}
+
+		if($this->isPlugin($method)){
+			$entryId = null;
+            $pluginClass = new Plugin;
+			if($pParams) {
+				$params = func_get_args();
+                $data = ['do' => $pluginClass->method($method), 'is_plugin' => $method,
+                         'data' => $pParams, 'file' => $pluginClass->file($method)];
+				$data['filename'] = preg_replace("/.*\//",'', $data['file']);				
+				$entryId = $this->xmlItem($this->xml($data), $method)->id;
+			}
+			$plugin = Plugin::getPluginInstance($method, $params, $entryId);
+			if($pParams) {
+				$pluginClass->instanceTriggers($plugin, $pParams);
+			}
+			return $plugin;
+		} 
+        else{
+			$data = ['do' => '_fn', 'fn' => $method, 'fn_data' => $pParams];			
+			$item = $this->xmlItem($this->xml($data),'fn');
+			$item->selector = $method;
+			return  $item;
+		}
+	}        
 }

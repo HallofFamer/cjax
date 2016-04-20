@@ -368,7 +368,7 @@ class Plugin extends Ext{
 			$value  = $coreEvents->mkArray($value);
 		}
 		$item['extra'][$setting] = $value;		
-		$coreEvents->UpdateCache($instanceId, $item);
+		$coreEvents->updateCache($instanceId, $item);
 	}
 	
 	/**
