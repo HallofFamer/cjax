@@ -1,7 +1,19 @@
 
 # ChangeLog
 
-## CJAX 6.0 - TBD
+## CJAX 6.0 Beta 2 - TBD
+
+- Added CJAXException class as CJAX's primary error/exception handler
+- Added plugin Dracula(Dragula) for CJAX
+- Added API documentation for CJAX in PHPDocumentator style
+- Updated CJAX core library class hierachy, unnecessary inheritance now becomes composition instead
+- Updated readme.md, changelog.md
+- Removed ajax() function, users should use CJAX::getInstance() instead
+- Removed CJAXSingleton and InstanceFactory classes, as they are never used
+- Other fixes and improvements.
+
+
+## CJAX 6.0 Beta 1 - Apr 8, 2016
 
 - Namespace, closure and short array syntax used in the framework, PHP version now requires 5.4.0+
 - Fixed strict standard errors resulted from calling instance methods statically for PHP 5.5 and 5.6 compatibility
@@ -11,14 +23,9 @@
 - Added event classes that represent valid javascript event objects to use in AJAX controllers
 - Added support for Mouse events
 - Added support for Drag-Drop events
-- Added plugin Dracula(Dragula) for CJAX
-- Added documentation for CJAX API in PHPDocumentator style
 - Updated folder structure for CJAX
 - Updated examples and Added new examples for Mouse and Drag-Drop events
-- Updated readme.md, changelog.md
 - Updated versions for third party libraries such as sizzle
-- Removed ajax() function, users should use CJAX::getInstance() instead
-- Removed CJAXSingleton and InstanceFactory classes, as they are never used
 - Removed arc.php and chat.php files from examples, as they are never used
 - Other fixes and improvements.
 
