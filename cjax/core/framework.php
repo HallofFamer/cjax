@@ -173,7 +173,7 @@ class Framework Extends CoreEvents{
 				$data['filename'] = preg_replace("/.*\//",'', $data['file']);				
 				$entryId = $this->xmlItem($this->xml($data), $method)->id;
 			}
-			$plugin = Plugin::getPluginInstance($method, $params , $entryId);
+			$plugin = Plugin::getPluginInstance($method, $params, $entryId);
 			if($pParams) {
 				$pluginClass->instanceTriggers($plugin, $pParams);
 			}
