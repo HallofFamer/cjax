@@ -22,7 +22,7 @@
 namespace CJAX\Core;
 use StdClass;
  
-class CoreEvents extends Format{
+class CoreEvents{
 
 	public $a,$b,$c,$d,$e,$f,$g,$h,$i, $j;
 	
@@ -242,6 +242,7 @@ class CoreEvents extends Format{
 
 	public $_flagCount = 0;
 	
+    
 	public function xmlItem($xml, $name){
 		if(!is_integer($xml)){
 			die("XML:{$name} ".print_r($xml,1)." is not an integer.");
@@ -1141,7 +1142,7 @@ class CoreEvents extends Format{
 
 	public function warning($msg = "Invalid Input", $seconds = 4){
 		$ajax = CJAX::getInstance();
-		return $ajax->message($ajax->format->message($msg, Format::CSS_WARNING),$seconds);
+		return $ajax->message($ajax->format->message($msg, Format::CSS_WARNING), $seconds);
 	}
 
 	public function success($msg = "Success!", $seconds = 3){
@@ -1164,7 +1165,7 @@ class CoreEvents extends Format{
 
 	public function info($msg = null, $seconds = 3){
 		$ajax = CJAX::getInstance();
-		return $ajax->message($ajax->format->message($msg, Format::CSS_INFO),$seconds);
+		return $ajax->message($ajax->format->message($msg, Format::CSS_INFO), $seconds);
 	}
 
 	public function error($msg = "Error!", $seconds = 15){
