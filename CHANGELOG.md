@@ -7,7 +7,7 @@
 - Added plugin Dracula(Dragula) for CJAX
 - Added API documentation for CJAX in PHPDocumentator style
 - Updated CJAX core library class hierachy, unnecessary inheritance now becomes composition instead
-- Updated readme.md, changelog.md
+- Updated readme.md, changelog.md to appropriate markdown style for GitHub
 - Removed ajax() function, users should use CJAX::getInstance() instead
 - Removed CJAXSingleton and InstanceFactory classes, as they are never used
 - Other fixes and improvements.
