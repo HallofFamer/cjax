@@ -25,10 +25,12 @@ class Plugin extends Ext{
 
 	/**
 	 * 
-	 * instancedd  to the plugin class
+	 * instanced to the plugin class
 	 * @var unknown_type
 	 */
 	private static $instance;
+    
+    private $coreEvents;
     
 	//xmlItem Object
 	public $xml;
@@ -89,6 +91,7 @@ class Plugin extends Ext{
 	public static $initiatePlugins = [];
     
 	public $loading;
+    
 	/**
 	 * 
 	 * Plugins settings
@@ -151,6 +154,11 @@ class Plugin extends Ext{
 	 */
 	private $cookie = false;
 
+    public function __construct(CoreEvents $coreEvents, $array = []){
+        parent::__construct($array);
+        $this->coreEvents = $coreEvents;
+    }
+    
 	/**
 	 * 
 	 * Delete plugin entries
@@ -162,11 +170,11 @@ class Plugin extends Ext{
 		if(self::$_instancesIds){
 			if(isset(self::$_instancesIds[$pluginName])){
 				$entries = self::$_instancesIds[$pluginName];
-				foreach($entries as $v) {
-					self::DeleteEntry($v);
+				foreach($entries as $v){
+					$this->deleteEntry($v);
 				}
-			}
-		}
+            }
+        }
 		self::$_aborted[$pluginName] = true;
  	}
  	
@@ -179,7 +187,7 @@ class Plugin extends Ext{
 	}
 	
 	public function xmlObject(){
-		return CJAX::getInstance()->xmlObjects($this->_id);
+        return $this->coreEvents->xmlObjects($this->_id);
 	}
 	
 	/**
@@ -187,7 +195,7 @@ class Plugin extends Ext{
 	 * mirrors xmlItem::xml()
 	 */
 	public function xml(){
-		return CJAX::getInstance()->xmlObjects($this->_id)->xml();
+		return $this->coreEvents->xmlObjects($this->_id)->xml();
 	}
 	
 	/**
@@ -195,7 +203,7 @@ class Plugin extends Ext{
 	 * mirrors xmlItem::output()
 	 */
 	public function output(){
-		return CJAX::getInstance()->xmlObjects($this->_id)->output();
+		return $this->coreEvents->xmlObjects($this->_id)->output();
 	}	
 	
 	/**
@@ -203,34 +211,11 @@ class Plugin extends Ext{
 	 * mirros xmlItem::delete()
 	 */
 	public function delete(){
-		return CJAX::getInstance()->xmlObjects($this->_id)->delete();
-	}
-	
-	public function trigger($event, $params = []){
-		$ajax = CJAX::getInstance();		
-		if(self::$_instancesExist){
-			foreach(self::$_instancesExist as $k => $v){				
-				$plugin = $ajax->plugin($v);				
-				if(!$plugin || !self::hasClass($k)){
-					continue;
-				}
-				
-				if(self::isAborted($k) || $plugin->exclude){
-					continue;
-				}
-				if(method_exists($plugin, $event)){
-					call_user_func_array([$plugin,$event], $params);
-					if($plugin instanceof XmlItem){
-						die('plugin:delete');
-						$plugin->delete();
-					}
-				}
-			}
-		}
+		return $this->coreEvents->xmlObjects($this->_id)->delete();
 	}
 	
 	public function isAborted($pluginName = null){
-		$plugin = self::getInstance();
+		$plugin = $this->getInstance();
 		if(!$pluginName){
 			$pluginName = $plugin->loading;
 		}
@@ -255,9 +240,8 @@ class Plugin extends Ext{
 	 * @param unknown_type $apiObj
 	 */
 	public function callback($apiObj){
-        $coreEvents = new CoreEvents;
 		$this->xml->callback = $apiObj;
-		CoreEvents::$cache = $coreEvents->callbacks(CoreEvents::$cache);
+		CoreEvents::$cache = $this->coreEvents->callbacks(CoreEvents::$cache);
 	}
 	
 	public function imports($files = [], &$data = []){
@@ -272,7 +256,7 @@ class Plugin extends Ext{
 	 * @param mixed $file
 	 * @param integer $loadTime - in milliseconds
 	 */
-	public function import($file , $loadTime = 0, $onInit = false){
+	public function import($file, $loadTime = 0, $onInit = false){
 		$ajax = CJAX::getInstance();	
 		if(!is_array($file) && preg_match("/^https?/", $file)){
 			$data['file'] = $file;
@@ -289,15 +273,14 @@ class Plugin extends Ext{
 			$ajax->initExtra[] = $data;
 		} 
         else{
-			$ajax->first();//forces this command to be executed before any other
+			$this->coreEvents->first();//forces this command to be executed before any other
 			$ajax->import($data);
 		}
 	}
 	
 	public function waitFor($file){
-        $coreEvents = new CoreEvents;
-		CJAX::getInstance()->xmlObjects($this->_id)->waitfor = $file;
-		$coreEvents->simpleCommit();
+		$this->coreEvents->xmlObjects($this->_id)->waitfor = $file;
+		$this->coreEvents->simpleCommit();
 	}
 	
 	public function isPlugin($pluginName){
@@ -306,41 +289,8 @@ class Plugin extends Ext{
 			return isset($plugins[$pluginName]);
 		}
 	}
-
-	public function setInstances(){
-		if(self::$_initiated){
-			return true;
-		}
-		if(!self::$_instances){
-			return;
-		}
-		$ajax = CJAX::getInstance();
-		foreach(self::$_instances as $k => $v){
-			$ajax->$k = $v;
-		}
-		self::$_initiated = true;
-	}
 	
-  	/**
-	 * 
-	 * Handle right handlers chain apis
-	 * 
-	 * @param unknown_type $api
-	 * @param unknown_type $args
-	 */
-	public function __call($api, $args){
-		return call_user_func_array([$this->xml, $api], $args);
-	}  
-    
-	/**
-	 * 
-	 * Set variables
-	 */
-	public function __set($setting, $value){
-		$this->setVar($setting, $value);
-	}
-	
-	public function setVar($setting, $value){
+	public function setVars($setting, $value){
 		if(empty(self::$_instancesIds) || !isset(self::$_instancesIds[$this->loading])){
 			return;
 		} 
@@ -349,7 +299,7 @@ class Plugin extends Ext{
 		}
 		
 		foreach($instances as $v){
-			$this->_setVar($setting , $value, $v);
+			$this->setVar($setting, $value, $v);
 		}
 	}
 	
@@ -357,18 +307,17 @@ class Plugin extends Ext{
 	 * 
 	 * Set variables that can be accessed as this.var
 	 */
-	private function _setVar($setting, $value, $instanceId){
-        $coreEvents = new CoreEvents;
+	private function setVar($setting, $value, $instanceId){
 		if(!isset(CoreEvents::$cache[$instanceId])){
 			return;
 		}
 		$item = CoreEvents::$cache[$instanceId];
 		
 		if(is_array($value)){
-			$value  = $coreEvents->mkArray($value);
+			$value  = $this->coreEvents->mkArray($value);
 		}
 		$item['extra'][$setting] = $value;		
-		$coreEvents->updateCache($instanceId, $item);
+		$this->coreEvents->updateCache($instanceId, $item);
 	}
 	
 	/**
@@ -376,19 +325,18 @@ class Plugin extends Ext{
 	 * Updates parameters using plugin class
 	 */
 	public function set($setting, $value , $instanceId = null){
-		if(plugin::isAborted($this->loading)){
+		if($this->isAborted($this->loading)){
 			return;
-		}
-		
+		}	
 		$params = range('a','z');	
 		if(!in_array($setting, $params)){
-			return $this->setVar($setting,$value);
+			return $this->setVars($setting,$value);
 		}
 		
 		if(!is_null($instanceId)){
 			$item = CoreEvents::$cache[$instanceId];
-			$item['data'][$setting] = $value;			
-			CoreEvents::UpdateCache($instanceId, $item);
+			$item['data'][$setting] = $value;		
+            $this->coreEvents->updateCache($instanceId, $item)
 		} 
         else{			
 			if(!isset(self::$_instancesIds[$this->loading])){
@@ -407,14 +355,13 @@ class Plugin extends Ext{
 		}
 	}
 	
-	public static function getPluginInstance($plugin = null, $params = [], $instanceId = null, $loadController = false){
-		if(isset(self::$_instances[$plugin]) && is_object(self::$_instances[$plugin])){
+	public static function getPluginInstance(CoreEvents $coreEvents, $plugin = null, $params = [], $instanceId = null, $loadController = false){
+        if(isset(self::$_instances[$plugin]) && is_object(self::$_instances[$plugin])){
 			return self::$_instances[$plugin];
 		}
-        $pluginObject = new self;
+        $pluginObject = new self($coreEvents);
 		if(!isset(self::$_instancesExist[$plugin])){
 			$pluginClass = ucfirst($plugin);
-			eval("namespace CJAX\\Plugin\\{$pluginClass}{ use CJAX\Core\Plugin; class {$pluginClass} extends Plugin {}}");
             $pluginClass = "\\CJAX\\Plugins\\{$pluginClass}\\{$pluginClass}";
 			self::$_instancesExist[$plugin] = $pluginClass;
 		} 
@@ -423,10 +370,9 @@ class Plugin extends Ext{
 		}
 		
 		if(!isset(self::$_instances[$plugin]) || !is_object(self::$_instances[$plugin])){
-			$ajax = CJAX::getInstance();
 			if(!isset($params[1])){
 				self::$_loadingPrefix = $plugin;
-				$_plugin = self::$_instances[$plugin] = new $pluginClass();
+				$_plugin = self::$_instances[$plugin] = new $pluginClass($coreEvents);
 				$_plugin->params = [];
 				if(!is_null($instanceId)){
 					$_plugin->_id = $instanceId;
@@ -453,7 +399,7 @@ class Plugin extends Ext{
 				}
 				extract($args);
 				self::$_loadingPrefix = $plugin;
-				$_plugin = self::$_instances[$plugin] = new $pluginClass($a,$b,$c,$d,$e,$f);
+				$_plugin = self::$_instances[$plugin] = new $pluginClass($coreEvents, $a, $b, $c, $d, $e, $f);
 				$_plugin->params  = $params;
 				if(!is_null($instanceId)){
 					$_plugin->_id = $instanceId;
@@ -469,24 +415,23 @@ class Plugin extends Ext{
 			$_plugin = self::$_instances[$plugin];
 		}
 		$dir = $pluginObject->dir($plugin).$_plugin->controllersDir;
-		$_plugin->xml = $ajax->xmlObject($instanceId);
+		$_plugin->xml = $coreEvents->xmlObject($instanceId);
 		$_plugin->controllersDir = $dir;
 		$_plugin->controllerFile = $dir."/{$plugin}.php";
 		$_plugin->loading = $plugin;
 		return $_plugin;
 	}
 	
-	public function instanceTriggers($_plugin , $params){
-		$ajax = CJAX::getInstance();        
-		if(!$ajax->isAjaxRequest() && method_exists($_plugin, 'onLoad') && $params){
-			call_user_func_array([$_plugin, 'onLoad'], $params);	
+	public function instanceTriggers($plugin , $params){
+		if(!$this->coreEvents->isAjaxRequest() && method_exists($plugin, 'onLoad') && $params){
+			call_user_func_array([$plugin, 'onLoad'], $params);	
 		} 
-        elseif(method_exists($_plugin, 'onAjaxLoad') && $params){
-			call_user_func_array([$_plugin, 'onAjaxLoad'],  $params);				
+        elseif(method_exists($plugin, 'onAjaxLoad') && $params){
+			call_user_func_array([$plugin, 'onAjaxLoad'],  $params);				
 		}
 	}
 	
-	public function DeleteEntry($entryId){
+	public function deleteEntry($entryId){
 		if(isset(CoreEvents::$cache[$entryId])){
 			unset(CoreEvents::$cache[$entryId]);
 		}
@@ -499,15 +444,15 @@ class Plugin extends Ext{
 		}
 	}
 	
-	public static function getInstance($plugin = null, $params = [], $instanceId  = null){
+	public function getInstance($plugin = null, $params = [], $instanceId  = null){
 		if(is_object(self::$instance)){
 			return self::$instance;
 		}
 		if(!$plugin){
-			$plugin = new Plugin;
+			$plugin = new Plugin($this->coreEvents);
 			return self::$instance = $plugin;
 		}		
-		if($plugin = self::getPluginInstance($plugin, $params, $instanceId)){
+		if($plugin = self::getPluginInstance($this->coreEvents, $plugin, $params, $instanceId)){
 			return $plugin;
 		}		
 	}
@@ -537,7 +482,7 @@ class Plugin extends Ext{
 		if($prefix){
 			$setting = $prefix.'_'.$setting;
 		}	
-		return CJAX::getInstance()->save($setting, $value, $this->cookie);
+		return $this->coreEvents->save($setting, $value, $this->cookie);
 	}
 	
 	/**
@@ -554,11 +499,7 @@ class Plugin extends Ext{
 		if($prefix){
 			$setting = $prefix.'_'.$setting;
 		}
-		return CJAX::getInstance()->getSetting($setting, $prefix);
-	}
-
-	public function  __get($setting){
-		return $this->get($setting);		
+		return $this->coreEvents->getSetting($setting, $prefix);
 	}
 		
 	/**
@@ -649,4 +590,27 @@ class Plugin extends Ext{
             }
         }        
     }
+    
+	public function  __get($setting){
+		return $this->get($setting);		
+	}    
+    
+	/**
+	 * 
+	 * Set variables
+	 */
+	public function __set($setting, $value){
+		$this->setVars($setting, $value);
+	}       
+    
+   	/**
+	 * 
+	 * Handle right handlers chain apis
+	 * 
+	 * @param unknown_type $api
+	 * @param unknown_type $args
+	 */
+	public function __call($api, $args){
+		return call_user_func_array([$this->xml, $api], $args);
+	}      
 }
