@@ -14,7 +14,7 @@
 namespace CJAX;
 use CJAX\Core\CJAX;
  
-class AjaxAuth{
+class Auth{
 	
 	/*
 	 * This function aims at covering the user authentification, 

@@ -25,7 +25,7 @@ class Plugin extends Ext{
 
 	/**
 	 * 
-	 * instanced to the plugin class
+	 * instancedd  to the plugin class
 	 * @var unknown_type
 	 */
 	private static $instance;
@@ -91,7 +91,6 @@ class Plugin extends Ext{
 	public static $initiatePlugins = [];
     
 	public $loading;
-    
 	/**
 	 * 
 	 * Plugins settings
@@ -173,8 +172,8 @@ class Plugin extends Ext{
 				foreach($entries as $v){
 					$this->deleteEntry($v);
 				}
-            }
-        }
+			}
+		}
 		self::$_aborted[$pluginName] = true;
  	}
  	
@@ -212,6 +211,28 @@ class Plugin extends Ext{
 	 */
 	public function delete(){
 		return $this->coreEvents->xmlObjects($this->_id)->delete();
+	}
+	
+	public function trigger($event, $params = []){	
+		if(self::$_instancesExist){
+			foreach(self::$_instancesExist as $k => $v){
+                $plugin = $this->coreEvents->plugin($v);			
+				if(!$plugin || !self::hasClass($k)){
+					continue;
+				}
+				
+				if($this->isAborted($k) || $plugin->exclude){
+					continue;
+				}
+				if(method_exists($plugin, $event)){
+					call_user_func_array([$plugin, $event], $params);
+					if($plugin instanceof XmlItem){
+						die('plugin:delete');
+						$plugin->delete();
+					}
+				}
+			}
+		}
 	}
 	
 	public function isAborted($pluginName = null){
@@ -256,7 +277,7 @@ class Plugin extends Ext{
 	 * @param mixed $file
 	 * @param integer $loadTime - in milliseconds
 	 */
-	public function import($file, $loadTime = 0, $onInit = false){
+	public function import($file , $loadTime = 0, $onInit = false){
 		$ajax = CJAX::getInstance();	
 		if(!is_array($file) && preg_match("/^https?/", $file)){
 			$data['file'] = $file;
@@ -324,10 +345,10 @@ class Plugin extends Ext{
 	 * 
 	 * Updates parameters using plugin class
 	 */
-	public function set($setting, $value , $instanceId = null){
+	public function set($setting, $value, $instanceId = null){
 		if($this->isAborted($this->loading)){
 			return;
-		}	
+		}
 		$params = range('a','z');	
 		if(!in_array($setting, $params)){
 			return $this->setVars($setting,$value);
@@ -335,8 +356,8 @@ class Plugin extends Ext{
 		
 		if(!is_null($instanceId)){
 			$item = CoreEvents::$cache[$instanceId];
-			$item['data'][$setting] = $value;		
-            $this->coreEvents->updateCache($instanceId, $item)
+			$item['data'][$setting] = $value;			
+			CoreEvents::UpdateCache($instanceId, $item);
 		} 
         else{			
 			if(!isset(self::$_instancesIds[$this->loading])){

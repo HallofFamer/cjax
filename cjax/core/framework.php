@@ -503,7 +503,34 @@ class Framework Extends CoreEvents{
                  'time' => $seconds, 'message_id' => $containerId];
 		return $this->xml($data);
 	}
+
+	public function success($msg = "Success!", $seconds = 3){
+        return $this->message($this->format->message($msg, Format::CSS_SUCCESS));
+	}
+    
+	public function warning($msg = "Invalid Input", $seconds = 4){
+		return $this->message($this->format->message($msg, Format::CSS_WARNING), $seconds);
+	}    
+
+	public function error($msg = "Error!", $seconds = 15){
+		return $this->message($this->format->message($msg, Format::CSS_ERROR), $seconds);
+	}       
+
+	public function process($msg = "Processing...", $seconds = 3){
+		return $this->message($this->format->message($msg, Format::CSS_PROCESS), $seconds);
+	}
+
+	public function info($msg = null, $seconds = 3){
+		return $this->message($this->format->message($msg, Format::CSS_INFO), $seconds);
+	} 
 	
+	/*
+	 * Show loading indicator
+	 */
+	public function loading($msg = "Loading..."){
+		return $this->message($this->format->message($msg, Format::CSS_SUCCESS));
+	}    
+    
 	/**
 	 * 
 	 * import css and javascript files
@@ -666,7 +693,7 @@ class Framework Extends CoreEvents{
 
 		if($this->isPlugin($method)){
 			$entryId = null;
-            $pluginClass = new Plugin;
+            $pluginClass = new Plugin($this);
 			if($pParams) {
 				$params = func_get_args();
                 $data = ['do' => $pluginClass->method($method), 'is_plugin' => $method,
@@ -674,7 +701,7 @@ class Framework Extends CoreEvents{
 				$data['filename'] = preg_replace("/.*\//",'', $data['file']);				
 				$entryId = $this->xmlItem($this->xml($data), $method)->id;
 			}
-			$plugin = Plugin::getPluginInstance($method, $params, $entryId);
+			$plugin = Plugin::getPluginInstance($this, $method, $params, $entryId);
 			if($pParams) {
 				$pluginClass->instanceTriggers($plugin, $pParams);
 			}

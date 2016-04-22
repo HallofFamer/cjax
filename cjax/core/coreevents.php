@@ -63,21 +63,21 @@ class CoreEvents{
 	/**
 	 * 
 	 * For js functions
-	 * @var unknown_type
+	 * @var string
 	 */
 	public $selector;
  	
 	/**
 	 *
 	 * Force the sytem to adapt to a loading or not loading state.
-	 * @var unknown_type
+	 * @var bool
 	 */
 	public $loading = false;
 	
 	/**
 	 * 
 	 * Some hosts have issues with sessions so lets fallback on cookies
-	 * @var unknown_type
+	 * @var bool
 	 */
 	public $fallback = false;
 	
@@ -389,16 +389,16 @@ class CoreEvents{
         $_preload = ($_preload)? $this->mkArray($this->processScache($_preload)): null;   
 		$_cache = $this->mkArray($this->processScache(self::$cache));		
 		if($ajax->config->debug){
-			$ajax->debug = true;
+			$this->debug = true;
 		}
-		$debug = ($ajax->debug)? 1 : 0;		
+		$debug = ($this->debug)? 1 : 0;		
 		$out = 'CJAX.process_all("'.$_cache.'","'.$_preload.'", '.$debug.', true);';		
 		return $out;
 	}
 	
 	public function simpleCommit($return = false){
 		$ajax = CJAX::getInstance();
-		if($ajax->fallback || $ajax->config->fallback || $ajax->caching) {
+		if($this->fallback || $ajax->config->fallback || $this->caching){
 			return true;
 		}
 		$cache = self::$cache;
@@ -433,9 +433,9 @@ class CoreEvents{
 		}		
 		$_cache = $this->mkArray($this->processScache($cache));		
 		if($ajax->config->debug){
-			$ajax->debug = true;
+			$this->debug = true;
 		}
-		$debug = ($ajax->debug)? 1 : 0;
+		$debug = ($this->debug)? 1 : 0;
 	
 		if($_preload){
 			$this->save('cjax_preload', $_preload);
@@ -577,7 +577,7 @@ class CoreEvents{
 	 * @param unknown_type $pluginName
 	 */
 	public function isPlugin($pluginName){
-        $plugin = new Plugin;
+        $plugin = new Plugin($this);
 		return $plugin->isPlugin($pluginName);
 	}
 	
@@ -591,7 +591,7 @@ class CoreEvents{
 	 * gets plugin only if it has a class
 	 */
 	public function plugin($pluginName, $loadController = false){
-		if($this->isPlugin($pluginName) && $plugin = Plugin::getPluginInstance($pluginName, null, null, $loadController)){
+		if($this->isPlugin($pluginName) && $plugin = Plugin::getPluginInstance($this, $pluginName, null, null, $loadController)){
 			return $plugin;
 		}
 	}
@@ -616,18 +616,17 @@ class CoreEvents{
 	 * @return string
 	 */
 	public function xml($xml, $apiName  = null){
-		$ajax = CJAX::getInstance();
 		if(isset($xml['do'])){
 			$this->lastCmd = $xml['do'];
 		}
-		if($ajax->_flag){			
-			if(is_array($ajax->_flag)){
-				$xml['flag'] = $this->xmlIt($ajax->_flag);
-				$ajax->_flag = null;
+		if($this->_flag){			
+			if(is_array($this->_flag)){
+				$xml['flag'] = $this->xmlIt($this->_flag);
+				$this->_flag = null;
 			} 
-            elseif($ajax->_flag == 'first'){
+            elseif($this->_flag == 'first'){
 				$this->setLastCache($xml);
-				$ajax->_flag = null;
+				$this->_flag = null;
 				return;
 			}
 		}
@@ -647,34 +646,31 @@ class CoreEvents{
 	}
 	
 	public function fallbackPrint($out){
-		$ajax = CJAX::getInstance();
-		$path = $ajax->_path;				
-		$data = "init = function() {
-	                 if (arguments.callee.done) return;
-	                 arguments.callee.done = true;
-	                 _cjax = function() {
-		                 $out
-	                 }
-	                 window['DOMContentLoaded'] = true;
-	                 if(typeof CJAX != 'undefined') {
-		                 _cjax();
-	                 } else {
-	                   	 window['_CJAX_PROCESS'] = function() {
+		return "init = function() {
+	                if (arguments.callee.done) return;
+	                arguments.callee.done = true;
+	                _cjax = function() {
+		                $out
+	                }
+	                window['DOMContentLoaded'] = true;
+	                if(typeof CJAX != 'undefined') {
+		                _cjax();
+	                } else {
+	                   	window['_CJAX_PROCESS'] = function() {
 			                 _cjax();
-		                 }
-	                 }
-                 }
-                 if (document.addEventListener) {
-	                 document.addEventListener('DOMContentLoaded', init, false);
-                 } else {
-	                 /* for Internet Explorer */
-	                 /*@cc_on @*/
-	                 /*@if (@_win32)
-	                 document.write('<script defer src=\"{$path}cjax.js.php?json=1\"><'+'/script>');
-	                 /*@end @*/
-	                 window.onload = init;
-                 }";
-		return $data;
+		                }
+	                }
+                }
+                if (document.addEventListener) {
+	                document.addEventListener('DOMContentLoaded', init, false);
+                } else {
+	                /* for Internet Explorer */
+	                /*@cc_on @*/
+	                /*@if (@_win32)
+	                document.write('<script defer src=\"{$this->_path}cjax.js.php?json=1\"><'+'/script>');
+	                /*@end @*/
+	                window.onload = init;
+                }";
 	}
 
 	public function getCache(){
@@ -935,7 +931,7 @@ class CoreEvents{
 	 * @param $flag_id
 	 * @param $command_count
 	 */
-	public function flag($flagId, $commandCount = 1 ,$settings = []){
+	public function flag($flagId, $commandCount = 1, $settings = []){
 		switch($flagId){
 			case 'wait':					
 				$settings['command_count'] = $commandCount;		
@@ -1066,8 +1062,8 @@ class CoreEvents{
 		$ajax = CJAX::getInstance();
 		if(!isset($_SESSION)){
 			@session_start();
-		}
-		if($ajax->fallback || $ajax->config->fallback){
+		}       
+		if($this->fallback || $ajax->config->fallback){
 			if($value===null && isset($_SESSION[$setting])){
 				unset($_SESSION[$setting]);
 				$this->cookie($setting);
@@ -1145,39 +1141,6 @@ class CoreEvents{
 	 */
 	public function removeCache($cacheId){
 		unset(self::$cache[$cacheId]);
-	}
-
-	public function warning($msg = "Invalid Input", $seconds = 4){
-		$ajax = CJAX::getInstance();
-		return $ajax->message($ajax->format->message($msg, Format::CSS_WARNING), $seconds);
-	}
-
-	public function success($msg = "Success!", $seconds = 3){
-		$ajax = CJAX::getInstance();
-		return $ajax->message($ajax->format->message($msg, Format::CSS_SUCCESS));
-	}
-
-	/*
-	 * Show loading indicator
-	 */
-	public function loading($msg = "Loading..."){
-		$ajax = CJAX::getInstance();
-		return $ajax->message($ajax->format->message($msg, Format::CSS_SUCCESS));
-	}
-
-	public function process($msg = "Processing...", $seconds = 3){
-		$ajax = CJAX::getInstance();
-		return $ajax->message($ajax->format->message($msg, Format::CSS_PROCESS), $seconds);
-	}
-
-	public function info($msg = null, $seconds = 3){
-		$ajax = CJAX::getInstance();
-		return $ajax->message($ajax->format->message($msg, Format::CSS_INFO), $seconds);
-	}
-
-	public function error($msg = "Error!", $seconds = 15){
-		$ajax = CJAX::getInstance();
-		return $ajax->message($ajax->format->message($msg, Format::CSS_ERROR), $seconds);
 	}
 	
 	public function _lastExecCount($count = 0){

@@ -20,7 +20,7 @@
 **####################################################################################################    */   
 
 require_once __DIR__."/autoloader.php";
-use CJAX\AjaxAuth;
+use CJAX\Auth;
 use CJAX\Core\CJAX; 
 use CJAX\Core\CJAXException;
 use CJAX\Core\CoreEvents;
@@ -165,7 +165,7 @@ final class AJAX{
 		if(file_exists($f = CJAX_HOME.'/auth.php')){
 			require_once $f;
 			if(class_exists('AjaxAuth')){
-				$auth = new AjaxAuth;
+				$auth = new Auth;
 				if(!$auth->validate($controller, $function, $args, $requestObject)) {
 					$auth->authError();
                     return true;
