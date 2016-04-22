@@ -110,6 +110,6 @@ class uploadify extends Plugin{
 			$this->save('exts', $exts);
 		}
 		$this->options[$setting] = $value;
-		$this->set('b', $this->options, $this->_id); //parameter, variable
+		$this->set('b', $this->options, $this->id); //parameter, variable
 	}
 }

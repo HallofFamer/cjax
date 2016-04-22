@@ -16,51 +16,37 @@
 *   Website: http://cjax.sourceforge.net                     $      
 *   Email: cjxxi@msn.com    
 *   Date: 2/12/2007                           $     
-*   File Last Changed:  04/05/2016            $     
+*   File Last Changed:  04/22/2016            $     
 **####################################################################################################    */   
 
 namespace CJAX\Core;
 
 class Plugin extends Ext{
 
+    private $coreEvents; 
+    
 	/**
 	 * 
-	 * instancedd  to the plugin class
-	 * @var unknown_type
+	 * If a plugin is used more than once on the page, assigns an id
+	 * in wished to do modifications in later execution
+	 * @var integer
 	 */
-	private static $instance;
+	public $id;    
     
-    private $coreEvents;
+	public $name;   
     
-	//xmlItem Object
-	public $xml;
-	
-	/**
-	 * Instances to plugins
-	 */
-	private static $_instances = [];
-	
-    /**
-	 * 
-	 * entries Ids from plugns
-	 * @var unknown_type
-	 */
-	private static $_instancesIds = [];
-	
+	public $dir; 
+    
 	/**
 	 * 
-	 * Plugin has a class
+	 * javascript file name,
+	 * by default is the plugin's name but can be different.
 	 * @var unknown_type
 	 */
-	private static $_instancesExist = [];
+	public $file = null;    
     
 	/**
-	* Plugins parameters
-	 */
-	private static $_instancesParams = [];
-    
-	/**
-	* Default controllers directory to each plugin
+	 * Default controllers directory to each plugin
 	 */
 	public $controllersDir = 'controllers';
 	
@@ -70,42 +56,10 @@ class Plugin extends Ext{
 	 * A executable string before the plugin is ran.
 	 * @var unknown_type
 	 */
-	public $init = "function(){}";
-	
-	/**
-	 * 
-	 * Plugins that are aborted
-	 * @var unknown_type
-	 */
-	private static $_aborted = [];
-	
-	/**
-	 * 
-	 * When needing  $loading in the contructor 
-	 * @var unknown_type
-	 */
-	private static $_loadingPrefix = null;
+	public $init = "function(){}";    
     
-	public $dir;
-    
-	public static $initiatePlugins = [];
-    
-	public $loading;
-	/**
-	 * 
-	 * Plugins settings
-	 * 
-	 * @var unknown_type
-	 */
-	public $ajaxFile = false; //if true the it  will replace any string that start with ajax.php to a full url.
-
-	/**
-	 * 
-	 * javascript file name,
-	 * by default is the plugin's name but can be different.
-	 * @var unknown_type
-	 */
-	public $file = null;
+	//xmlItem Object
+	public $xml;   
 	
 	/**
 	 * 
@@ -126,24 +80,16 @@ class Plugin extends Ext{
 	 * If using Exec event, store the element_id.
 	 * @var unknown_type
 	 */
-	public $element_id;
-	
+	public $element_id;   
+    
 	/**
 	 * 
-	 * If a  plugin is used more than once on the page, assigns an id
-	 * in wished to do modifications in later execution
-	 * @var integer
+	 * Plugins settings
+	 * 
+	 * @var unknown_type
 	 */
-	public $_id;
+	public $ajaxFile = false; //if true the it  will replace any string that start with ajax.php to a full url. 
     
-	public $id;
-	
-    private static $_dirs = [];
-	
-    private static $_initiated;
-	
-    private static $readDir = [];
-	
 	/**
 	 * 
 	 * For session variables use cookie?
@@ -151,7 +97,47 @@ class Plugin extends Ext{
 	 * 
 	 * @var boolean
 	 */
-	private $cookie = false;
+	private $cookie = false;    
+	
+	/**
+	 * Instances to plugins
+	 */
+	private static $_instances = [];
+	
+    /**
+	 * 
+	 * entries Ids from plugins
+	 * @var unknown_type
+	 */
+	private static $_instancesIds = [];
+	
+	/**
+	 * 
+	 * Plugin has a class
+	 * @var unknown_type
+	 */
+	private static $_instancesExist = [];
+	
+	/**
+	 * 
+	 * Plugins that are aborted
+	 * @var unknown_type
+	 */
+	private static $_aborted = [];
+	
+	/**
+	 * 
+	 * When needing  $loading in the contructor 
+	 * @var unknown_type
+	 */
+	private static $_loadingPrefix = null;
+    
+	public static $initiatePlugins = [];
+	
+    private static $_dirs = [];
+	
+    private static $readDir = [];
+    
 
     public function __construct(CoreEvents $coreEvents, $array = []){
         parent::__construct($array);
@@ -164,7 +150,7 @@ class Plugin extends Ext{
 	 */
 	public function abort($pluginName = null){
 		if(!$pluginName){
-			$pluginName = $this->loading;
+			$pluginName = $this->name;
 		}
 		if(self::$_instancesIds){
 			if(isset(self::$_instancesIds[$pluginName])){
@@ -180,13 +166,13 @@ class Plugin extends Ext{
  	/*
  	 * can preload the plugin file if plugin is not being fired.
  	 */
-	public function preload(){
-		$file = preg_replace('/.+\/+/', '', $this->file($this->loading));
+	public function preload($pluginName){
+		$file = preg_replace('/.+\/+/', '', $this->file($pluginName));
 		$this->import($file);
 	}
 	
 	public function xmlObject(){
-        return $this->coreEvents->xmlObjects($this->_id);
+        return $this->coreEvents->xmlObjects($this->id);
 	}
 	
 	/**
@@ -194,7 +180,7 @@ class Plugin extends Ext{
 	 * mirrors xmlItem::xml()
 	 */
 	public function xml(){
-		return $this->coreEvents->xmlObjects($this->_id)->xml();
+		return $this->coreEvents->xmlObjects($this->id)->xml();
 	}
 	
 	/**
@@ -202,7 +188,7 @@ class Plugin extends Ext{
 	 * mirrors xmlItem::output()
 	 */
 	public function output(){
-		return $this->coreEvents->xmlObjects($this->_id)->output();
+		return $this->coreEvents->xmlObjects($this->id)->output();
 	}	
 	
 	/**
@@ -210,7 +196,7 @@ class Plugin extends Ext{
 	 * mirros xmlItem::delete()
 	 */
 	public function delete(){
-		return $this->coreEvents->xmlObjects($this->_id)->delete();
+		return $this->coreEvents->xmlObjects($this->id)->delete();
 	}
 	
 	public function trigger($event, $params = []){	
@@ -236,13 +222,13 @@ class Plugin extends Ext{
 	}
 	
 	public function isAborted($pluginName = null){
-		$plugin = $this->getInstance();
-		if(!$pluginName){
-			$pluginName = $plugin->loading;
-		}
+        if(!$pluginName){
+            $pluginName = $this->name;
+        }
 		if(isset(self::$_aborted[$pluginName])){
 			return true;
 		}
+        return false;
 	}
 	
 	/**
@@ -266,7 +252,7 @@ class Plugin extends Ext{
 	}
 	
 	public function imports($files = [], &$data = []){
-		$data['plugin_dir'] = $this->loading;
+		$data['plugin_dir'] = $this->name;
 		$ajax = CJAX::getInstance();		
 		return $ajax->imports($files, $data);
 	}
@@ -283,7 +269,7 @@ class Plugin extends Ext{
 			$data['file'] = $file;
 		} 
         else{
-			$data['plugin_dir'] = $this->loading;
+			$data['plugin_dir'] = $this->name;
 			$data['file'] = $file;
 		}
 		
@@ -300,7 +286,7 @@ class Plugin extends Ext{
 	}
 	
 	public function waitFor($file){
-		$this->coreEvents->xmlObjects($this->_id)->waitfor = $file;
+		$this->coreEvents->xmlObjects($this->id)->waitfor = $file;
 		$this->coreEvents->simpleCommit();
 	}
 	
@@ -312,11 +298,11 @@ class Plugin extends Ext{
 	}
 	
 	public function setVars($setting, $value){
-		if(empty(self::$_instancesIds) || !isset(self::$_instancesIds[$this->loading])){
+		if(empty(self::$_instancesIds) || !isset(self::$_instancesIds[$this->name])){
 			return;
 		} 
         else{
-			$instances  = self::$_instancesIds[$this->loading];
+			$instances  = self::$_instancesIds[$this->name];
 		}
 		
 		foreach($instances as $v){
@@ -346,32 +332,32 @@ class Plugin extends Ext{
 	 * Updates parameters using plugin class
 	 */
 	public function set($setting, $value, $instanceId = null){
-		if($this->isAborted($this->loading)){
+		if($this->isAborted($this->name)){
 			return;
 		}
 		$params = range('a','z');	
 		if(!in_array($setting, $params)){
-			return $this->setVars($setting,$value);
+			return $this->setVars($setting, $value);
 		}
-		
+
 		if(!is_null($instanceId)){
 			$item = CoreEvents::$cache[$instanceId];
 			$item['data'][$setting] = $value;			
 			CoreEvents::UpdateCache($instanceId, $item);
 		} 
         else{			
-			if(!isset(self::$_instancesIds[$this->loading])){
+			if(!isset(self::$_instancesIds[$this->name])){
 				return;
 			}			
-			$instances  = self::$_instancesIds[$this->loading];		
+			$instances  = self::$_instancesIds[$this->name];		
 			if(!$instances){
 				return false;
 			}
-			if(count($instances)==1){
-				return $this->set($setting ,$value, implode($instances));
+			if(count($instances) == 1){
+				return $this->set($setting, $value, implode($instances));
 			}
-			foreach ($instances as  $v){
-				$this->set($setting ,$value, $v);
+			foreach($instances as $v){
+				$this->set($setting, $value, $v);
 			}
 		}
 	}
@@ -393,16 +379,15 @@ class Plugin extends Ext{
 		if(!isset(self::$_instances[$plugin]) || !is_object(self::$_instances[$plugin])){
 			if(!isset($params[1])){
 				self::$_loadingPrefix = $plugin;
-				$_plugin = self::$_instances[$plugin] = new $pluginClass($coreEvents);
-				$_plugin->params = [];
+				$pluginInstance = self::$_instances[$plugin] = new $pluginClass($coreEvents);
+				$pluginInstance->params = [];
 				if(!is_null($instanceId)){
-					$_plugin->_id = $instanceId;
-					$_plugin->id = $instanceId;
+					$pluginInstance->id = $instanceId;
 					self::$_instancesIds[$plugin][$instanceId] = $instanceId;
 				}
 				
-				$_plugin->dir = $pluginObject->dir($plugin);
-				$_plugin->loading = $plugin;				
+				$pluginInstance->dir = $pluginObject->dir($plugin);
+				$pluginInstance->name = $plugin;				
 				self::$_loadingPrefix = null;
 			} 
             else{
@@ -420,30 +405,29 @@ class Plugin extends Ext{
 				}
 				extract($args);
 				self::$_loadingPrefix = $plugin;
-				$_plugin = self::$_instances[$plugin] = new $pluginClass($coreEvents, $a, $b, $c, $d, $e, $f);
-				$_plugin->params  = $params;
+				$pluginInstance = self::$_instances[$plugin] = new $pluginClass($coreEvents, $a, $b, $c, $d, $e, $f);
+				$pluginInstance->params  = $params;
 				if(!is_null($instanceId)){
-					$_plugin->_id = $instanceId;
-					$_plugin->id = $instanceId;
+					$pluginInstance->id = $instanceId;
 					self::$_instancesIds[$plugin][$instanceId] = $instanceId;
 				}
-				$_plugin->dir = $pluginObject->dir($plugin);
-				$_plugin->loading = $plugin;
+				$pluginInstance->dir = $pluginObject->dir($plugin);
+				$pluginInstance->name = $plugin;
 				self::$_loadingPrefix = null;
 			}
 		} 
         else{
-			$_plugin = self::$_instances[$plugin];
+			$pluginInstance = self::$_instances[$plugin];
 		}
-		$dir = $pluginObject->dir($plugin).$_plugin->controllersDir;
-		$_plugin->xml = $coreEvents->xmlObject($instanceId);
-		$_plugin->controllersDir = $dir;
-		$_plugin->controllerFile = $dir."/{$plugin}.php";
-		$_plugin->loading = $plugin;
-		return $_plugin;
+		$dir = $pluginObject->dir($plugin).$pluginInstance->controllersDir;
+		$pluginInstance->xml = $coreEvents->xmlObject($instanceId);
+		$pluginInstance->controllersDir = $dir;
+		$pluginInstance->controllerFile = $dir."/{$plugin}.php";
+		$pluginInstance->name = $plugin;
+		return $pluginInstance;
 	}
 	
-	public function instanceTriggers($plugin , $params){
+	public function instanceTriggers($plugin, $params){
 		if(!$this->coreEvents->isAjaxRequest() && method_exists($plugin, 'onLoad') && $params){
 			call_user_func_array([$plugin, 'onLoad'], $params);	
 		} 
@@ -456,26 +440,13 @@ class Plugin extends Ext{
 		if(isset(CoreEvents::$cache[$entryId])){
 			unset(CoreEvents::$cache[$entryId]);
 		}
-		self::$_instancesIds[$this->loading] = [];
+		self::$_instancesIds[$this->name] = [];
 	}
 	
 	public function hasClass($plugin){
 		if(isset(self::$_instancesExist[$plugin])){
 			return true;
 		}
-	}
-	
-	public function getInstance($plugin = null, $params = [], $instanceId  = null){
-		if(is_object(self::$instance)){
-			return self::$instance;
-		}
-		if(!$plugin){
-			$plugin = new Plugin($this->coreEvents);
-			return self::$instance = $plugin;
-		}		
-		if($plugin = self::getPluginInstance($this->coreEvents, $plugin, $params, $instanceId)){
-			return $plugin;
-		}		
 	}
 	
 	public static function initiatePlugins(){
@@ -495,7 +466,7 @@ class Plugin extends Ext{
 	 */
 	public function save($setting, $value, $prefix = null){
 		if(!$prefix){
-			$prefix = $this->loading;
+			$prefix = $this->name;
 		}
 		if(!$prefix && self::$_loadingPrefix){
 			$prefix = self::$_loadingPrefix;
@@ -512,7 +483,7 @@ class Plugin extends Ext{
 	 */
 	public function get($setting, $prefix = null){
 		if(!$prefix){
-			$prefix = $this->loading;
+			$prefix = $this->name;
 		}
 		if(!$prefix && self::$_loadingPrefix){
 			$prefix = self::$_loadingPrefix;
@@ -540,7 +511,7 @@ class Plugin extends Ext{
 	
 	public function dir($plugName = null){
 		if(!$plugName){
-			$plugName = $this->loading;
+			$plugName = $this->name;
 		}
 		return self::$_dirs[$plugName];
 	}

@@ -711,7 +711,7 @@ class Framework Extends CoreEvents{
 			$data = ['do' => '_fn', 'fn' => $method, 'fn_data' => $pParams];			
 			$item = $this->xmlItem($this->xml($data),'fn');
 			$item->selector = $method;
-			return  $item;
+			return $item;
 		}
 	}        
 }
