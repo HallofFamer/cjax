@@ -693,17 +693,17 @@ class Framework Extends CoreEvents{
 
 		if($this->isPlugin($method)){
 			$entryId = null;
-            $pluginClass = new Plugin($this);
-			if($pParams) {
+			if($pParams){
 				$params = func_get_args();
-                $data = ['do' => $pluginClass->method($method), 'is_plugin' => $method,
-                         'data' => $pParams, 'file' => $pluginClass->file($method)];
+                $data = ['do' => $this->pluginManager->method($method), 'is_plugin' => $method,
+                         'data' => $pParams, 'file' => $this->pluginManager->file($method)];
 				$data['filename'] = preg_replace("/.*\//",'', $data['file']);				
 				$entryId = $this->xmlItem($this->xml($data), $method)->id;
 			}
-			$plugin = Plugin::getPluginInstance($this, $method, $params, $entryId);
-			if($pParams) {
-				$pluginClass->instanceTriggers($plugin, $pParams);
+            
+			$plugin = $this->pluginManager->getPlugin($method, $params, $entryId);
+			if($pParams){
+				$this->pluginManager->instanceTriggers($plugin, $pParams);
 			}
 			return $plugin;
 		} 

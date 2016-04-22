@@ -47,6 +47,13 @@ class CoreEvents{
 	public $trace = 0;
 	
 	private $xmlObjects;
+    
+	/**
+	 * 
+	 * Stores a reference of PluginManager.
+	 * @var PluginManager
+	 */    
+    protected $pluginManager;
 	
 	//helper to cache callbacks
 	public static $callbacks = [];
@@ -253,6 +260,10 @@ class CoreEvents{
 
 	public $_flagCount = 0;
 	
+    
+    public function __construct(){
+        $this->pluginManager = new PluginManager($this);
+    }
     
 	public function xmlItem($xml, $name){
 		if(!is_integer($xml)){
@@ -577,8 +588,7 @@ class CoreEvents{
 	 * @param unknown_type $pluginName
 	 */
 	public function isPlugin($pluginName){
-        $plugin = new Plugin($this);
-		return $plugin->isPlugin($pluginName);
+        return $this->pluginManager->isPlugin($pluginName);
 	}
 	
 	public function updateCache($instanceId, $data){
@@ -591,13 +601,13 @@ class CoreEvents{
 	 * gets plugin only if it has a class
 	 */
 	public function plugin($pluginName, $loadController = false){
-		if($this->isPlugin($pluginName) && $plugin = Plugin::getPluginInstance($this, $pluginName, null, null, $loadController)){
+		if($this->isPlugin($pluginName) && $plugin = $this->pluginManager->getPlugin($pluginName, null, null, $loadController)){
 			return $plugin;
 		}
 	}
 	
 	public function initiatePlugins(){
-		return Plugin::initiatePlugins();
+		return $this->pluginManager->initiate();        
 	}
 	
 	/**

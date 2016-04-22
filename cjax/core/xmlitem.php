@@ -110,8 +110,80 @@ class XmlItem{
 		$this->name = $name;
 		$this->id = (int)$xmlId;
 		$this->type = $type;
+	}	
+ 	
+	/**
+     * The attach method, adds a list of callback methods to this XmlItem.
+	 * @param array  $callbacks
+     * @access public
+     * @return void
+     */	    
+	public function attach($callbacks){
+		$xml = $this->xml();
+		$cb = $this->coreEvents->processScache($callbacks);
+		$xml['stack'] = $this->coreEvents->mkArray($cb);
+		CoreEvents::$cache[$this->id] = $xml;
+        
+		foreach($callbacks as $k2 => $v2){
+			unset(CoreEvents::$cache[$k2]);
+		}
+	}   
+    
+	/**
+     * The callback method, adds a callback to XmlItem.
+	 * @param object  $xmlObj
+     * @param mixed  $fn
+     * @access public
+     * @return void
+     */	     
+	public function callback($xmlObj, $fn = null){
+		$this->callback = $xmlObj;
 	}
 	
+	/**
+     * The delete method, removes this XmlItem from CJAX cache so it won't be available for AJAX request.
+     * @access public
+     * @return void
+     */	        
+	public function delete(){
+		if(!is_null($this->id)){
+			$this->coreEvents->removeExecCache($this->id);
+		}
+	}
+	
+	/**
+     * The next method, fetches the next available Xml object.
+     * @param object  $xmlObj
+     * @access public
+     * @return void
+     */	     
+	public function next($xmlObj){
+		$xmlObjects = $this->coreEvents->xmlObjects();
+		$found = false;
+		foreach($xmlObjects as $v){
+			if($v->id == $xmlObj->id){
+				$found = true;
+				continue;
+			}
+			if($found){
+				return $v;
+			}
+		}
+	}
+	
+	/**
+     * The xml method, retrieves an Xml object from CoreEvents' cache list.
+     * @param string  $id
+     * @access public
+     * @return object
+     */	      
+	public function xml($id = null){
+		$id or $id = $this->id;
+		if(!is_null($id)){
+			return CoreEvents::$cache[$id];
+		}
+	}
+    	
 	/**
      * The magic method __set, dynamically creates properties for XmlItem class.
 	 * @param string  $setting
@@ -148,7 +220,7 @@ class XmlItem{
 			
 		} 
 		
-		if(in_array(CJAX::getInstance()->lastCmd, $this->api)){
+		if(in_array($this->coreEvents->lastCmd, $this->api)){
 			if(is_object($value)){
 				CoreEvents::$callbacks[$this->id][$value->id] = CoreEvents::$cache[$value->id];
 			} 
@@ -160,7 +232,7 @@ class XmlItem{
 			$event = CoreEvents::$cache[$this->id];
 			$event[$setting] = $value;
 			CoreEvents::$cache[$this->id] = $event;
-			if($setting=='waitFor'){
+			if($setting == 'waitFor'){
 				CoreEvents::$cache[$value]['onwait'][$this->id] = $this->xml();
 				$this->delete();
 			}
@@ -209,78 +281,5 @@ class XmlItem{
 		}		
 		$data = ['do' => '_fn', 'fn' => $fn, 'fn_data' => $pParams];
 		return $this->coreEvents->xmlItem($this->coreEvents->xml($data),'xmlItem_fn');
-	}
-	
- 	
-	/**
-     * The attach method, adds a list of callback methods to this XmlItem.
-	 * @param array  $callbacks
-     * @access public
-     * @return void
-     */	    
-	public function attach($callbacks){
-		$xml = $this->xml();
-		$cb = $this->coreEvents->processScache($callbacks);
-		$xml['stack'] = $this->coreEvents->mkArray($cb);
-		CoreEvents::$cache[$this->id] = $xml;
-        
-		foreach($callbacks as $k2 => $v2){
-			unset(CoreEvents::$cache[$k2]);
-		}
-	}   
-    
-	/**
-     * The callback method, adds a callback to XmlItem.
-	 * @param object  $xmlObj
-     * @param mixed  $fn
-     * @access public
-     * @return void
-     */	     
-	public function callback($xmlObj, $fn = null){
-		$this->callback = $xmlObj;
-	}
-	
-	/**
-     * The delete method, removes this XmlItem from CJAX cache so it won't be available for AJAX request.
-     * @access public
-     * @return void
-     */	        
-	public function delete(){
-		if(!is_null($this->id)) {
-			$this->coreEvents->removeExecCache($this->id);
-		}
-	}
-	
-	/**
-     * The next method, fetches the next available Xml object.
-     * @param object  $xmlObj
-     * @access public
-     * @return void
-     */	     
-	public function next($xmlObj){
-		$xmlObjects = $this->coreEvents->xmlObjects();
-		$found = false;
-		foreach($xmlObjects as $v){
-			if($v->id == $xmlObj->id){
-				$found = true;
-				continue;
-			}
-			if($found){
-				return $v;
-			}
-		}
-	}
-	
-	/**
-     * The xml method, retrieves an Xml object from CoreEvents' cache list.
-     * @param string  $id
-     * @access public
-     * @return object
-     */	      
-	public function xml($id = null){
-		$id or $id = $this->id;
-		if(!is_null($id)){
-			return CoreEvents::$cache[$id];
-		}
-	}
+	}    
 }
