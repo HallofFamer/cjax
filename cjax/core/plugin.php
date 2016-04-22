@@ -99,17 +99,17 @@ class Plugin extends Ext{
 	 */
 	private $cookie = false;    
 	
+    /**
+	 * 
+	 * entries Ids for this plugin.
+	 * @var array
+	 */    
+    public $entryIds = [];
+    
 	/**
 	 * Instances to plugins
 	 */
 	private static $_instances = [];
-	
-    /**
-	 * 
-	 * entries Ids from plugins
-	 * @var unknown_type
-	 */
-	private static $_instancesIds = [];
 	
 	/**
 	 * 
@@ -124,13 +124,6 @@ class Plugin extends Ext{
 	 * @var unknown_type
 	 */
 	private static $_aborted = [];
-	
-	/**
-	 * 
-	 * When needing  $loading in the contructor 
-	 * @var unknown_type
-	 */
-	private static $_loadingPrefix = null;
     
 	public static $initiatePlugins = [];
 	
@@ -152,13 +145,11 @@ class Plugin extends Ext{
 		if(!$pluginName){
 			$pluginName = $this->name;
 		}
-		if(self::$_instancesIds){
-			if(isset(self::$_instancesIds[$pluginName])){
-				$entries = self::$_instancesIds[$pluginName];
-				foreach($entries as $v){
-					$this->deleteEntry($v);
-				}
+		if($this->entryIds){
+			foreach($this->entryIds as $entryId){
+				$this->deleteEntry($entryId);
 			}
+            $this->entryIds = [];
 		}
 		self::$_aborted[$pluginName] = true;
  	}
@@ -298,15 +289,11 @@ class Plugin extends Ext{
 	}
 	
 	public function setVars($setting, $value){
-		if(empty(self::$_instancesIds) || !isset(self::$_instancesIds[$this->name])){
+		if(!$this->entryIds){
 			return;
-		} 
-        else{
-			$instances  = self::$_instancesIds[$this->name];
-		}
-		
-		foreach($instances as $v){
-			$this->setVar($setting, $value, $v);
+		} 		
+		foreach($this->entryIds as $entryId){
+			$this->setVar($setting, $value, $entryId);
 		}
 	}
 	
@@ -342,22 +329,18 @@ class Plugin extends Ext{
 
 		if(!is_null($instanceId)){
 			$item = CoreEvents::$cache[$instanceId];
-			$item['data'][$setting] = $value;			
-			CoreEvents::UpdateCache($instanceId, $item);
+			$item['data'][$setting] = $value;
+            $this->coreEvents->updateCache($instanceId, $item);
 		} 
         else{			
-			if(!isset(self::$_instancesIds[$this->name])){
+			if(!$this->entryIds){
 				return;
-			}			
-			$instances  = self::$_instancesIds[$this->name];		
-			if(!$instances){
-				return false;
+			}	
+			if(count($this->entryIds) == 1){
+				return $this->set($setting, $value, implode($this->entryIds));
 			}
-			if(count($instances) == 1){
-				return $this->set($setting, $value, implode($instances));
-			}
-			foreach($instances as $v){
-				$this->set($setting, $value, $v);
+			foreach($this->entryIds as $entryId){
+				$this->set($setting, $value, $entryId);
 			}
 		}
 	}
@@ -378,17 +361,15 @@ class Plugin extends Ext{
 		
 		if(!isset(self::$_instances[$plugin]) || !is_object(self::$_instances[$plugin])){
 			if(!isset($params[1])){
-				self::$_loadingPrefix = $plugin;
 				$pluginInstance = self::$_instances[$plugin] = new $pluginClass($coreEvents);
 				$pluginInstance->params = [];
 				if(!is_null($instanceId)){
 					$pluginInstance->id = $instanceId;
-					self::$_instancesIds[$plugin][$instanceId] = $instanceId;
+                    $pluginInstance->entryIds[$instanceId] = $instanceId;
 				}
 				
 				$pluginInstance->dir = $pluginObject->dir($plugin);
-				$pluginInstance->name = $plugin;				
-				self::$_loadingPrefix = null;
+				$pluginInstance->name = $plugin;		
 			} 
             else{
 				$args = [];
@@ -404,16 +385,14 @@ class Plugin extends Ext{
 					}
 				}
 				extract($args);
-				self::$_loadingPrefix = $plugin;
 				$pluginInstance = self::$_instances[$plugin] = new $pluginClass($coreEvents, $a, $b, $c, $d, $e, $f);
 				$pluginInstance->params  = $params;
 				if(!is_null($instanceId)){
 					$pluginInstance->id = $instanceId;
-					self::$_instancesIds[$plugin][$instanceId] = $instanceId;
+					$pluginInstance->entryIds[$instanceId] = $instanceId;
 				}
 				$pluginInstance->dir = $pluginObject->dir($plugin);
 				$pluginInstance->name = $plugin;
-				self::$_loadingPrefix = null;
 			}
 		} 
         else{
@@ -440,7 +419,6 @@ class Plugin extends Ext{
 		if(isset(CoreEvents::$cache[$entryId])){
 			unset(CoreEvents::$cache[$entryId]);
 		}
-		self::$_instancesIds[$this->name] = [];
 	}
 	
 	public function hasClass($plugin){
@@ -468,9 +446,6 @@ class Plugin extends Ext{
 		if(!$prefix){
 			$prefix = $this->name;
 		}
-		if(!$prefix && self::$_loadingPrefix){
-			$prefix = self::$_loadingPrefix;
-		}
 		if($prefix){
 			$setting = $prefix.'_'.$setting;
 		}	
@@ -484,9 +459,6 @@ class Plugin extends Ext{
 	public function get($setting, $prefix = null){
 		if(!$prefix){
 			$prefix = $this->name;
-		}
-		if(!$prefix && self::$_loadingPrefix){
-			$prefix = self::$_loadingPrefix;
 		}
 		if($prefix){
 			$setting = $prefix.'_'.$setting;
@@ -599,10 +571,24 @@ class Plugin extends Ext{
 	 * 
 	 * Handle right handlers chain apis
 	 * 
-	 * @param unknown_type $api
-	 * @param unknown_type $args
+	 * @param string $api
+	 * @param array $args
 	 */
 	public function __call($api, $args){
-		return call_user_func_array([$this->xml, $api], $args);
-	}      
+        $argCount = count($args);
+        switch($argCount){
+            case 0: 
+                return $this->xml->$api();
+            case 1:
+                return $this->xml->$api($args[0]);
+            case 2:
+                return $this->xml->$api($args[0], $args[1]);
+            case 3:
+                return $this->xml->$api($args[0], $args[1], $args[2]);
+            case 4:
+                return $this->xml->$api($args[0], $args[1], $args[2], $args[3]);
+            default:
+                return call_user_func_array([$this->xml, $api], $args);
+        }		
+	}     
 }
