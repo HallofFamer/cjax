@@ -507,15 +507,14 @@ class CoreEvents{
 		}
 		if(isset($v['callback'])){
 			$v['callback'] = $this->mkArray($v['callback']);
-		}	
-		
+		}			
 		return $v;
 	}
 	
 	public function _processScacheAddEventTo($event){
-		$keep = ['event_element_id','xml','do','event','waitFor','uniqid'];
+		$keep = ['event_elementId','xml','do','event','waitFor','uniqid'];
 		foreach($event['events'] as $k => $v){
-			$v['event_element_id'] = $event['element_id'];
+			$v['event_elementId'] = $event['elementId'];
 			foreach($v as $k2 => $v2){
 				if(is_array($v2)){
 					foreach($v2 as $k3 => $v3){
@@ -528,7 +527,7 @@ class CoreEvents{
 			}
 			$v['xml'] = $this->xmlIt($v);
 			foreach($v as $_k => $_v){
-				if(in_array($_k , $keep)){
+				if(in_array($_k, $keep)){
 					continue;
 				}
 				unset($v[$_k]);
@@ -610,6 +609,38 @@ class CoreEvents{
 		return $this->pluginManager->initiate();        
 	}
 	
+	/**
+	 * 
+	 * import css and javascript files
+	 * @param mixed_type $file
+	 * @param unknown_type $loadTime
+	 */
+	public function import($file, $loadTime = 0){
+        $data = ['do' => '_import', 'time' => (int)$loadTime, 'is_import' => 1];
+		if(!is_array($file)){
+			$data['file'] = $file;
+		} 
+        else{
+			$data = array_merge($data, $file);
+		}		
+		return $this->xml($data);
+	}
+	
+	/**
+	 * 
+	 * import more than one file, waiting for the previous to load.
+	 * @param mixed_type $files
+	 * @param unknown_type $data
+	 */
+	public function imports($files = [], &$data = []){
+		$data['do'] = '_imports';
+		$data['files'] = $this->xmlIt($files, 'file');
+		$data['is_import'] = 1;
+		
+		$this->first();
+		return $this->xml($data);
+	}    
+    
 	/**
 	 * 
 	 * sets flag 
@@ -954,7 +985,7 @@ class CoreEvents{
 				$this->_flag = 'first';
 				break;
 			default:
-				if(CJAX::getInstance()->strict){
+				if($this->strict){
 					throw new CJAXException("Invalid Flag Argument Prodivided");
 				}
 		}

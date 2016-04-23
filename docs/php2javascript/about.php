@@ -74,7 +74,7 @@ These two examples are the exceptions, and more will be allowed to have callback
 <h4>Example</h4>
 <?php
 echo $ajax->code("
-\$ajax->document(\"getElementById\",\"element_id\",\"function(element) {
+\$ajax->document(\"getElementById\",\"elementId\",\"function(element) {
 		//your element is...
 		alert(element);
 	}

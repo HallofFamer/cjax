@@ -106,11 +106,11 @@
 - New usage for Exec events:
 
   ```php
-	$ajax->click($element_id, $actions);
-	$ajax->change($element_id, $actions);
-	$ajax->keyup($element_id, $actions);
-	$ajax->keydown($element_id, $actions);
-	$ajax->blur($element_id, $actions);
+	$ajax->click($elementId, $actions);
+	$ajax->change($elementId, $actions);
+	$ajax->keyup($elementId, $actions);
+	$ajax->keydown($elementId, $actions);
+	$ajax->blur($elementId, $actions);
   ```
 	
 	This is alternative replacement wrapper of the clasic:
@@ -345,7 +345,7 @@
 	is required all the processing is built in. Recognizes most errors. Suports custom settings in $ajax->upload(), 
 	the API documentation has be updated, see API for more info. 
 - $ajax->form() parameter form_id is no longer required if used in context of $ajax->Exec(), the form is automatically pulled from
-	the event_element_id parent form, (the first parameter in $ajax->Exec(). You can still specify the form_id but is no longer required.
+	the event_elementId parent form, (the first parameter in $ajax->Exec(). You can still specify the form_id but is no longer required.
 - $ajax->call()  and $ajax->form() now shared  some of the  same source code, this helps to keep consistancy and illiminate some redundancy.
 
 

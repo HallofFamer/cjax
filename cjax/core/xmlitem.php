@@ -34,6 +34,13 @@ namespace CJAX\Core;
  */
 
 class XmlItem{
+
+    /**
+     * The coreEvents property, stores an instance of injected CoreEvents object.
+     * @access private
+     * @var CoreEvents
+     */	    
+	private $coreEvents;
     
     /**
      * The selector property, defines the name of selector method.
@@ -41,13 +48,6 @@ class XmlItem{
      * @var string
      */	
 	public $selector;
-    
-    /**
-     * The coreEvents property, stores an instance of injected CoreEvents object.
-     * @access public 
-     * @var CoreEvents
-     */	    
-	public $coreEvents;
     
     /**
      * The id property, specifies the element ID associated with XmlItem.
@@ -243,8 +243,8 @@ class XmlItem{
 	
 	/**
      * The magic method __call, allows CJAX to call custom javascript function from PHP.
-	 * @param mixed  $fn
-     * @param mixed  $args
+	 * @param string  $fn
+     * @param array  $args
      * @access public
      * @return void
      */	    

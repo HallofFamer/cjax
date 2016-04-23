@@ -13,24 +13,24 @@ require 'ajax.php';
 <tr>
 	<td>$alax->focus();</td>
 	<td>Focus Element</td>
-	<td>$alax->focus('#element_id');</td>
+	<td>$alax->focus('#elementId');</td>
 </tr>
 <tr>
 	<td>$alax->append();</td>
 	<td>Append HTML to element</td>
 	<td>
-	$alax->append('#element_id','Content Here');
+	$alax->append('#elementId','Content Here');
 	<br />
-	$alax->append('#element_id','#element_id2');
+	$alax->append('#elementId','#elementId2');
 	</td>
 </tr>
 <tr>
 	<td>$alax->prepend();</td>
 	<td>Prepend HTML to element</td>
 	<td>
-	$alax->prepend('#element_id','Content Here');
+	$alax->prepend('#elementId','Content Here');
 	<br />
-	$alax->prepend('#element_id','#element_id2');
+	$alax->prepend('#elementId','#elementId2');
 	</td>
 </tr>
 <tr>
@@ -39,14 +39,14 @@ require 'ajax.php';
 	Triggers element's click. 
 	Or triggers a callback function on element's click.</td>
 	<td>
-	$alax->click('#element_id');
+	$alax->click('#elementId');
 	<br />
-	$alax->click('#element_id',"function(element) {
+	$alax->click('#elementId',"function(element) {
 		alert(element);
 	}");
 	</td>
 </tr>
 <tr>
-	<td>$alax->click('#element_id');</td>
+	<td>$alax->click('#elementId');</td>
 </tr>
 </table>

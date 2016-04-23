@@ -21,112 +21,172 @@
 
 namespace CJAX\Core;
 
+/**
+ * The Plugin class that represents a basic unit of CJAX's plugin system.
+ * Since CJAX 6.0, Plugin class is lightweight and only contains information of one specific plugin object.
+ * @category CJAX
+ * @package Core
+ * @author Ordland Euroboros <halloffamer@mysidiarpg.com>
+ * @copyright (c) 2008, CJ Galindo
+ * @link https://github.com/ajaxboy/cjax
+ * @version 6.0
+ * @since 6.0
+ * @api
+ */
+
 class Plugin extends Ext{
     
-	/**
-	 * 
-	 * If a plugin is used more than once on the page, assigns an id
-	 * in wished to do modifications in later execution
-	 * @var integer
-	 */
-	public $id;    
-    
-	public $name;   
-    
-	public $dir; 
-    
-	/**
-	 * 
-	 * javascript file name,
-	 * by default is the plugin's name but can be different.
-	 * @var unknown_type
-	 */
-	public $file = null;    
-    
-	/**
-	 * Default controllers directory to each plugin
-	 */
-	public $controllersDir = 'controllers';
-	
-	public $controllerFile = null;
-	
-	/**
-	 * A executable string before the plugin is ran.
-	 * @var unknown_type
-	 */
-	public $init = "function(){}";    
-    
-	//xmlItem Object
-	public $xml;   
-	
-	/**
-	 * 
-	 * Plugin arguments
-	 * @var unknown_type
-	 */
-	public $params;
-	
-	/**
-	 * 
-	 * class pertaining to an addon
-	 * @var unknown_type
-	 */
-	public $class;
-	
-	/**
-	 * 
-	 * If using Exec event, store the element_id.
-	 * @var unknown_type
-	 */
-	public $element_id;   
-    
-	/**
-	 * 
-	 * Plugins settings
-	 * 
-	 * @var unknown_type
-	 */
-	public $ajaxFile = false; //if true the it  will replace any string that start with ajax.php to a full url. 
-    
+    /**
+     * The coreEvents property, stores an instance of injected CoreEvents object.
+     * @access protected 
+     * @var CoreEvents
+     */	    
     protected $coreEvents;     
     
-	/**
-	 * 
-	 * For session variables use cookie?
-	 * if false it will use sessions.
-	 * 
-	 * @var boolean
-	 */
+    /**
+     * The cookie property, it will use cookie instead of session if true.
+     * @access protected
+     * @var bool
+     */       
 	protected $cookie = false;  
     
+    /**
+     * The aborted property, specifes if the plugin is aborted.
+     * @access protected
+     * @var bool
+     */     
     protected $aborted = false;
+    
+    /**
+     * The ajaxFile property, it will replace any string starting with ajax.php to full url if true.
+     * @access public 
+     * @var bool
+     */      
+	public $ajaxFile = false;      
+    
+    /**
+     * The id property, assigns an id if the plugin is used for more than once on a page.
+     * This id will be useful to do modifications in later execution.
+     * @access public 
+     * @var int
+     */   
+	public $id;    
+    
+    /**
+     * The name property, defines the plugin name and the identity key for a plugin.
+     * @access public 
+     * @var string
+     */      
+	public $name;   
+    
+    /**
+     * The dir property, specifies the main directory for a given plugin.
+     * @access public 
+     * @var string
+     */      
+	public $dir; 
+    
+    /**
+     * The file property, defines the name of javascript file name for plugin.
+     * By default it is the plugin's name, but can be different.
+     * @access public 
+     * @var string
+     */      
+	public $file = null;    
+    
+    /**
+     * The controllersDir property, specifies the controllers directory for this plugin.
+     * By default it is 'controllers', but can be different.
+     * @access public 
+     * @var string
+     */          
+	public $controllersDir = 'controllers';
 	
     /**
-	 * 
-	 * entries Ids for this plugin.
-	 * @var array
-	 */    
+     * The controllersFile property, defines the controllers file name for this plugin.
+     * @access public 
+     * @var string
+     */      
+	public $controllerFile = null;
+
+    /**
+     * The init property, which is an executable string runs before plugin is created.
+     * @access public 
+     * @var string
+     */        
+	public $init = "function(){}";    
+    
+    /**
+     * The xml property, stores an instance of XmlItem object for this plugin.
+     * @access public 
+     * @var XmlItem
+     */      
+	public $xml;   
+	
+    /**
+     * The params property, specifies the plugin arguments.
+     * @access public 
+     * @var array
+     */        
+	public $params;
+	
+    /**
+     * The class property, defines a class pertaining to an addon.
+     * @access public 
+     * @var string
+     */        
+	public $class;
+	
+    /**
+     * The elementId property, stores the element Id associated with plugin event.
+     * @access public 
+     * @var string
+     */      
+	public $elementId;     
+	  
+    /**
+     * The entryIds property, stores an array of entry ids for this plugin.
+     * @access public 
+     * @var array
+     */      
     public $entryIds = [];
     
 
+	/**
+     * The constructor for Plugin class, creates an instance of Plugin object.
+	 * @param CoreEvents  $coreEvents
+     * @param array  $array
+     * @access public
+     * @return Plugin
+     */	     
     public function __construct(CoreEvents $coreEvents, $array = []){
         parent::__construct($array);
         $this->coreEvents = $coreEvents;
     }
     
+	/**
+     * The init method, fetches the executable string for $init.
+     * @access public
+     * @return string
+     */	       
 	public function init(){
 		return $this->init;
 	}
 	    
-    
+	/**
+     * The isAborted method, checks if this plugin has been aborted.
+     * @access public
+     * @return bool
+     */       
 	public function isAborted(){
         return $this->aborted;
 	}    
-    
+
 	/**
-	 * 
-	 * Delete plugin entries
-	 */
+     * The abort method, terminates plugin executation and deletes plugin entry ids.
+     * @access public
+     * @return void
+     */     
 	public function abort(){
 		if($this->entryIds){
 			foreach($this->entryIds as $entryId){
@@ -137,67 +197,51 @@ class Plugin extends Ext{
         $this->aborted = true;
  	}
 	
+	/**
+     * The xmlObject method, gets the XmlItem object associated with this plugin.
+     * @access public
+     * @return XmlItem
+     */      
 	public function xmlObject(){
         return $this->coreEvents->xmlObjects($this->id);
 	}
-	
+
 	/**
-	 * 
-	 * mirrors xmlItem::xml()
-	 */
+     * The xml method, mirrors XmlItem's xml() method.
+     * @access public
+     * @return object
+     */     
 	public function xml(){
 		return $this->coreEvents->xmlObjects($this->id)->xml();
 	}
 	
 	/**
-	 * 
-	 * mirrors xmlItem::output()
-	 */
+     * The output method, mirrors XmlItem's output() method.
+     * @access public
+     * @return object
+     */      
 	public function output(){
 		return $this->coreEvents->xmlObjects($this->id)->output();
 	}	
-	
+
 	/**
-	 * 
-	 * mirros xmlItem::delete()
-	 */
+     * The delete method, mirrors XmlItem's delete() method.
+     * @access public
+     * @return object
+     */    
 	public function delete(){
 		return $this->coreEvents->xmlObjects($this->id)->delete();
 	}
-	
+    
 	/**
-	 * 
-	 * @param unknown_type $apiObj
-	 */
-	public function prevent($apiObj){
-		$this->xml->callback = $apiObj;
-	}
-	
-	/**
-	 * 
-	 * pass apis, and they will be accesible in javascripot through this.callback;
-	 * 
-	 * @param unknown_type $apiObj
-	 */
-	public function callback($apiObj){
-		$this->xml->callback = $apiObj;
-		CoreEvents::$cache = $this->coreEvents->callbacks(CoreEvents::$cache);
-	}
-	
-	public function imports($files = [], &$data = []){
-		$data['plugin_dir'] = $this->name;
-		$ajax = CJAX::getInstance();		
-		return $ajax->imports($files, $data);
-	}
-	
-	/**
-	 * 
-	 * Impor javascript and css files
-	 * @param mixed $file
-	 * @param integer $loadTime - in milliseconds
-	 */
-	public function import($file , $loadTime = 0, $onInit = false){
-		$ajax = CJAX::getInstance();	
+     * The import method, imports and caches a JavaScript or CSS file.
+     * @param string  $file
+     * @param int  $loadTime
+     * @param bool  $onInit
+     * @access public
+     * @return void
+     */        
+	public function import($file, $loadTime = 0, $onInit = false){
 		if(!is_array($file) && preg_match("/^https?/", $file)){
 			$data['file'] = $file;
 		} 
@@ -206,27 +250,46 @@ class Plugin extends Ext{
 			$data['file'] = $file;
 		}
 		
-		$data['time'] = (int)$loadTime;
-			
-			
+		$data['time'] = (int)$loadTime;						
 		if($onInit){
-			$ajax->initExtra[] = $data;
+            $this->coreEvents->initExtra[] = $data;
 		} 
         else{
 			$this->coreEvents->first();//forces this command to be executed before any other
-			$ajax->import($data);
+            $this->coreEvents->import($data);
 		}
-	}
+	}    
+    
+	/**
+     * The imports method, imports and caches JavaScript or CSS files.
+     * @param array  $files
+     * @param array  $data
+     * @access public
+     * @return void
+     */    	    
+	public function imports($files = [], &$data = []){
+		$data['plugin_dir'] = $this->name;
+        $this->coreEvents->imports($files, $data);
+	}	
 	
+	/**
+     * The waitFor method, wait for javascript file to be loaded before firing plugin.
+     * @param string  $file
+     * @access public
+     * @return void
+     */    	
 	public function waitFor($file){
 		$this->coreEvents->xmlObjects($this->id)->waitfor = $file;
 		$this->coreEvents->simpleCommit();
-	}
-	
+	}       
+
 	/**
-	 * 
-	 * get settings saved in cookies
-	 */
+     * The get method, gets a setting that has been saved with save() function. 
+     * @param string  $setting
+     * @param string  $prefix
+     * @access public
+     * @return mixed
+     */       
 	public function get($setting, $prefix = null){
 		if(!$prefix){
 			$prefix = $this->name;
@@ -236,11 +299,15 @@ class Plugin extends Ext{
 		}
 		return $this->coreEvents->getSetting($setting, $prefix);
 	}    
-    
+
 	/**
-	 * 
-	 * Updates parameters using plugin class
-	 */
+     * The set method, updates parameters using plugin class. 
+     * @param string  $setting
+     * @param mixed  $value
+     * @param int  $instanceId
+     * @access public
+     * @return void
+     */        
 	public function set($setting, $value, $instanceId = null){
 		if($this->aborted){
 			return;
@@ -268,6 +335,13 @@ class Plugin extends Ext{
 		}
 	}    
     
+	/**
+     * The setVars method, set variables that can be accessed as this.var in javascript for all instance ids.
+     * @param string  $setting
+     * @param mixed  $value
+     * @access public
+     * @return void
+     */        
 	public function setVars($setting, $value){
 		if(!$this->entryIds){
 			return;
@@ -276,11 +350,15 @@ class Plugin extends Ext{
 			$this->setVar($setting, $value, $entryId);
 		}
 	}
-	
+
 	/**
-	 * 
-	 * Set variables that can be accessed as this.var
-	 */
+     * The setVar method, set variables that can be accessed as this.var in javascript.
+     * @param string  $setting
+     * @param mixed  $value
+     * @param int  $instanceId
+     * @access private
+     * @return void
+     */     
 	private function setVar($setting, $value, $instanceId){
 		if(!isset(CoreEvents::$cache[$instanceId])){
 			return;
@@ -293,13 +371,15 @@ class Plugin extends Ext{
 		$item['extra'][$setting] = $value;		
 		$this->coreEvents->updateCache($instanceId, $item);
 	}
-	
+
 	/**
-	 * 
-	 * Saves values in a cookie or session
-	 * @param unknown_type $setting
-	 * @param unknown_type $value
-	 */
+     * The save method, saves values in a cookie or session for future use.
+     * @param string  $setting
+     * @param mixed  $value
+     * @param string  $prefix
+     * @access public
+     * @return void
+     */         
 	public function save($setting, $value, $prefix = null){
 		if(!$prefix){
 			$prefix = $this->name;
@@ -310,31 +390,67 @@ class Plugin extends Ext{
 		return $this->coreEvents->save($setting, $value, $this->cookie);
 	}
 	
+	/**
+     * The deleteEntry method, deletes an entry id for plugin.
+     * @param int  $entryId
+     * @access public
+     * @return void
+     */       
 	public function deleteEntry($entryId){
 		if(isset(CoreEvents::$cache[$entryId])){
 			unset(CoreEvents::$cache[$entryId]);
 		}
-	} 
-    
-	public function  __get($setting){
-		return $this->get($setting);		
-	}    
+	}     
+
+	/**
+     * The callback method, assigns an API as javascript callback function.
+     * @param object  $apiObj
+     * @access public
+     * @return void
+     */       
+	public function callback($apiObj){
+		$this->xml->callback = $apiObj;
+		CoreEvents::$cache = $this->coreEvents->callbacks(CoreEvents::$cache);
+	}     
     
 	/**
-	 * 
-	 * Set variables
-	 */
+     * The prevent method, intercepts an API and prevent it from being fired.
+     * @param object  $apiObj
+     * @access public
+     * @return void
+     */     
+	public function prevent($apiObj){
+		$this->xml->callback = $apiObj;
+	}    
+ 
+	/**
+     * The magic method __get, dynamically gets a setting/parameter for plugin.
+	 * @param string  $setting
+     * @access public
+     * @return mixed
+     */	    
+	public function __get($setting){
+		return $this->get($setting);		
+	}    
+
+	/**
+     * The magic method __set, dynamically sets a parameter/setting for plugin.
+	 * @param string  $setting
+     * @param mixed  $value
+     * @access public
+     * @return void
+     */	    
 	public function __set($setting, $value){
 		$this->setVars($setting, $value);
 	}       
-    
-   	/**
-	 * 
-	 * Handle right handlers chain apis
-	 * 
-	 * @param string $api
-	 * @param array $args
-	 */
+
+	/**
+     * The magic method __call, carries out right handlers chain APIs.
+	 * @param string  $api
+     * @param array  $args
+     * @access public
+     * @return void
+     */	     
 	public function __call($api, $args){
         $argCount = count($args);
         switch($argCount){

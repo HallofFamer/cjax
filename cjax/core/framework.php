@@ -193,8 +193,8 @@ class Framework Extends CoreEvents{
 			
 		if($actions instanceof XmlItem || $actions instanceof Plugin){
 			if($actions instanceof Plugin){
-				$actions->element_id = $selector;
-				$actions->xml->element_id = $selector;
+				$actions->elementId = $selector;
+				$actions->xml->elementId = $selector;
 				if(method_exists($actions, 'onEvent')){
 					call_user_func('onEvent', $actions, $selector);
 				}
@@ -222,8 +222,8 @@ class Framework Extends CoreEvents{
         foreach($actions as $k => $v){
             if(is_object($v) && ($v instanceof XmlItem || $v instanceof Plugin)){
                 if($v instanceof Plugin){
-                    $v->element_id = $selector;
-                    $v->xml->element_id = $selector;
+                    $v->elementId = $selector;
+                    $v->xml->elementId = $selector;
                     if(method_exists($v, 'onEvent')){
                         call_user_func('onEvent', $v, $selector);
                     }
@@ -363,13 +363,13 @@ class Framework Extends CoreEvents{
 	 * @param string $value
 	 */
 	public function property($elementId, $value = '', $clearDefault = false, $selectText = false){
-		$options = ['do' => 'property', 'element_id' => $elementId, 'clear_text' => $clearDefault,
+		$options = ['do' => 'property', 'elementId' => $elementId, 'clear_text' => $clearDefault,
                     'select_text' => $selectText, 'value' => $value];
 		return $this->xml($options);
 	}
 
 	public function select($element, $options = [], $selected = null, $allowInput = false){
-        $select = ['do' => 'select', 'element_id' => $element, 'selected' => $selected,
+        $select = ['do' => 'select', 'elementId' => $element, 'selected' => $selected,
                    'options' => $options, 'allow_input' => $allowInput];	
 		return $this->xml($select);
 	}
@@ -530,42 +530,10 @@ class Framework Extends CoreEvents{
 	public function loading($msg = "Loading..."){
 		return $this->message($this->format->message($msg, Format::CSS_SUCCESS));
 	}    
-    
-	/**
-	 * 
-	 * import css and javascript files
-	 * @param mixed_type $file
-	 * @param unknown_type $loadTime
-	 */
-	public function import($file, $loadTime = 0){
-        $data = ['do' => '_import', 'time' => (int)$loadTime, 'is_import' => 1];
-		if(!is_array($file)){
-			$data['file'] = $file;
-		} 
-        else{
-			$data = array_merge($data, $file);
-		}		
-		return $this->xml($data);
-	}
-	
-	/**
-	 * 
-	 * import more than one file, waiting for the previous to load.
-	 * @param mixed_type $files
-	 * @param unknown_type $data
-	 */
-	public function imports($files = [], &$data = []){
-		$data['do'] = '_imports';
-		$data['files'] = $this->xmlIt($files, 'file');
-		$data['is_import'] = 1;
-		
-		$this->first();
-		return $this->xml($data);
-	}
 
 	/**
 	 * Update any element on the page by specifying the element ID
-	 * Usage:  $ajax->update('element_id', $content);
+	 * Usage:  $ajax->update('elementId', $content);
 	 * @param string $elementId
 	 * @param string $data
 	 */
@@ -583,7 +551,7 @@ class Framework Extends CoreEvents{
 	 * @param string $event
 	 */
 	public function addEventTo($element, $actions, $event = 'onclick'){
-        $data = ['do' => 'AddEventTo', 'element_id' => $element, 
+        $data = ['do' => 'AddEventTo', 'elementId' => $element, 
                  'event' => $event, 'events' => $actions];	
 		return $this->xmlItem($this->xml($data), 'AddEventTo', 'api');
 	}
@@ -637,7 +605,7 @@ class Framework Extends CoreEvents{
 	 * @param string $obj
 	 */
 	public function remove($obj){
-		$this->xml(['do' => 'remove', 'element_id' => $obj]);
+		$this->xml(['do' => 'remove', 'elementId' => $obj]);
 	}
 
 	/**

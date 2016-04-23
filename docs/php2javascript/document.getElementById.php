@@ -13,7 +13,7 @@ $ajax = CJAX::getInstance();
 <h2>getElementByid in PHP</h2>
 (5.0-RC2+)
 <br />
-Syntax:  $ajax->document([mixed property/function], [element_id], [callback])
+Syntax:  $ajax->document([mixed property/function], [elementId], [callback])
 <br />
 Parameter:
 <br />
@@ -22,7 +22,7 @@ Parameter:
 	"getElementById" string
 	</li>
 	<li>
-	element_id string<br />
+	elementId string<br />
 	The id of an element in the HTML document.
 	</li>
 	<li>
@@ -38,7 +38,7 @@ Parameter:
 <?php 
 
 echo $ajax->code("
-\$ajax->document(\"getElementById\",\"element_id\",\"function(element) {
+\$ajax->document(\"getElementById\",\"elementId\",\"function(element) {
 		//your element is...
 		alert(element);
 	}

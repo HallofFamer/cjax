@@ -5,12 +5,12 @@ use CJAX\Core\AJAXController;
 
 class ChangeValue extends AJAXController{
 	
-	public function text($element_id, $current_value){
+	public function text($elementId, $current_value){
 		$this->ajax->text1 = "Random number..".rand(100,1000);
 	}
 	
 	
-	public function check($element_id, $current_value){
+	public function check($elementId, $current_value){
 		if($current_value){
 			$this->ajax->check1 = false;
 		} 

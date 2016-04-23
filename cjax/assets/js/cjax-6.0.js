@@ -367,12 +367,12 @@ function CJAX_FRAMEWORK() {
 	};
 	
 	this.property = function (buffer) {
-		var element = CJAX.$(CJAX.xml('element_id',buffer));
+		var element = CJAX.$(CJAX.xml('elementId',buffer));
 		
 		if(!element) {
 			if(CJAX.debug) {
 				
-				console.log('Element:', CJAX.xml('element_id',buffer),'was not found');
+				console.log('Element:', CJAX.xml('elementId',buffer),'was not found');
 			}
 			return;
 		}
@@ -842,10 +842,10 @@ function CJAX_FRAMEWORK() {
 	* @param buffer
 	*/
 	this.select	= function(buffer) {
-		var element_id = CJAX.xml('element_id',buffer);
-		var element = CJAX.$(element_id); 
+		var elementId = CJAX.xml('elementId',buffer);
+		var element = CJAX.$(elementId); 
 		if(!element) {
-			alert("CJAX Error -  Element "+ element_id+" not found");
+			alert("CJAX Error -  Element "+ elementId+" not found");
 			return;
 		}
 		
@@ -912,18 +912,18 @@ function CJAX_FRAMEWORK() {
 		}
 
 		function make_input(element) {
-			element_id = element.id;
+			elementId = element.id;
 			name = element.name;
 			element.setAttribute('id', '');
 			element.setAttribute('name', '');
-			var obj = CJAX.create.input(element_id);
+			var obj = CJAX.create.input(elementId);
 			obj.type = 'text';
 			obj.name = name;
 			obj.className = element.className;
 			obj.style.width = element.offsetWidth+'px';
 			obj.style.display = '';
 			element.parentNode.replaceChild(obj, element);
-			obj.id = element_id;
+			obj.id = elementId;
 
 			if(_selected!=null) {
 				obj.style.color = '#ACACAC';
@@ -1323,7 +1323,7 @@ function CJAX_FRAMEWORK() {
 	this.AddEventTo = function(buffer) {
 		var temp_buffer = CJAX.decode(buffer);
 		uid = CJAX._uniqid(temp_buffer);				
-		var element = CJAX.xml('element_id',temp_buffer);
+		var element = CJAX.xml('elementId',temp_buffer);
 		
 		//binding elements
 		if(element.indexOf(CJAX.split_delimiter)!=-1) {
@@ -1732,7 +1732,7 @@ function CJAX_FRAMEWORK() {
 							{
 								element: element,
 								event: _event,
-								element_id: element.id,
+								elementId: element.id,
 								clear: function() {
 									CJAX._EventCache.flushElement(element);
 								}
@@ -3139,11 +3139,11 @@ function CJAX_FRAMEWORK() {
 		return data;
 	};
 	
-	this.update =	function(element_id, data) {
+	this.update =	function(elementId, data) {
 		if(data) {
-			CJAX.$(element_id).innerHTML =  data;
+			CJAX.$(elementId).innerHTML =  data;
 		} else {
-			CJAX.$(element_id).innerHTML =  '';
+			CJAX.$(elementId).innerHTML =  '';
 		}
 	};
 	
@@ -3151,7 +3151,7 @@ function CJAX_FRAMEWORK() {
 	* update an element on the page
 	**/
 	this._update	=	function(buffer) {
-		var element = CJAX.is_element(CJAX.xml('element_id',buffer));
+		var element = CJAX.is_element(CJAX.xml('elementId',buffer));
 		
 		if( !element )  {
 			console.log(element,'was not found');
@@ -3331,10 +3331,10 @@ function CJAX_FRAMEWORK() {
 		}
 
 		if(!form_id) {
-			var element_id = CJAX.xml('event_element_id',buffer);
+			var elementId = CJAX.xml('event_elementId',buffer);
 			
-			if(element_id) {
-				form = CJAX.$(element_id).form;
+			if(elementId) {
+				form = CJAX.$(elementId).form;
 			} else {
 				if(typeof CJAX.clicked =='undefined') {
 					console.log("Form not found");
@@ -3460,32 +3460,32 @@ function CJAX_FRAMEWORK() {
 		}
 	};
 	
-	this.$ = function(element_id,v) {
-		if(!element_id) {
+	this.$ = function(elementId,v) {
+		if(!elementId) {
 			return;
 		}
-		if(typeof element_id =='object') {
-			return element_id;
+		if(typeof elementId =='object') {
+			return elementId;
 		}
 		if(typeof v == 'undefined') {
 			var v = false;
 		}
 		
-		if(element_id=='body') {
+		if(elementId=='body') {
 			return CJAX.elem_docs( 'body' )[0];
 		}
-		if(element_id=='head') {
+		if(elementId=='head') {
 			return CJAX.elem_docs( 'head' )[0];
 		}
-		element_id = element_id.replace(/^\#/,'');
+		elementId = elementId.replace(/^\#/,'');
 		
-		if(/[^a-zA-Z0-9_\-]/.test(element_id)) {
+		if(/[^a-zA-Z0-9_\-]/.test(elementId)) {
 			//if(CJAX.debug) {
-				console.log('Invalid Element ID:', element_id);
+				console.log('Invalid Element ID:', elementId);
 			//}
 			return;
 		}
-		return CJAX.is_element(element_id,v);
+		return CJAX.is_element(elementId,v);
 	};
 	
 	/**
@@ -3507,7 +3507,7 @@ function CJAX_FRAMEWORK() {
 		if( !elem ){
 			
 			if(CJAX.util.isXML(id_obj)) {
-				elem = CJAX.xml('element_id',id_obj);
+				elem = CJAX.xml('elementId',id_obj);
 			}
 			
 			if(!elem) {

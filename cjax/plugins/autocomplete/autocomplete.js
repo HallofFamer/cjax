@@ -14,7 +14,7 @@ CJAX.importFile({
 	files: 'css/style.css,helper.js',
 	plugin:'autocomplete',
 	callback: function() {
-		AC.init(CJAX.xml('element_id',CJAX._plugins['autocomplete']));
+		AC.init(CJAX.xml('elementId',CJAX._plugins['autocomplete']));
 	}
 });
 

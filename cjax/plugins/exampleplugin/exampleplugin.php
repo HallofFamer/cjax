@@ -177,11 +177,11 @@ class ExamplePlugin extends Plugin{
 	/**
 	 * 
 	 * This function is ran within exec when plugin  passed as paramenter.
-	 * Serves mainly to obtain the element_id being used.
+	 * Serves mainly to obtain the elementId being used.
 	 * 
 	 * As of  5.3 +
 	 */
-	public function onEvent($element_id){
+	public function onEvent($elementId){
 		
 	}
 	

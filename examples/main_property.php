@@ -65,7 +65,7 @@ I'd say the innerHTML.  That's all this is, is access these properties in the fa
 <br />
 Keep in mind, this works with all HTML elements, so think of the limiteless things you can do.
 <br /><br />
-All you need is the element ID and the value you wish to apply. $ajax->[element_id_here] = [value here];
+All you need is the element ID and the value you wish to apply. $ajax->[elementId_here] = [value here];
 
 
 <h2>Examples</h2>

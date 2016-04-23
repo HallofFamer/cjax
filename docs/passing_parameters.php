@@ -74,7 +74,7 @@ class Test extends AJAXController{
 </li>
 </ul>
 <h4>Passing Element Values in the URL</h4>
-Sometimes you might need to pass element values such as these of inputs. To accomplish this, in the url pass the element_id
+Sometimes you might need to pass element values such as these of inputs. To accomplish this, in the url pass the elementId
 wrapped with vertical bars.
 <br />
 Example:
