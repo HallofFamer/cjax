@@ -30,11 +30,11 @@ namespace CJAX\Core;
  * @copyright (c) 2008, CJ Galindo
  * @link https://github.com/ajaxboy/cjax
  * @version 6.0
- * @since 6.0
+ * @since 1.0
  * @api
  */
 
-class Plugin extends Ext{
+class Plugin{
     
     /**
      * The coreEvents property, stores an instance of injected CoreEvents object.
@@ -160,8 +160,12 @@ class Plugin extends Ext{
      * @return Plugin
      */	     
     public function __construct(CoreEvents $coreEvents, $array = []){
-        parent::__construct($array);
         $this->coreEvents = $coreEvents;
+		if($array && (is_array($array) || is_object($array))){
+			foreach($array as $k => $v){
+				$this->$k = $v;
+			}
+		}
     }
     
 	/**

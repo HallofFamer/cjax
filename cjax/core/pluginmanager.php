@@ -129,7 +129,6 @@ final class PluginManager{
         else{
 			$pluginClass .= $this->classes[$pluginName]."\\".$this->classes[$pluginName];
 		}
-		
 		if(!isset($this->instances[$pluginName]) || !is_object($this->instances[$pluginName])){
 			if(!isset($params[1])){
 				$plugin = $this->instances[$pluginName] = new $pluginClass($this->coreEvents);
@@ -156,7 +155,7 @@ final class PluginManager{
 					}
 				}
 				extract($args);
-				$plugin = $this->instances[$pluginName] = new $pluginClass($this->coreEvents, $a, $b, $c, $d, $e, $f);
+				$plugin = $this->instances[$pluginName] = new $pluginClass($this->coreEvents, ["a" => $a, "b" => $b, "c" => $c, "d" => $d, "e" => $e, "f" => $f]);
 				$plugin->params  = $params;
 				if(!is_null($instanceId)){
 					$plugin->id = $instanceId;
