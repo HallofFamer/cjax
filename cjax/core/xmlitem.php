@@ -202,15 +202,15 @@ class XmlItem{
 					$value = $value->id;
 				    break;
 				case 'callback':					
-					if(isset(CoreEvents::$callbacks[$value->id])){					
-						$cb = CoreEvents::$callbacks[$value->id];
+					if(isset($this->coreEvents->callbacks[$value->id])){					
+						$cb = $this->coreEvents->callbacks[$value->id];
 						$cb = $this->coreEvents->processScache($cb);						
 						CoreEvents::$cache[$value->id]['callback'] = $this->coreEvents->mkArray($cb,'json', true);						
-						CoreEvents::$callbacks[$this->id][$value->id] = CoreEvents::$cache[$value->id];
+						$this->coreEvents->callbacks[$this->id][$value->id] = CoreEvents::$cache[$value->id];
 						$value->delete();
 					} 
                     else{
-						CoreEvents::$callbacks[$this->id][$value->id][] = CoreEvents::$cache[$value->id];
+						$this->coreEvents->callbacks[$this->id][$value->id][] = CoreEvents::$cache[$value->id];
 						$value->delete();
 					}					
 					return;
@@ -222,10 +222,10 @@ class XmlItem{
 		
 		if(in_array($this->coreEvents->lastCmd, $this->api)){
 			if(is_object($value)){
-				CoreEvents::$callbacks[$this->id][$value->id] = CoreEvents::$cache[$value->id];
+				$this->coreEvents->callbacks[$this->id][$value->id] = CoreEvents::$cache[$value->id];
 			} 
             else{
-				CoreEvents::$callbacks[$this->id][$value] = CoreEvents::$cache[$value];
+				$this->coreEvents->callbacks[$this->id][$value] = CoreEvents::$cache[$value];
 			}
 		} 
         else{
@@ -268,9 +268,9 @@ class XmlItem{
 		}
 		
 		if($this->selector){
-			$_args[] = $this->selector;
-			$_args = array_merge($_args, $args);
-			$args = $_args;
+			$arguments[] = $this->selector;
+			$arguments = array_merge($arguments, $args);
+			$args = $arguments;
 		}
 		$params = range('a','z');
 		$pParams = [];

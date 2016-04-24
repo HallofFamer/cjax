@@ -1,4 +1,6 @@
 
+/* global data, DragEvent, MouseEvent, KeyboardEvent, FocusEvent, x, eventtype, _id, xfile, CKEDITOR  */
+
 /** ################################################################################################**   
 * Copyright (c)  2008  CJ.   
 * Permission is granted to copy, distribute and/or modify this document   
@@ -15,7 +17,7 @@
 *   Website: http://cjax.sourceforge.net                     $      
 *   Email: cjxxi@msn.com    
 *   Date: 2/12/2007                           $     
-*   File Last Changed:  04/18/2016            $     
+*   File Last Changed:  04/24/2016            $     
 **####################################################################################################    */   
 
 /**
@@ -95,7 +97,7 @@ function CJAX_FRAMEWORK() {
 		success: function() {},
 		complete: function() {},
 		error: function() {},
-		stop: false,//if true, halts an ajax request and resets to false
+		stop: false, //if true, halts an ajax request and resets to false
 	}; 
 	//don't change these
 	var FLAG_WAIT = 1;
@@ -344,7 +346,7 @@ function CJAX_FRAMEWORK() {
 					return _processFn(fn, 'window');
 				}
 			} else {
-				if(typeof fn=='object') {
+				if(typeof fn == 'object') {
 					_processFn(fn);
 				} else  {
 					element = CJAX.$(data.a);
@@ -392,7 +394,7 @@ function CJAX_FRAMEWORK() {
 				}
 			}
 		}  else {
-			switch ( element.nodeName ) {
+			switch (element.nodeName) {
 				default:				
 					console.log(element);
 					element.value = value;
@@ -1368,7 +1370,7 @@ function CJAX_FRAMEWORK() {
 			buffer = events[x];
 			CJAX.set.event(element, buffer.event? buffer.event: event, buffer.xml, x);
 		}
-	}
+	};
 	
 	this.is_cjax =	function(buffer) {
 		if(typeof buffer !='string') {
@@ -1480,7 +1482,7 @@ function CJAX_FRAMEWORK() {
 					item[0][item[1]] = null;
 				};
 			},
-			flush : function( event_id ){
+			flush : function(event_id){
 				if(typeof event_id =='undefined') var event_id;
 				var i, item;
 				for(i = listEvents.length - 1; i >= 0; i = i - 1){
@@ -1705,7 +1707,7 @@ function CJAX_FRAMEWORK() {
 								start: function() {
 									_stop = false;
 								}
-							}
+							};
 							return props;
 						};
 						fn_object = new x_fn();
@@ -2163,7 +2165,7 @@ function CJAX_FRAMEWORK() {
 	/**
 	* Process all commands
 	*/
-	this.process_all = function ( actions, preload, debug, is_loading) {
+	this.process_all = function (actions, preload, debug, is_loading) {
 		var raw_actions = actions;
 		actions = CJAX.util.json(actions);
 		preload = CJAX.util.json(preload);
@@ -2252,7 +2254,6 @@ function CJAX_FRAMEWORK() {
 								CJAX.processPlugin(plugin_buffer);
 							}, waitfor);
 						} else {
-
 							if(buff = CJAX.xml('onwait', plugin_buffer)) {
 								_import = CJAX.importPlugin(file , function() {
 									CJAX.process_all(buff);
@@ -3124,7 +3125,7 @@ function CJAX_FRAMEWORK() {
 	* Decodes encoded data that passed by parameter
 	* data delivered from php
 	**/
-	this.decode = function( data ) {
+	this.decode = function(data) {
 		if(!data) {
 			return '';
 		}
@@ -3935,12 +3936,12 @@ function CJAX_FRAMEWORK() {
 	/**
 	* Display a message in the middle of the screen
 	*/
-	this._message = function( buffer ) {
+	this._message = function(buffer) {
 		var message_id;
 		var time;
 		var seconds;
 		var options = {};
-		if(typeof buffer=='object') {			
+		if(typeof buffer == 'object') {			
 			if(buffer.message_id) {
 				message_id = buffer.message_id;
 			} else {
@@ -3953,7 +3954,7 @@ function CJAX_FRAMEWORK() {
 				options[x] = buffer[x];
 			}			
 		} else {
-			message_id = (CJAX.xml('message_id',buffer)? CJAX.xml('message_id',buffer):'cjax_message');
+			message_id = (CJAX.xml('message_id',buffer)? CJAX.xml('message_id',buffer): 'cjax_message');
 			
 			message = CJAX.decode( CJAX.xml('message',buffer) );
 			
@@ -4171,7 +4172,7 @@ function CJAX_FRAMEWORK() {
 									stop: function() {
 										CJAX.ajaxSettings.stop = true;
 									}
-								}
+								};
 								return props;
 							};
 							fn_object = new _fn();

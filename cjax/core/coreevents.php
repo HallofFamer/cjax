@@ -16,7 +16,7 @@
 *   Website: http://cjax.sourceforge.net                     $      
 *   Email: cjxxi@msn.com    
 *   Date: 2/12/2007                           $     
-*   File Last Changed:  04/12/2016           $     
+*   File Last Changed:  04/23/2016           $     
 **####################################################################################################    */   
 
 namespace CJAX\Core;
@@ -56,11 +56,11 @@ class CoreEvents{
     protected $pluginManager;
 	
 	//helper to cache callbacks
-	public static $callbacks = [];
+	public $callbacks = [];
 	
-	private static $simpleCommit;
+	private $simpleCommit;
 	
-	private static $wrapper;
+	private $wrapper;
 	
 	public $lastCmd;
 	
@@ -76,7 +76,7 @@ class CoreEvents{
  	
 	/**
 	 *
-	 * Force the sytem to adapt to a loading or not loading state.
+	 * Force the system to adapt to a loading or not loading state.
 	 * @var bool
 	 */
 	public $loading = false;
@@ -87,8 +87,6 @@ class CoreEvents{
 	 * @var bool
 	 */
 	public $fallback = false;
-	
-	private static $_loading;
 
 	public $post = [];
 
@@ -129,37 +127,22 @@ class CoreEvents{
 	public $format;
 
 	/**
-	 * Where the data is stored before the output
-	 *
-	 * @var unknown_type
-	 */
-	private static $out = [];
-
-	/**
 	 * Check whether or not to call the shutdown function
 	 *
-	 * @var boolean $_is_shutdown_called
+	 * @var boolean $shutDown
 	 */
-	private static $_isShutdownCalled = false;
-
-	/**
-	 * store cache procedure
-	 *
-	 * @var string $cache
-	 */
-	public static $cache = [];
+	private $shutDown = false;
 	
 	public $caching = false;
 	
 	public $crc32;
 	
 	/**
-	 * 
-	 * Hold cache set for to execute last. Use flag $ajax->flag('last'); to store commands.
-	 * This makes it so that commands even if called first can be executed last.
-	 * @var unknown_type
+	 * store cache procedure
+	 *
+	 * @var string $cache
 	 */
-	public static $lastCache = [];
+	public static $cache = [];    
 
 	/**
 	 * hold cache for actions
@@ -168,18 +151,25 @@ class CoreEvents{
 	 */
 	public static $actions = [];
 	
-	
+	/**
+	 * 
+	 * Hold cache set for to execute last. Use flag $ajax->flag('last'); to store commands.
+	 * This makes it so that commands even if called first can be executed last.
+	 * @var unknown_type
+	 */
+	public static $lastCache = [];
+    
 	/**
 	 * number of commands passed last in Exec
 	 */
-	private static $_lastExecCount = 0;
+	private $lastExecCount = 0;
 
 	/**
 	 * specified whether to use the cache system or normal mode
 	 *
-	 * @var boolean $use_cache
+	 * @var boolean $useCache
 	 */
-	static $useCache;
+	public $useCache;
 
 	//new alias to replace $JSevent.
 	public $event = "onClick";
@@ -212,7 +202,7 @@ class CoreEvents{
 	 */
 	public $isInit;
 	
-	public $_file;//full name of the cjax.js
+	public $file; //full name of the cjax.js
 	
 	public $initExtra = [];
 
@@ -222,22 +212,17 @@ class CoreEvents{
 	public $method;
 
 	/**
-	 * Stores the the waiting procedure for the next action
-	 */
-	private static $wait;
-
-	/**
 	 * Path where JavaScript Library is located
 	 *
 	 * @var string
 	 */
-	public static $path;
+	public $path;
 	
 	/**
 	 * 
 	 * @var unknown_type
 	 */
-	public $_path;
+	public $fullPath;
 
 	/**
 	 * Path where JavaScript Library is located
@@ -247,18 +232,11 @@ class CoreEvents{
 	private $jsdir = null;
 	
 	public $caller;
-
-	/*
-	 * sets up the default loading image
-	 */
-	protected static $flags = [];
-
-	public static $const = [];
 	
 	//holds he latest flag
-	public $_flag = null;
+	public $flag = null;
 
-	public $_flagCount = 0;
+	public $flagCount = 0;
 	
     
     public function __construct(){
@@ -310,8 +288,8 @@ class CoreEvents{
 	}
 	
 	public function callbacks($cache, $test = false){
-		if(self::$callbacks){
-			foreach(self::$callbacks as $k => $v){
+		if($this->callbacks){
+			foreach($this->callbacks as $k => $v){
                 $cb = $this->processScache($v);
 				if(!isset($cache[$k])){
 					$v[$k]['callback'] = $this->mkArray($cb,'json', true);
@@ -361,8 +339,8 @@ class CoreEvents{
 		$_cache = $this->mkArray($this->processScache($cache));
 				
 		$out  = "<xml class='cjax'>{$_cache}</xml><xml class='cjax'><preload>{$_preload}</preload></xml>";
-		if(self::$wrapper){
-			$out = str_replace('(!xml!)', $out, self::$wrapper);
+		if($this->wrapper){
+			$out = str_replace('(!xml!)', $out, $this->wrapper);
 		}
 		return $out;
 	}
@@ -388,22 +366,22 @@ class CoreEvents{
         
 		$ajax = CJAX::getInstance();		
 		self::$cache = $this->callbacks(self::$cache);
-		$_preload = [];
+		$preload = [];
 		foreach(self::$cache as $k => $v){
-			if($v['do']=='_import' || $v['do']=='_imports' || isset($v['is_plugin'])) {
-				$_preload[$k] = $v;
+			if($v['do'] == '_import' || $v['do'] == '_imports' || isset($v['is_plugin'])) {
+				$preload[$k] = $v;
 				if(!isset($v['is_plugin'])){
 					unset(self::$cache[$k]);
 				}
 			}
 		}
-        $_preload = ($_preload)? $this->mkArray($this->processScache($_preload)): null;   
-		$_cache = $this->mkArray($this->processScache(self::$cache));		
+        $preload = ($preload)? $this->mkArray($this->processScache($preload)): null;   
+		$cache = $this->mkArray($this->processScache(self::$cache));		
 		if($ajax->config->debug){
 			$this->debug = true;
 		}
 		$debug = ($this->debug)? 1 : 0;		
-		$out = 'CJAX.process_all("'.$_cache.'","'.$_preload.'", '.$debug.', true);';		
+		$out = 'CJAX.process_all("'.$cache.'","'.$preload.'", '.$debug.', true);';		
 		return $out;
 	}
 	
@@ -416,12 +394,12 @@ class CoreEvents{
 		if(!$cache){
 			$cache = self::$actions;
 			if(self::$lastCache) {
-				$cache = array_merge($cache,self::$lastCache);
+				$cache = array_merge($cache, self::$lastCache);
 			}
 		} 
         else{
 			if(self::$actions){
-				$cache = array_merge(self::$cache,self::$actions);
+				$cache = array_merge(self::$cache, self::$actions);
 			}
 			if(self::$lastCache){
 				$cache = array_merge(self::$lastCache, $cache);
@@ -430,33 +408,33 @@ class CoreEvents{
 		
 		$cache = $this->callbacks($cache);
 		
-		$_preload = [];
+		$preload = [];
 		foreach($cache as $k => $v){
 			if(isset($v['do']) && ($v['do']=='_import' || $v['do']=='_imports' || isset($v['is_plugin']))) {
-				$_preload[$k] = $v;
+				$preload[$k] = $v;
 				if(!isset($v['is_plugin'])){
 					unset($cache[$k]);
 				}
 			}
 		}
-		if($_preload){
-			$_preload = $this->mkArray($this->processScache($_preload));
+		if($preload){
+			$preload = $this->mkArray($this->processScache($preload));
 		}		
-		$_cache = $this->mkArray($this->processScache($cache));		
+		$processedCache = $this->mkArray($this->processScache($cache));		
 		if($ajax->config->debug){
 			$this->debug = true;
 		}
 		$debug = ($this->debug)? 1 : 0;
 	
-		if($_preload){
-			$this->save('cjax_preload', $_preload);
+		if($preload){
+			$this->save('cjax_preload', $preload);
 		}
-		$this->save('cjax_x_cache', $_cache);
+		$this->save('cjax_x_cache', $processedCache);
 		if($debug){
 			$this->save('cjax_debug', $debug);
 		}
-		self::$simpleCommit = $cache;
-		return $_cache;
+		$this->simpleCommit = $cache;
+		return $processedCache;
 	}
 	
 	/**
@@ -470,37 +448,36 @@ class CoreEvents{
 			throw new CJAXException("Debug Info:<pre>".print_r(self::$cache,1)."</pre>");
 		}
 		
-        $coreEvents = new self;	
-		if($coreEvents->isAjaxRequest()){			
-			print $coreEvents->out();
+		if($ajax->isAjaxRequest()){			
+			print $ajax->out();
 			return;
 		}  
         else{			
-			$out = $coreEvents->commit();
+			$out = $ajax->commit();
 			
 			if($ajax->config->caching){
 				if(is_array($ajax->caching) && crc32('caching=1;'.$out)!= key($ajax->caching)){
-					$coreEvents->write([$ajax->crc32 => 'caching=1;'.$out], 'cjax-'.$ajax->crc32);
+					$ajax->write([$ajax->crc32 => 'caching=1;'.$out], 'cjax-'.$ajax->crc32);
 				} 
                 elseif(!$ajax->caching){
-					$coreEvents->write([$ajax->crc32 => 'caching=1;'.$out], 'cjax-'.$ajax->crc32);
+					$ajax->write([$ajax->crc32 => 'caching=1;'.$out], 'cjax-'.$ajax->crc32);
 				}
 			} 
             else{
 				if($ajax->fallback || $ajax->config->fallback){					
-					$data = $coreEvents->fallbackPrint($out);			
+					$data = $ajax->fallbackPrint($out);			
 					print "\n<script>$data\n</script>";
 				}
 			}
 		}
 	}
 	
-	public function _processScachePlugin($v, $caller = null){
+	public function processScachePlugin($v, $caller = null){
 		if($v['data'] && is_array($v['data'])){
-			$v['data'] =  $this->mkArray($v['data']);
+			$v['data'] = $this->mkArray($v['data']);
 		}
 		if(isset($v['extra'])){
-			$v['extra'] =  $this->mkArray($v['extra']);
+			$v['extra'] = $this->mkArray($v['extra']);
 		}
 		if(isset($v['onwait'])){
 			$v['onwait'] = $this->processScache($v['onwait']);
@@ -511,7 +488,7 @@ class CoreEvents{
 		return $v;
 	}
 	
-	public function _processScacheAddEventTo($event){
+	public function processScacheAddEventTo($event){
 		$keep = ['event_elementId','xml','do','event','waitFor','uniqid'];
 		foreach($event['events'] as $k => $v){
 			$v['event_elementId'] = $event['elementId'];
@@ -543,21 +520,21 @@ class CoreEvents{
 		foreach($_cache as $k => $v){
 			$v['uniqid'] = $k;
 			if(isset($v['do']) && $v['do']=='AddEventTo'){
-				$v = $this->_processScacheAddEventTo($v);
+				$v = $this->processScacheAddEventTo($v);
 			}
 			
 			if(isset($v['is_plugin'])){
-				$v = $this->_processScachePlugin($v);
+				$v = $this->processScachePlugin($v);
 			}
 			
 			foreach($v  as $k2 => $v2){
 				if(is_array($v2)){
 					$v2 = $this->mkArray($v2);
-					$v[$k2] =  "<$k2>$v2</$k2>";
+					$v[$k2] = "<$k2>$v2</$k2>";
 					
 				} 
                 else{
-					$v[$k2] =  "<$k2>$v2</$k2>";
+					$v[$k2] = "<$k2>$v2</$k2>";
 				}
 			}
 			$_cache[$k] = "<cjax>".implode($v)."</cjax>";
@@ -660,14 +637,14 @@ class CoreEvents{
 		if(isset($xml['do'])){
 			$this->lastCmd = $xml['do'];
 		}
-		if($this->_flag){			
-			if(is_array($this->_flag)){
-				$xml['flag'] = $this->xmlIt($this->_flag);
-				$this->_flag = null;
+		if($this->flag){			
+			if(is_array($this->flag)){
+				$xml['flag'] = $this->xmlIt($this->flag);
+				$this->flag = null;
 			} 
-            elseif($this->_flag == 'first'){
+            elseif($this->flag == 'first'){
 				$this->setLastCache($xml);
-				$this->_flag = null;
+				$this->flag = null;
 				return;
 			}
 		}
@@ -682,7 +659,7 @@ class CoreEvents{
 	
 	public function cacheWrapper($wrapper = []){
 		if(is_array($wrapper)){
-			self::$wrapper = implode('(!xml!)', $wrapper);
+			$this->wrapper = implode('(!xml!)', $wrapper);
 		}		
 	}
 	
@@ -708,7 +685,7 @@ class CoreEvents{
 	                /* for Internet Explorer */
 	                /*@cc_on @*/
 	                /*@if (@_win32)
-	                document.write('<script defer src=\"{$this->_path}cjax.js.php?json=1\"><'+'/script>');
+	                document.write('<script defer src=\"{$this->fullPath}cjax.js.php?json=1\"><'+'/script>');
 	                /*@end @*/
 	                window.onload = init;
                 }";
@@ -724,10 +701,10 @@ class CoreEvents{
 	 * @param string $add
 	 */
 	public function cache($add=null, $cacheId = null){
-		if(!self::$_isShutdownCalled) {
+		if(!$this->shutDown) {
 			register_shutdown_function(['CJAX\\Core\\CoreEvents','saveSCache']);
-			self::$_isShutdownCalled = true;
-			self::$useCache = true;		
+			$this->shutDown = true;
+			$this->useCache = true;		
 		}
 		
 		if($cacheId){
@@ -767,11 +744,11 @@ class CoreEvents{
 	 */
 	public function js($jsdir, $force = false){
 		if($force){
-			self::$path = $jsdir;
+			$this->path = $jsdir;
 			return $this->jsdir = false;
 		}
 		if(!$this->jsdir && $this->jsdir !== false){
-			self::$path = $jsdir;
+			$this->path = $jsdir;
 			$this->jsdir = $jsdir;
 		}
 	}
@@ -785,7 +762,7 @@ class CoreEvents{
 		$ajax = CJAX::getInstance();
 		$file = "cjax-6.0.js";
 		if($min) {
-			$file = $this->_file;
+			$file = $this->file;
 		}
 		if(is_string($min) && !is_bool($min)){
             $jsPath = ($file)? rtrim($min,'/').'/cjax/assets/js/': rtrim($min,'/'); 
@@ -795,32 +772,32 @@ class CoreEvents{
 				$jsPath = rtrim($ajax->config->initUrl,'/').'/cjax/assets/js/';
 			}
 		}
-		if($ajax->crc32){
-			$file .= "?crc32={$ajax->crc32}";
+		if($this->crc32){
+			$file .= "?crc32={$this->crc32}";
 		}
 		
 		if($this->config->sizzle){
 			$script[] = "<script type='text/javascript' src='{$jsPath}sizzle.min.js'></script>\n";
 		}
 		
-		if($ajax->initExtra){
+		if($this->initExtra){
 			$pluginPath = str_replace('/assets/js','/plugins',$jsPath);
-			foreach($ajax->initExtra as $k => $v) {
+			foreach($this->initExtra as $k => $v) {
                 $script[] = (isset($v['plugin_dir']))? "\t<script type='text/javascript' src='".$pluginPath.$v['plugin_dir'].'/'.$v['file']."'></script>\n"
                                                      : "\t<script type='text/javascript' src='".$v['file']."'></script>\n";
 			}
 		}
 		if($this->jsdir){
             $path = ($file)? $jsPath.$file: $jsPath;
-			$ajax->_path = $path;
+			$this->fullPath = $path;
 			$script[] = "<script defer='defer' id='cjax_lib' type='text/javascript' src='{$path}'></script>\n";
 		} 
-        elseif(self::$path){
-			if(self::$path[strlen(self::$path)-1] =='/') {
-				self::$path = substr(self::$path,0,strlen(self::$path) -1);
+        elseif($this->path){
+			if($this->path[strlen($this->path)-1] =='/') {
+				$this->path = substr($this->path, 0, strlen($this->path) -1);
 			}
-			$ajax->_path = ($this->_file)? self::$path: self::$path."/assets/js/";
-			$script[] = "<script id='cjax_lib' type='text/javascript' src='".$ajax->_path.$file."'></script>\n";
+			$this->fullPath = ($this->file)? $this->path: $this->path."/assets/js/";
+			$script[] = "<script id='cjax_lib' type='text/javascript' src='".$this->fullPath.$file."'></script>\n";
 		}
 		return implode($script);
 	}
@@ -832,7 +809,7 @@ class CoreEvents{
 	 * @return string
 	 */
 	public function init($min = true){
-        $this->_file = ($min && substr($min, 0, 2)=='..')
+        $this->file = ($min && substr($min, 0, 2)=='..')
                         ? (strpos($min,'.js') !== false) ? null: "cjax-6.0.min.js"
                         : "cjax-6.0.min.js";
 		$this->isInit = $href = $this->headRef($this->jsdir, $min);
@@ -848,7 +825,7 @@ class CoreEvents{
 			curl_setopt($ch,CURLOPT_POSTFIELDS, http_build_query($postData));
 		}
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
-		curl_setopt ($ch, CURLOPT_TIMEOUT, 3);
+		curl_setopt($ch, CURLOPT_TIMEOUT, 3);
 		$data = curl_exec($ch);
 		$err = curl_errno($ch);
 		curl_close($ch);
@@ -900,8 +877,9 @@ class CoreEvents{
 	}
 	
 	public function readCache($crc32 = null){
+        $ajax = CJAX::getInstance();
         $filename = ($crc32)? $crc32: 'cjax.txt';
-        $dir = ($this->config->caching)? sys_get_temp_dir(): CJAX_HOME.'/assets/cache/';
+        $dir = ($ajax->config->caching)? sys_get_temp_dir(): CJAX_HOME.'/assets/cache/';
  		$dir = rtrim($dir, '/').'/';
  		$file = $dir.$filename;
  		if(is_file($file)){
@@ -976,13 +954,13 @@ class CoreEvents{
 		switch($flagId){
 			case 'wait':					
 				$settings['command_count'] = $commandCount;		
-				$this->_flag = $settings;
+				$this->flag = $settings;
 				$this->_flagcount = $commandCount;
 				break;
 			case 'first':
 			case 'last':
 			case 'no_wait':
-				$this->_flag = 'first';
+				$this->flag = 'first';
 				break;
 			default:
 				if($this->strict){
@@ -1141,7 +1119,7 @@ class CoreEvents{
 			self::$lastCache[$cacheId] = $add;
 		} 
         else{
-			array_push(self::$lastCache,$add);
+			array_push(self::$lastCache, $add);
 		}
 	}
 
@@ -1184,11 +1162,11 @@ class CoreEvents{
 		unset(self::$cache[$cacheId]);
 	}
 	
-	public function _lastExecCount($count = 0){
+	public function lastExecCount($count = 0){
 		if($count){
-			self::$_lastExecCount = $count;
+			$this->lastExecCount = $count;
 		}
-		return self::$_lastExecCount;
+		return $this->lastExecCount;
 	}
 
 	/**
@@ -1265,22 +1243,20 @@ class CoreEvents{
 	 * @param string $path [CJAX URL]
 	 */
 	public function path($path){
-		self::$path = $path;
+		$this->path = $path;
 	}
 
-	public static function remotePath(){
+	public function remotePath(){
 		return 'http://'.$_SERVER['HTTP_HOST'].dirname($_SERVER["SCRIPT_NAME"]).'/cjax';
 	}
 
-	public static function getFile($file = null){
-		return self::connect($_SERVER['HTTP_HOST'],(isset($_SERVER['SERVER_PORT'])? $_SERVER['SERVER_PORT']:80), $file, true);
+	public function getFile($file = null){
+		return $this->connect($_SERVER['HTTP_HOST'],(isset($_SERVER['SERVER_PORT'])? $_SERVER['SERVER_PORT']:80), $file, true);
 	}
 
-	public static function connect($file = null, $port = 80, $local = false){
-		$ajax = CJAX::getInstance();
-
+	public function connect($file = null, $port = 80, $local = false){
 		if(!$port){
-			$port = $ajax->port;
+			$port = $this->port;
 			if(!$port){
 				$port = 80;
 			}
@@ -1288,8 +1264,7 @@ class CoreEvents{
 		if(!function_exists('fsockopen')){
 			throw new CJAXException('no fsockopen: be sure that php function fsockopen is enabled.');
 		}
-		
-		
+				
 		$fp = @fsockopen($host, $port, $errno, $errstr);
 		if(!$fp){
 			return false;

@@ -52,14 +52,14 @@ class Framework Extends CoreEvents{
 			if(is_array($key)){
 				foreach($key as $k => $v){
 					if($v == 'enter') $v = 13;
-					$_keys[$v] = $v;
+					$keys[$v] = $v;
 				}
 			} 
             else{
-				$_keys = [$key => $key];
+				$keys = [$key => $key];
 			}
-			$actions->key = $_keys;
-			$actions->buffer = ['key' => $_keys];
+			$actions->key = $keys;
+			$actions->buffer = ['key' => $keys];
 		}
 		return $this->exec($elementId, $actions, 'keypress');
 	}
@@ -202,8 +202,8 @@ class Framework Extends CoreEvents{
 			
 			$item = $actions->xml();
 			$item['event'] = $event;
-			if(isset(CoreEvents::$callbacks[$actions->id]) && CoreEvents::$callbacks[$actions->id]){
-				$item['callback'] = $this->processScache(CoreEvents::$callbacks[$actions->id]);
+			if(isset($this->callbacks[$actions->id]) && $this->callbacks[$actions->id]){
+				$item['callback'] = $this->processScache($this->callbacks[$actions->id]);
 				$item['callback'] = $this->mkArray($item['callback'],'json', true);
 			}
 			$actions->delete();
@@ -229,9 +229,9 @@ class Framework Extends CoreEvents{
                     }
                 }
 
-                if(isset(CoreEvents::$callbacks[$v->id]) && CoreEvents::$callbacks[$v->id]){
-                    $v->attach(CoreEvents::$callbacks[$v->id]);
-                    foreach(CoreEvents::$callbacks[$v->id] as $k2 => $v2){
+                if(isset($this->callbacks[$v->id]) && $this->callbacks[$v->id]){
+                    $v->attach($this->callbacks[$v->id]);
+                    foreach($this->callbacks[$v->id] as $k2 => $v2){
                         unset(CoreEvents::$cache[$k2]);
                     }
                 }
@@ -444,13 +444,13 @@ class Framework Extends CoreEvents{
 			foreach($options as $k => $v){
 				if($v instanceof Plugin){
 					$xml = $v->xmlObject();
-					$_data = $xml->pack();
+					$xmlData = $xml->pack();
 					$xml->delete();
 				} 
                 else{
-					$_data = $v;
+					$xmlData = $v;
 				}
-				$data[$k] = $_data;
+				$data[$k] = $xmlData;
 			}
 			$data['options'] = $options;
 		}
@@ -578,7 +578,7 @@ class Framework Extends CoreEvents{
         else{
 			$data['expand'] = $expand;
 		}
-		$this->_flag = $data;
+		$this->flag = $data;
 		return $this;
 	}
 	
