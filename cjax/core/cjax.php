@@ -61,7 +61,7 @@ class CJAX extends Framework{
 		
 		if(!isset($ajax->format) || !$ajax->format){
 			$ajax->format = new Format;		
-			$ajax->initiate($ajax);
+			$ajax->initiate();
 			if(!$ajax->isAjaxRequest() && defined('AJAX_CD')){
 				@setcookie('AJAX_CD', AJAX_CD, null, '/');
 			} 

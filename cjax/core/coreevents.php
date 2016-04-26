@@ -365,8 +365,7 @@ class CoreEvents{
 				self::$cache = array_merge(self::$lastCache, self::$cache);
 			}
 		}
-        
-		$ajax = CJAX::getInstance();		
+        	
 		self::$cache = $this->callbacks(self::$cache);
 		$preload = [];
 		foreach(self::$cache as $k => $v){
@@ -379,7 +378,7 @@ class CoreEvents{
 		}
         $preload = ($preload)? $this->mkArray($this->processScache($preload)): null;   
 		$cache = $this->mkArray($this->processScache(self::$cache));		
-		if($ajax->config->debug){
+		if($this->config->debug){
 			$this->debug = true;
 		}
 		$debug = ($this->debug)? 1 : 0;		
@@ -388,8 +387,7 @@ class CoreEvents{
 	}
 	
 	public function simpleCommit($return = false){
-		$ajax = CJAX::getInstance();
-		if($this->fallback || $ajax->config->fallback || $this->caching){
+		if($this->fallback || $this->config->fallback || $this->caching){
 			return true;
 		}
 		$cache = self::$cache;
@@ -423,7 +421,7 @@ class CoreEvents{
 			$preload = $this->mkArray($this->processScache($preload));
 		}		
 		$processedCache = $this->mkArray($this->processScache($cache));		
-		if($ajax->config->debug){
+		if($this->config->debug){
 			$this->debug = true;
 		}
 		$debug = ($this->debug)? 1 : 0;
@@ -444,30 +442,29 @@ class CoreEvents{
 	 *
 	 * @return string
 	 */
-	public static function saveSCache(){
-		$ajax = CJAX::getInstance();
-		if($ajax->log && self::$cache){
+	public function saveSCache(){
+		if($this->log && self::$cache){
 			throw new CJAXException("Debug Info:<pre>".print_r(self::$cache,1)."</pre>");
 		}
 		
-		if($ajax->isAjaxRequest()){			
-			print $ajax->out();
+		if($this->isAjaxRequest()){			
+			print $this->out();
 			return;
 		}  
         else{			
-			$out = $ajax->commit();
+			$out = $this->commit();
 			
-			if($ajax->config->caching){
-				if(is_array($ajax->caching) && crc32('caching=1;'.$out)!= key($ajax->caching)){
-					$ajax->write([$ajax->crc32 => 'caching=1;'.$out], 'cjax-'.$ajax->crc32);
+			if($this->config->caching){
+				if(is_array($this->caching) && crc32('caching=1;'.$out)!= key($this->caching)){
+					$this->write([$this->crc32 => 'caching=1;'.$out], 'cjax-'.$this->crc32);
 				} 
-                elseif(!$ajax->caching){
-					$ajax->write([$ajax->crc32 => 'caching=1;'.$out], 'cjax-'.$ajax->crc32);
+                elseif(!$this->caching){
+					$this->write([$this->crc32 => 'caching=1;'.$out], 'cjax-'.$this->crc32);
 				}
 			} 
             else{
-				if($ajax->fallback || $ajax->config->fallback){					
-					$data = $ajax->fallbackPrint($out);			
+				if($this->fallback || $this->config->fallback){					
+					$data = $this->fallbackPrint($out);			
 					print "\n<script>$data\n</script>";
 				}
 			}
@@ -703,14 +700,14 @@ class CoreEvents{
 	 * @param string $add
 	 */
 	public function cache($add = null, $cacheId = null){
-		if(!$this->shutDown) {
-			register_shutdown_function(['CJAX\\Core\\CoreEvents','saveSCache']);
+		if(!$this->shutDown){
+			register_shutdown_function([$this, "saveSCache"]);
 			$this->shutDown = true;
 			$this->useCache = true;		
 		}
 		
 		if($cacheId){
-			if($cacheId=='actions'){
+			if($cacheId == 'actions'){
 				self::$actions[] = $add;
 			} 
             else{
@@ -761,7 +758,6 @@ class CoreEvents{
 	 * @return unknown
 	 */
 	public function headRef($jsPath = null, $min = false){
-		$ajax = CJAX::getInstance();
 		$file = "cjax-6.0.js";
 		if($min) {
 			$file = $this->file;
@@ -770,8 +766,8 @@ class CoreEvents{
             $jsPath = ($file)? rtrim($min,'/').'/cjax/assets/js/': rtrim($min,'/'); 
 		} 
         else{
-			if($ajax->config->initUrl && preg_match("/https?/", $ajax->config->initUrl)) {
-				$jsPath = rtrim($ajax->config->initUrl,'/').'/cjax/assets/js/';
+			if($this->config->initUrl && preg_match("/https?/", $this->config->initUrl)) {
+				$jsPath = rtrim($this->config->initUrl,'/').'/cjax/assets/js/';
 			}
 		}
 		if($this->crc32){
@@ -879,9 +875,8 @@ class CoreEvents{
 	}
 	
 	public function readCache($crc32 = null){
-        $ajax = CJAX::getInstance();
         $filename = ($crc32)? $crc32: 'cjax.txt';
-        $dir = ($ajax->config->caching)? sys_get_temp_dir(): CJAX_HOME.'/assets/cache/';
+        $dir = ($this->config->caching)? sys_get_temp_dir(): CJAX_HOME.'/assets/cache/';
  		$dir = rtrim($dir, '/').'/';
  		$file = $dir.$filename;
  		if(is_file($file)){
@@ -911,8 +906,7 @@ class CoreEvents{
  		if(!$filename){
 	 		$filename = 'cjax.txt';
  		}
- 		$ajax = CJAX::getInstance();
- 		if($ajax->config->caching && !is_writable($dir = sys_get_temp_dir())){
+ 		if($this->config->caching && !is_writable($dir = sys_get_temp_dir())){
  			$dir = CJAX_HOME.'/assets/cache/';
  		}
  		if(is_array($content)){
@@ -920,6 +914,7 @@ class CoreEvents{
  		}
  		$dir = rtrim($dir, '/').'/';
  		$file = $dir.$filename;
+        
  		if(file_exists($file) && !is_writable($file) && !chmod($filename, 0666)){
  			throw new CJAXException("CJAX: Error! file ($file) is not writable, Not enough permission");
  		}
@@ -1080,12 +1075,11 @@ class CoreEvents{
     }
 
 	public function save($setting, $value = null, $useCookie = false){
-		$ajax = CJAX::getInstance();
 		if(!isset($_SESSION)){
 			@session_start();
 		}       
-		if($this->fallback || $ajax->config->fallback){
-			if($value===null && isset($_SESSION[$setting])){
+		if($this->fallback || $this->config->fallback){
+			if($value === null && isset($_SESSION[$setting])){
 				unset($_SESSION[$setting]);
 				$this->cookie($setting);
 			} 
@@ -1219,12 +1213,12 @@ class CoreEvents{
 		}
 	}
 	
-	public function initiate($ajax){
+	public function initiate(){
 		if(isset($_REQUEST['session_id'])){
 			session_id($_REQUEST['session_id']);
 			@session_start();
 		} 
-        elseif(!$ajax->config->fallback && !isset($_SESSION)){
+        elseif(!$this->config->fallback && !isset($_SESSION)){
 		    @session_start();
 		}
 	}
