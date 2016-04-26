@@ -26,7 +26,7 @@ namespace CJAX\Core;
  * Since CJAX 6.0, Plugin class is lightweight and only contains information of one specific plugin object.
  * @category CJAX
  * @package Core
- * @author Ordland Euroboros <halloffamer@mysidiarpg.com>
+ * @author Ordland Euroboros <halloffamer@mysidiainc.com>
  * @copyright (c) 2008, CJ Galindo
  * @link https://github.com/ajaxboy/cjax
  * @version 6.0
@@ -195,7 +195,7 @@ class Plugin{
 		if($this->entryIds){
 			foreach($this->entryIds as $entryId){
 				$this->deleteEntry($entryId);
-			}
+            }
             $this->entryIds = [];
 		}
         $this->aborted = true;

@@ -16,7 +16,7 @@
 *   Website: http://cjax.sourceforge.net                     $      
 *   Email: cjxxi@msn.com    
 *   Date: 2/12/2007                           $     
-*   File Last Changed:  04/18/2016           $     
+*   File Last Changed:  04/26/2016           $     
 **####################################################################################################    */   
 
 namespace CJAX\Core;
@@ -58,21 +58,9 @@ class CJAX extends Framework{
 		}		
 		CoreEvents::errorHandlingConfig();
 		$ajax = new self;
-		if(!defined('JSON_FORCE_OBJECT')){
-			define('JSON_FORCE_OBJECT', 16);
-		}
 		
 		if(!isset($ajax->format) || !$ajax->format){
 			$ajax->format = new Format;		
-			$config = new Ext;
-			if(file_exists($f = CJAX_HOME."/"."config.php")){
-				include($f);
-				if(isset($config)){
-					$config = new Ext($config);
-				}
-			}
-			$ajax->config = $config;
-			
 			$ajax->initiate($ajax);
 			if(!$ajax->isAjaxRequest() && defined('AJAX_CD')){
 				@setcookie('AJAX_CD', AJAX_CD, null, '/');

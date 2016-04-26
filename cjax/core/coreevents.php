@@ -16,10 +16,11 @@
 *   Website: http://cjax.sourceforge.net                     $      
 *   Email: cjxxi@msn.com    
 *   Date: 2/12/2007                           $     
-*   File Last Changed:  04/23/2016           $     
+*   File Last Changed:  04/24/2016           $     
 **####################################################################################################    */   
 
 namespace CJAX\Core;
+use CJAX\Config;
 use StdClass;
  
 /**
@@ -202,8 +203,6 @@ class CoreEvents{
 	 */
 	public $isInit;
 	
-	public $file; //full name of the cjax.js
-	
 	public $initExtra = [];
 
 	/**
@@ -211,6 +210,8 @@ class CoreEvents{
 	 */
 	public $method;
 
+	public $file; //full name of the cjax.js    
+    
 	/**
 	 * Path where JavaScript Library is located
 	 *
@@ -241,6 +242,7 @@ class CoreEvents{
     
     public function __construct(){
         $this->pluginManager = new PluginManager($this);
+        $this->config = (file_exists(CJAX_HOME."/config.php"))? new Config: new Ext;
     }
     
 	public function xmlItem($xml, $name){
@@ -323,22 +325,22 @@ class CoreEvents{
 		}
 		
 		$cache = $this->callbacks($cache);		
-		$_preload = null;
+		$preload = null;
 		foreach($cache as $k => $v){
 			if($v['do']=='_import' || $v['do']=='_imports' || isset($v['is_plugin'])) {
-				$_preload[$k] = $v;
+				$preload[$k] = $v;
 				if(!isset($v['is_plugin'])){
 					unset($cache[$k]);
 				}
 			}
 		}
-		if($_preload){
-			$_preload = $this->mkArray($this->processScache($_preload));
+		if($preload){
+			$preload = $this->mkArray($this->processScache($preload));
 		}
 		
-		$_cache = $this->mkArray($this->processScache($cache));
+		$processedCache = $this->mkArray($this->processScache($cache));
 				
-		$out  = "<xml class='cjax'>{$_cache}</xml><xml class='cjax'><preload>{$_preload}</preload></xml>";
+		$out  = "<xml class='cjax'>{$processedCache}</xml><xml class='cjax'><preload>{$preload}</preload></xml>";
 		if($this->wrapper){
 			$out = str_replace('(!xml!)', $out, $this->wrapper);
 		}
@@ -352,12 +354,12 @@ class CoreEvents{
 		if(!self::$cache){
 			self::$cache = self::$actions;
 			if(self::$lastCache){
-				self::$cache = array_merge(self::$cache,self::$lastCache);
+				self::$cache = array_merge(self::$cache, self::$lastCache);
 			}
 		} 
         else{
 			if(self::$actions){
-				self::$cache = array_merge(self::$cache,self::$actions);
+				self::$cache = array_merge(self::$cache, self::$actions);
 			}
 			if(self::$lastCache){
 				self::$cache = array_merge(self::$lastCache, self::$cache);
@@ -410,7 +412,7 @@ class CoreEvents{
 		
 		$preload = [];
 		foreach($cache as $k => $v){
-			if(isset($v['do']) && ($v['do']=='_import' || $v['do']=='_imports' || isset($v['is_plugin']))) {
+			if(isset($v['do']) && ($v['do'] == '_import' || $v['do'] == '_imports' || isset($v['is_plugin']))) {
 				$preload[$k] = $v;
 				if(!isset($v['is_plugin'])){
 					unset($cache[$k]);
@@ -516,8 +518,8 @@ class CoreEvents{
 		return $event;
 	}
 	
-	public function processScache($_cache){
-		foreach($_cache as $k => $v){
+	public function processScache($cache){
+		foreach($cache as $k => $v){
 			$v['uniqid'] = $k;
 			if(isset($v['do']) && $v['do']=='AddEventTo'){
 				$v = $this->processScacheAddEventTo($v);
@@ -537,9 +539,9 @@ class CoreEvents{
 					$v[$k2] = "<$k2>$v2</$k2>";
 				}
 			}
-			$_cache[$k] = "<cjax>".implode($v)."</cjax>";
+			$cache[$k] = "<cjax>".implode($v)."</cjax>";
 		}
-		return $_cache;
+		return $cache;
 	}
 	
 	public function lastEntryId(){
@@ -700,7 +702,7 @@ class CoreEvents{
 	 *
 	 * @param string $add
 	 */
-	public function cache($add=null, $cacheId = null){
+	public function cache($add = null, $cacheId = null){
 		if(!$this->shutDown) {
 			register_shutdown_function(['CJAX\\Core\\CoreEvents','saveSCache']);
 			$this->shutDown = true;
@@ -883,7 +885,7 @@ class CoreEvents{
  		$dir = rtrim($dir, '/').'/';
  		$file = $dir.$filename;
  		if(is_file($file)){
- 			if(getlastmod($file) > time() + 3600) {
+ 			if(getlastmod($file) > time() + 3600){
  				return;//1 hour to regenerate
  			}
 	 		$content = file_get_contents($file);
@@ -910,7 +912,7 @@ class CoreEvents{
 	 		$filename = 'cjax.txt';
  		}
  		$ajax = CJAX::getInstance();
- 		if($ajax->config->caching && !is_writable($dir=sys_get_temp_dir())){
+ 		if($ajax->config->caching && !is_writable($dir = sys_get_temp_dir())){
  			$dir = CJAX_HOME.'/assets/cache/';
  		}
  		if(is_array($content)){
