@@ -21,7 +21,6 @@
 
 namespace CJAX\Core;
 use CJAX\Config;
-use StdClass;
  
 /**
  * The CoreEvents class that handles CJAX internal processes and functionality.
@@ -164,7 +163,7 @@ class CoreEvents{
             throw new CJAXException("XML:{$name} ".print_r($xml,1)." is not an integer.");
 		}
 		$xmlItem = new XmlItem($this, $xml, $name);
-        $this->xmlObjects = ($this->xmlObjects)? $this->xmlObjects: new StdClass;
+        $this->xmlObjects = ($this->xmlObjects)? $this->xmlObjects: new Ext;
 		$this->xmlObjects->{$xmlItem->id} = $xmlItem;	
 		return $xmlItem;
 	}
