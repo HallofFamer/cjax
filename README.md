@@ -53,7 +53,7 @@ It's really simple as
 ## Example #1 - Ajax Call
 ```php
 <?php
-$ajax->click('#elementId' , $ajax->call('controller/the_function/'));
+$ajax->click('#elementId', $ajax->call('controller/the_function/'));
 ?>
 <!doctype html>
 <html>
@@ -69,7 +69,7 @@ $ajax->click('#elementId' , $ajax->call('controller/the_function/'));
 ## Example #2 - Ajax Form
 ```php
 <?php
-$ajax->click('#elementId' , $ajax->form('controller/the_function/'));
+$ajax->click('#elementId', $ajax->form('controller/the_function/'));
 ?>
 <!doctype html>
 <html>
@@ -91,7 +91,7 @@ $ajax->click('#elementId' , $ajax->form('controller/the_function/'));
 ## Example #3 - Ajax Overlay, Lightbox
 ```php
 <?php
-$ajax->click('#elementId' , $ajax->overlay('some/splash/html'));
+$ajax->click('#elementId', $ajax->overlay('some/splash/html'));
 ?>
 <!doctype html>
 <html>

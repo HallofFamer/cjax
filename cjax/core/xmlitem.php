@@ -126,7 +126,7 @@ class XmlItem{
         $cache->set($this->id, $xml);
         
 		foreach($callbacks as $k2 => $v2){
-            $cache->removeCache($k2);
+            $cache->delete($k2);
 		}
 	}   
     
@@ -148,7 +148,7 @@ class XmlItem{
      */	        
 	public function delete(){
 		if(!is_null($this->id)){
-			$this->coreEvents->removeExecCache($this->id);
+			$this->coreEvents->execCache($this->id);
 		}
 	}
 	

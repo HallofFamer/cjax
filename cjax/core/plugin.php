@@ -402,7 +402,7 @@ class Plugin{
      * @return void
      */       
 	public function deleteEntry($entryId){
-        $this->coreEvents->getCache()->removeCache($entryId);
+        $this->coreEvents->getCache()->delete($entryId);
 	}     
 
 	/**

@@ -36,7 +36,7 @@ use StdClass;
 
 class CoreEvents{
 
-	public $a,$b,$c,$d,$e,$f,$g,$h,$i, $j;
+	public $a, $b, $c, $d, $e, $f, $g, $h, $i, $j;
 	
 	public $config;
 
@@ -61,13 +61,6 @@ class CoreEvents{
 	
 	//is using includes.php?
 	public $includes = false;
-	
-	/**
-	 * 
-	 * For js functions
-	 * @var string
-	 */
-	public $selector;
 
 	public $dir;
 	
@@ -106,23 +99,9 @@ class CoreEvents{
     protected $cache; 
 
 	/**
-	 * specified whether to use the cache system or normal mode
-	 *
-	 * @var boolean $useCache
-	 */
-	public $useCache;
-
-	/**
-	 * Get the current version of CJAX FRAMEWORK you are using
-	 *
-	 * @var string
-	 */
-	public $version = '6.0';
-
-	/**
 	 * Tells whether CJAX output has initciated or not, to void duplications
 	 *
-	 * @var boolean $is_init
+	 * @var boolean $isInit
 	 */
 	public $isInit;
 	
@@ -157,9 +136,14 @@ class CoreEvents{
 	
 	//holds he latest flag
 	public $flag = null;
-
-	public $flagCount = 0;
 	
+	/**
+	 * Get the current version of CJAX FRAMEWORK you are using
+	 *
+	 * @var string
+	 */
+	public $version = '6.0';    
+    
     
     public function __construct(){
         $this->pluginManager = new PluginManager($this);
@@ -508,7 +492,7 @@ class CoreEvents{
 				$this->flag = null;
 			} 
             elseif($this->flag == 'first'){
-                $this->cache->setLastCache($xml);
+                $this->cache->appendLast($xml);
 				$this->flag = null;
 				return;
 			}
@@ -563,10 +547,9 @@ class CoreEvents{
 	public function cache($value = null, $cacheId = null){
 		if(!$this->shutDown){
 			register_shutdown_function([$this, "saveSCache"]);
-			$this->shutDown = true;
-			$this->useCache = true;		
+			$this->shutDown = true;	
 		}
-		$this->cache->setCacheId($value, $cacheId);
+		$this->cache->append($value, $cacheId);
 		if($value == null){
 			return $this->cache->getCache();
 		}
@@ -802,7 +785,6 @@ class CoreEvents{
 			case 'wait':					
 				$settings['command_count'] = $commandCount;		
 				$this->flag = $settings;
-				$this->flagcount = $commandCount;
 				break;
 			case 'first':
 			case 'last':
@@ -962,32 +944,12 @@ class CoreEvents{
 
 	/**
 	 * 
-	 * remove cache
+	 * executes and removes cache
 	 * @param mixed $cacheId
 	 */
-	public function removeExecCache($cacheId){
+	public function execCache($cacheId){
         $this->cache->remove($cacheId);
 		$this->simpleCommit();
-	}
-	
-	/**
-	 * 
-	 * remove cache
-	 * @param int $count
-	 */
-	public function removeLastCache($count){
-        $this->cache->removeLast($count);
-	}
-
-	public function clearCache(){
-		if(!isset($_SESSION)){
-			@session_start();
-		}
-		unset($_SESSION['cjax_x_cache']);
-			
-		if(!headers_sent()){
-			@setcookie('cjax_x_cache','');
-		}
 	}
 	
 	public function initiate(){

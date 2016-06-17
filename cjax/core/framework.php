@@ -240,7 +240,7 @@ class Framework Extends CoreEvents{
         else{
 			$_actions = $this->cache->get($actions);
 			$_actions['event'] = $event;
-			$this->removeLastCache(1);
+            $this->cache->deleteLast(1);
 			return $this->addEventTo($selector, [$actions => $_actions],$event);
 		}
 	}
