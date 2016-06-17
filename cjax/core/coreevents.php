@@ -16,7 +16,7 @@
 *   Website: http://cjax.sourceforge.net                     $      
 *   Email: cjxxi@msn.com    
 *   Date: 2/12/2007                           $     
-*   File Last Changed:  04/24/2016           $     
+*   File Last Changed:  06/16/2016           $     
 **####################################################################################################    */   
 
 namespace CJAX\Core;
@@ -42,10 +42,6 @@ class CoreEvents{
 
 	//acts more strict in the kind of information you provive
 	public $strict = false;
-
-	public $messageId;
- 
-	public $trace = 0;
 	
 	private $xmlObjects;
     
@@ -58,8 +54,6 @@ class CoreEvents{
 	
 	//helper to cache callbacks
 	public $callbacks = [];
-	
-	private $simpleCommit;
 	
 	private $wrapper;
 	
@@ -74,37 +68,10 @@ class CoreEvents{
 	 * @var string
 	 */
 	public $selector;
- 	
-	/**
-	 *
-	 * Force the system to adapt to a loading or not loading state.
-	 * @var bool
-	 */
-	public $loading = false;
-	
-	/**
-	 * 
-	 * Some hosts have issues with sessions so lets fallback on cookies
-	 * @var bool
-	 */
-	public $fallback = false;
-
-	public $post = [];
 
 	public $dir;
-
-	public $attachEvent = true;
 	
 	public $log = false; //show internal debug info
-	
-	/**
-	 * If a request variable is sent with 'session_id' name
-	 * the framework will start session with that id.
-	 * 
-	 * In case ever need sessions
-	 * @var string
-	 */
-	public $sessionId;
 
 	/**
 	 * default port when connecting to web pages
@@ -120,13 +87,6 @@ class CoreEvents{
 	 */
 	public $controllerDir = '';
 
-	/*
-	 * hold an object with some formattig helpers
-	 * not meant to be added to the package but it was added at some point
-	 * @return cjaxFormat
-	 */
-	public $format;
-
 	/**
 	 * Check whether or not to call the shutdown function
 	 *
@@ -139,31 +99,11 @@ class CoreEvents{
 	public $crc32;
 	
 	/**
-	 * store cache procedure
+	 * store cache object
 	 *
-	 * @var string $cache
-	 */
-	public static $cache = [];    
-
-	/**
-	 * hold cache for actions
-	 *
-	 * @var array
-	 */
-	public static $actions = [];
-	
-	/**
-	 * 
-	 * Hold cache set for to execute last. Use flag $ajax->flag('last'); to store commands.
-	 * This makes it so that commands even if called first can be executed last.
-	 * @var unknown_type
-	 */
-	public static $lastCache = [];
-    
-	/**
-	 * number of commands passed last in Exec
-	 */
-	private $lastExecCount = 0;
+	 * @var Cache $cache
+	 */    
+    protected $cache; 
 
 	/**
 	 * specified whether to use the cache system or normal mode
@@ -171,23 +111,6 @@ class CoreEvents{
 	 * @var boolean $useCache
 	 */
 	public $useCache;
-
-	//new alias to replace $JSevent.
-	public $event = "onClick";
-
-	/**
-	 * Set the text to show when the page is loading
-	 * this replaces the "loading.."
-	 *
-	 *
-	 * @var mixed $text
-	 */
-	public $text = null;
-
-	/*
-	 * The the CJAX console on debug mode
-	 */
-	public $debug;
 
 	/**
 	 * Get the current version of CJAX FRAMEWORK you are using
@@ -232,8 +155,6 @@ class CoreEvents{
 	 */
 	private $jsdir = null;
 	
-	public $caller;
-	
 	//holds he latest flag
 	public $flag = null;
 
@@ -243,6 +164,15 @@ class CoreEvents{
     public function __construct(){
         $this->pluginManager = new PluginManager($this);
         $this->config = (file_exists(CJAX_HOME."/config.php"))? new Config: new Ext;
+        $this->cache = new Cache($this->config->caching);
+    }
+    
+    public function getPluginManager(){
+        return $this->pluginManager;
+    }
+    
+    public function getCache(){
+        return $this->cache;
     }
     
 	public function xmlItem($xml, $name){
@@ -283,12 +213,6 @@ class CoreEvents{
 		@setcookie('cjax_debug','');
 	}
 	
-	public function flushRawCache(){
-		self::$cache = [];
-		self::$actions = [];
-		self::$lastCache = [];
-	}
-	
 	public function callbacks($cache, $test = false){
 		if($this->callbacks){
 			foreach($this->callbacks as $k => $v){
@@ -297,7 +221,7 @@ class CoreEvents{
 					$v[$k]['callback'] = $this->mkArray($cb,'json', true);
 				} 
                 else{
-                    $cache[$k]['callback'] = ($test)? $cb: $this->mkArray($cb,'json', true);
+                    $cache[$k]['callback'] = ($test)? $cb: $this->mkArray($cb, 'json', true);
 				}
 			}
 		}
@@ -305,41 +229,24 @@ class CoreEvents{
 	}
 	
 	public function out(){
-		if(!self::$cache && !self::$actions){
+		if(!$this->cache->hasContents()){
 			return;
 		}
-		$cache = self::$cache;
-		if(!self::$cache){
-			$cache = self::$actions;
-			if(self::$lastCache){
-				$cache = array_merge($cache,self::$lastCache);
-			}
-		} 
-        else{
-			if(self::$actions){
-				$cache = array_merge($cache,self::$actions);
-			}
-			if(self::$lastCache){
-				$cache = array_merge($cache,self::$lastCache);
-			}
-		}
-		
-		$cache = $this->callbacks($cache);		
-		$preload = null;
+		$cache = $this->callbacks($this->cache->getContents());		
+		$preload = null;        
 		foreach($cache as $k => $v){
-			if($v['do']=='_import' || $v['do']=='_imports' || isset($v['is_plugin'])) {
+			if($v['do'] == '_import' || $v['do'] == '_imports' || isset($v['is_plugin'])){
 				$preload[$k] = $v;
 				if(!isset($v['is_plugin'])){
 					unset($cache[$k]);
 				}
 			}
 		}
+        
 		if($preload){
 			$preload = $this->mkArray($this->processScache($preload));
-		}
-		
-		$processedCache = $this->mkArray($this->processScache($cache));
-				
+		}		
+		$processedCache = $this->mkArray($this->processScache($cache));				
 		$out  = "<xml class='cjax'>{$processedCache}</xml><xml class='cjax'><preload>{$preload}</preload></xml>";
 		if($this->wrapper){
 			$out = str_replace('(!xml!)', $out, $this->wrapper);
@@ -348,66 +255,34 @@ class CoreEvents{
 	}
 	
 	public function commit(){
-		if(!self::$cache && !self::$actions){
+		if(!$this->cache->hasContents()){
 			return;
-		}
-		if(!self::$cache){
-			self::$cache = self::$actions;
-			if(self::$lastCache){
-				self::$cache = array_merge(self::$cache, self::$lastCache);
-			}
-		} 
-        else{
-			if(self::$actions){
-				self::$cache = array_merge(self::$cache, self::$actions);
-			}
-			if(self::$lastCache){
-				self::$cache = array_merge(self::$lastCache, self::$cache);
-			}
-		}
-        	
-		self::$cache = $this->callbacks(self::$cache);
+		}        	
+        $contents = $this->cache->getContents();
+        $this->cache->setCache($this->callbacks($contents));
+		$cache = $this->cache->getCache();
 		$preload = [];
-		foreach(self::$cache as $k => $v){
+		foreach($cache as $k => $v){
 			if($v['do'] == '_import' || $v['do'] == '_imports' || isset($v['is_plugin'])) {
 				$preload[$k] = $v;
 				if(!isset($v['is_plugin'])){
-					unset(self::$cache[$k]);
+                    $this->cache->remove($k);
 				}
 			}
 		}
+        
         $preload = ($preload)? $this->mkArray($this->processScache($preload)): null;   
-		$cache = $this->mkArray($this->processScache(self::$cache));		
-		if($this->config->debug){
-			$this->debug = true;
-		}
-		$debug = ($this->debug)? 1 : 0;		
+		$cache = $this->mkArray($this->processScache($this->cache->getCache()));		
+		$debug = ($this->config->debug)? 1 : 0;		
 		$out = 'CJAX.process_all("'.$cache.'","'.$preload.'", '.$debug.', true);';		
 		return $out;
 	}
 	
 	public function simpleCommit($return = false){
-		if($this->fallback || $this->config->fallback || $this->caching){
+		if($this->config->fallback || $this->caching){
 			return true;
 		}
-		$cache = self::$cache;
-		if(!$cache){
-			$cache = self::$actions;
-			if(self::$lastCache) {
-				$cache = array_merge($cache, self::$lastCache);
-			}
-		} 
-        else{
-			if(self::$actions){
-				$cache = array_merge(self::$cache, self::$actions);
-			}
-			if(self::$lastCache){
-				$cache = array_merge(self::$lastCache, $cache);
-			}
-		}
-		
-		$cache = $this->callbacks($cache);
-		
+        $cache = $this->callbacks($this->cache->getContents());	
 		$preload = [];
 		foreach($cache as $k => $v){
 			if(isset($v['do']) && ($v['do'] == '_import' || $v['do'] == '_imports' || isset($v['is_plugin']))) {
@@ -416,16 +291,12 @@ class CoreEvents{
 					unset($cache[$k]);
 				}
 			}
-		}
+		}   
 		if($preload){
 			$preload = $this->mkArray($this->processScache($preload));
 		}		
 		$processedCache = $this->mkArray($this->processScache($cache));		
-		if($this->config->debug){
-			$this->debug = true;
-		}
-		$debug = ($this->debug)? 1 : 0;
-	
+		$debug = ($this->config->debug)? 1 : 0;	
 		if($preload){
 			$this->save('cjax_preload', $preload);
 		}
@@ -433,7 +304,6 @@ class CoreEvents{
 		if($debug){
 			$this->save('cjax_debug', $debug);
 		}
-		$this->simpleCommit = $cache;
 		return $processedCache;
 	}
 	
@@ -443,8 +313,8 @@ class CoreEvents{
 	 * @return string
 	 */
 	public function saveSCache(){
-		if($this->log && self::$cache){
-			throw new CJAXException("Debug Info:<pre>".print_r(self::$cache,1)."</pre>");
+		if($this->log && $this->cache->getCache()){
+			throw new CJAXException("Debug Info:<pre>".print_r($this->cache->getCache(), 1)."</pre>");
 		}
 		
 		if($this->isAjaxRequest()){			
@@ -452,8 +322,7 @@ class CoreEvents{
 			return;
 		}  
         else{			
-			$out = $this->commit();
-			
+			$out = $this->commit();			
 			if($this->config->caching){
 				if(is_array($this->caching) && crc32('caching=1;'.$out)!= key($this->caching)){
 					$this->write([$this->crc32 => 'caching=1;'.$out], 'cjax-'.$this->crc32);
@@ -463,9 +332,9 @@ class CoreEvents{
 				}
 			} 
             else{
-				if($this->fallback || $this->config->fallback){					
+				if($this->config->fallback){					
 					$data = $this->fallbackPrint($out);			
-					print "\n<script>$data\n</script>";
+                    print "\n<script>{$data}\n</script>";
 				}
 			}
 		}
@@ -518,7 +387,7 @@ class CoreEvents{
 	public function processScache($cache){
 		foreach($cache as $k => $v){
 			$v['uniqid'] = $k;
-			if(isset($v['do']) && $v['do']=='AddEventTo'){
+			if(isset($v['do']) && $v['do'] == 'AddEventTo'){
 				$v = $this->processScacheAddEventTo($v);
 			}
 			
@@ -526,7 +395,7 @@ class CoreEvents{
 				$v = $this->processScachePlugin($v);
 			}
 			
-			foreach($v  as $k2 => $v2){
+			foreach($v as $k2 => $v2){
 				if(is_array($v2)){
 					$v2 = $this->mkArray($v2);
 					$v[$k2] = "<$k2>$v2</$k2>";
@@ -543,16 +412,13 @@ class CoreEvents{
 	
 	public function lastEntryId(){
 		$count = 0;
-		if(self::$cache){
-			end(self::$cache);
-			$count = key(self::$cache);
-			reset(self::$cache);
+        $cache = $this->cache->getCache();
+		if($cache){
+			end($cache);
+			$count = key($cache);
+			reset($cache);
 		}		
 		return $count;
-	}
-	
-	public function lastId(){
-		return $this->lastEntryId();
 	}
 	
 	/**
@@ -567,7 +433,7 @@ class CoreEvents{
 	}
 	
 	public function updateCache($instanceId, $data){
-		self::$cache[$instanceId] = $data;
+        $this->cache->set($instanceId, $data);
 		$this->simpleCommit();
 	}
 	
@@ -642,17 +508,16 @@ class CoreEvents{
 				$this->flag = null;
 			} 
             elseif($this->flag == 'first'){
-				$this->setLastCache($xml);
+                $this->cache->setLastCache($xml);
 				$this->flag = null;
 				return;
 			}
 		}
-		
-		$this->cache($xml);		
+		$this->cache($xml);	
 		if(!$this->isAjaxRequest()){
-			$this->simpleCommit();
+			$this->simpleCommit(); 
 		}
-		$count = $this->lastEntryId();		
+		$count = $this->lastEntryId();	
 		return $count;
 	}
 	
@@ -689,36 +554,21 @@ class CoreEvents{
 	                window.onload = init;
                 }";
 	}
-
-	public function getCache(){
-		return self::$cache;
-	}
-
+    
 	/**
 	 * Used for loading "fly" events
 	 *
-	 * @param string $add
+	 * @param string $value
 	 */
-	public function cache($add = null, $cacheId = null){
+	public function cache($value = null, $cacheId = null){
 		if(!$this->shutDown){
 			register_shutdown_function([$this, "saveSCache"]);
 			$this->shutDown = true;
 			$this->useCache = true;		
 		}
-		
-		if($cacheId){
-			if($cacheId == 'actions'){
-				self::$actions[] = $add;
-			} 
-            else{
-				self::$cache[$cacheId] = $add;
-			}
-		} 
-        else{
-			self::$cache[] = $add;
-		}
-		if($add == null){
-			return self::$cache;
+		$this->cache->setCacheId($value, $cacheId);
+		if($value == null){
+			return $this->cache->getCache();
 		}
 	}
 	
@@ -952,7 +802,7 @@ class CoreEvents{
 			case 'wait':					
 				$settings['command_count'] = $commandCount;		
 				$this->flag = $settings;
-				$this->_flagcount = $commandCount;
+				$this->flagcount = $commandCount;
 				break;
 			case 'first':
 			case 'last':
@@ -1015,7 +865,7 @@ class CoreEvents{
 	 				$arr = debug_backtrace(false);
 		 			$trace = $arr[1];
 		 			$class = $trace['class'];
-	 				$callback[0] =$class;
+	 				$callback[0] = $class;
 	 			}
 	 			if(!$params) $params = [];
 	 			$r = call_user_func_array($callback, $params);
@@ -1050,7 +900,7 @@ class CoreEvents{
 		$new = [];
 		if(is_array($input) && $input){
             $new = $this->xmlInput($tag, $input);
-			return $xml = implode($new);
+			return implode($new);
 		}
 	}
     
@@ -1078,7 +928,7 @@ class CoreEvents{
 		if(!isset($_SESSION)){
 			@session_start();
 		}       
-		if($this->fallback || $this->config->fallback){
+		if($this->config->fallback){
 			if($value === null && isset($_SESSION[$setting])){
 				unset($_SESSION[$setting]);
 				$this->cookie($setting);
@@ -1109,15 +959,6 @@ class CoreEvents{
 	public function getSetting($setting){
 		return $this->get($setting);
 	}
-	
-	public function setLastCache($add = null, $cacheId = null){
-		if($cacheId){
-			self::$lastCache[$cacheId] = $add;
-		} 
-        else{
-			array_push(self::$lastCache, $add);
-		}
-	}
 
 	/**
 	 * 
@@ -1125,14 +966,7 @@ class CoreEvents{
 	 * @param mixed $cacheId
 	 */
 	public function removeExecCache($cacheId){
-		if(is_array($cacheId)){
-			foreach($cacheId as $k){
-				unset(self::$cache[$k]);
-			}
-		} 
-        elseif(isset(self::$cache[$cacheId])){
-			unset(self::$cache[$cacheId]);
-		}
+        $this->cache->remove($cacheId);
 		$this->simpleCommit();
 	}
 	
@@ -1142,67 +976,10 @@ class CoreEvents{
 	 * @param int $count
 	 */
 	public function removeLastCache($count){
-		do{
-			$count--;
-			end(self::$cache);
-			unset(self::$cache[key(self::$cache)]);			
-		}while($count);
-	}
-	
-	/**
-	 * 
-	 * remove cache
-	 * @param mixed $cacheId
-	 */
-	public function removeCache($cacheId){
-		unset(self::$cache[$cacheId]);
-	}
-	
-	public function lastExecCount($count = 0){
-		if($count){
-			$this->lastExecCount = $count;
-		}
-		return $this->lastExecCount;
-	}
-
-	/**
-	 * Yet to implement
-	 *
-	 * @param string $errno
-	 * @param string $errstr
-	 * @param string $errfile
-	 * @param string $errline
-	 * @return string
-	 */
-	public function CJAXErrorHandler($errno, $errstr, $errfile, $errline){
-		switch($errno){
-			case E_USER_ERROR:
-				echo "<b>CJAX:</b> [$errno] $errstr<br />\n";
-				echo "  Fatal error on line $errline in file $errfile";
-				echo ", PHP " . PHP_VERSION . " (" . PHP_OS . ")<br />\n";
-				echo "Aborting...<br />\n";
-				exit(1);
-			    break;
-			case E_USER_WARNING:
-				echo "<b>Cjax WARNING</b> [$errno] $errstr<br />\n";
-				break;
-			case E_USER_NOTICE:
-				echo "<b>Cjax NOTICE</b> [$errno] $errstr<br />\n";
-			break;
-			default:
-				echo "Unknown error type: [$errno] $errstr<br />\n";
-			break;
-		}
-		/* Don't execute PHP internal error handler */
-		return true;
-	}
-
-	public function CJAXExceptionHandler(){
-
+        $this->cache->removeLast($count);
 	}
 
 	public function clearCache(){
-		//$old_err = set_error_handler(['self', 'CJAXErrorHandler']);
 		if(!isset($_SESSION)){
 			@session_start();
 		}
@@ -1221,15 +998,6 @@ class CoreEvents{
         elseif(!$this->config->fallback && !isset($_SESSION)){
 		    @session_start();
 		}
-	}
-
-	/**
-	 * Optional text, replaces the "loading.." text when an ajax call is placed
-	 *
-	 * @param unknown_type $ms
-	 */
-	public function text($ms = ''){
-		$this->text = $ms;
 	}
 
 	/**

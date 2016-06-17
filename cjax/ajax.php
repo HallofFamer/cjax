@@ -16,14 +16,13 @@
 *   Website: http://cjax.sourceforge.net                     $      
 *   Email: cjxxi@msn.com    
 *   Date: 2/12/2007                           $     
-*   File Last Changed:  04/20/2016            $     
+*   File Last Changed:  06/16/2016            $     
 **####################################################################################################    */   
 
 require_once __DIR__."/autoloader.php";
 use CJAX\Auth;
 use CJAX\Core\CJAX; 
 use CJAX\Core\CJAXException;
-use CJAX\Core\CoreEvents;
 use CJAX\Core\Ext;
 
 /**
@@ -210,9 +209,8 @@ final class AJAX{
      */	        
 	private function getResponse($response){
 		if($response && (is_array($response) || is_object($response))){
-            $coreEvents = new CoreEvents;
 			header('Content-type: application/json; charset=utf-8');
-			print $coreEvents->jsonEncode($response);
+			print $this->ajax->jsonEncode($response);
 		}		
 	}
 	
@@ -337,7 +335,7 @@ final class AJAX{
         catch(CJAXException $cje){
             $exitMessage = $cje->getMessage();
             $ajax = CJAX::getInstance();
-            if($ajax->debug){
+            if($ajax->config->debug){
                 $exitMessage = "Exception: {$exitMessage} @ ";
                 $trace = $cje->getTrace();
                 if(!empty($trace[0]['class'])){

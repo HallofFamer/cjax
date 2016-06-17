@@ -16,12 +16,11 @@
 *   Website: http://cjax.sourceforge.net                     $      
 *   Email: cjxxi@msn.com    
 *   Date: 2/12/2007                           $     
-*   File Last Changed:  04/18/2016           $     
+*   File Last Changed:  06/16/2016           $     
 **####################################################################################################    */  
 
 namespace CJAX\Plugins\Uploader;
 use CJAX\Core\CJAX;
-use CJAX\Core\CoreEvents;
 use CJAX\Core\Plugin; 
  
 /**
@@ -45,13 +44,6 @@ class Uploader extends Plugin{
 	 * @var array
 	 */   	
 	private $options = [];
-	
-	/**
-	 * The callbackId property, specifies the callbackId for uploading event.
-     * @access private
-	 * @var string
-	 */        
-	private $callbackId;
 	
     
   	/**
@@ -82,19 +74,19 @@ class Uploader extends Plugin{
      * @return void
      */          
 	public function callbackHandler($sender, $receiver, $setting){
-        $coreEvents = new CoreEvents;
 		switch($setting){
 			case 'postCallback':
-				$event = CoreEvents::$cache[$receiver->id];				
-				$callback = CoreEvents::$cache[$sender->id];				
+                $cache = $this->coreEvents->getCache();
+				$event = $cache->get($receiver->id);			
+				$callback = $cache->get($sender->id);				
 				$event['postCallback'][$sender->id] = $callback;
 				$sender->delete();
 				
-				$callbacks = $coreEvents->processScache($event['postCallback']);
-				$callbacks = $coreEvents->mkArray($callbacks,'json', true);
-				$event['postCallback'] =  "<cjax>{$callbacks}</cjax>";				
-				CoreEvents::$cache[$receiver->id] = $event;				
-				$coreEvents->simpleCommit();
+				$callbacks = $this->coreEvents->processScache($event['postCallback']);
+				$callbacks = $this->coreEvents->mkArray($callbacks,'json', true);
+				$event['postCallback'] =  "<cjax>{$callbacks}</cjax>";	
+                $cache->set($receiver->id, $event);
+				$this->coreEvents->simpleCommit();
 			    break;
 		}
 	}

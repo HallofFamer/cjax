@@ -22,7 +22,6 @@
 //extend plugin to inheric generic plugin properties
 
 namespace CJAX\Plugin\ExamplePlugin;
-use CJAX\Core\CoreEvents;
 use CJAX\Core\Plugin;
 
 class ExamplePlugin extends Plugin{
@@ -282,8 +281,9 @@ class ExamplePlugin extends Plugin{
 	 * 
 	 */
 	public function callbackHandler($xmlObjFrom, $xmlObjTo, $setting){
-		$event = CoreEvents::$cache[$xmlObjFrom->id];
-		$callback = CoreEvents::$cache[$xmlObjTo->id];
+        $cache = $this->coreEvents->getCache();
+		$event = $cache->get($xmlObjFrom->id);
+		$callback = $cache->get($xmlObjTo->id);
 		
 		//pusha a copy of the API as callback
 		$event['callback'][$xmlObjFrom->id] = $callback;
@@ -294,7 +294,7 @@ class ExamplePlugin extends Plugin{
 		//do changes to $event
 		
 		//push changes
-		CoreEvents::$cache[$xmlObjTo->id] = $event;
+        $cache->set($xmlObjTo->id, $event);
 		//commit changes
 		$this->coreEvents->simpleCommit();		
 		return true;

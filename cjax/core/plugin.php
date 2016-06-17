@@ -321,8 +321,9 @@ class Plugin{
 			return $this->setVars($setting, $value);
 		}
 
+        $cache = $this->coreEvents->getCache();
 		if(!is_null($instanceId)){
-			$item = CoreEvents::$cache[$instanceId];
+            $item = $cache->get($instanceId);
 			$item['data'][$setting] = $value;
             $this->coreEvents->updateCache($instanceId, $item);
 		} 
@@ -364,11 +365,11 @@ class Plugin{
      * @return void
      */     
 	private function setVar($setting, $value, $instanceId){
-		if(!isset(CoreEvents::$cache[$instanceId])){
-			return;
-		}
-		$item = CoreEvents::$cache[$instanceId];
-		
+		$item = $this->coreEvents->getCache()->get($instanceId);
+		if(!$item){
+            return;
+        }
+        
 		if(is_array($value)){
 			$value  = $this->coreEvents->mkArray($value);
 		}
@@ -401,9 +402,7 @@ class Plugin{
      * @return void
      */       
 	public function deleteEntry($entryId){
-		if(isset(CoreEvents::$cache[$entryId])){
-			unset(CoreEvents::$cache[$entryId]);
-		}
+        $this->coreEvents->getCache()->removeCache($entryId);
 	}     
 
 	/**
@@ -414,7 +413,8 @@ class Plugin{
      */       
 	public function callback($apiObj){
 		$this->xml->callback = $apiObj;
-		CoreEvents::$cache = $this->coreEvents->callbacks(CoreEvents::$cache);
+        $cache = $this->coreEvents->getCache();
+        $cache->setCache($this->coreEvents->callbacks($cache->getCache()));
 	}     
     
 	/**

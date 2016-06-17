@@ -16,7 +16,7 @@
 *   Website: http://cjax.sourceforge.net                     $      
 *   Email: cjxxi@msn.com    
 *   Date: 2/12/2007                           $     
-*   File Last Changed:  04/18/2016            $     
+*   File Last Changed:  06/16/2016            $     
 **####################################################################################################    */  
 
 
@@ -122,10 +122,11 @@ class XmlItem{
 		$xml = $this->xml();
 		$cb = $this->coreEvents->processScache($callbacks);
 		$xml['stack'] = $this->coreEvents->mkArray($cb);
-		CoreEvents::$cache[$this->id] = $xml;
+        $cache = $this->coreEvents->getCache();
+        $cache->set($this->id, $xml);
         
 		foreach($callbacks as $k2 => $v2){
-			unset(CoreEvents::$cache[$k2]);
+            $cache->removeCache($k2);
 		}
 	}   
     
@@ -180,7 +181,7 @@ class XmlItem{
 	public function xml($id = null){
 		$id or $id = $this->id;
 		if(!is_null($id)){
-			return CoreEvents::$cache[$id];
+            return $this->coreEvents->getCache()->get($id);
 		}
 	}
     	
@@ -192,8 +193,9 @@ class XmlItem{
      * @return void
      */		    
 	public function __set($setting, $value){
+        $cache = $this->coreEvents->getCache();
 		if($value instanceof Plugin){
-			if(method_exists($value, 'callbackHandler') && $value->callbackHandler($value->xml,$this, $setting)){
+			if(method_exists($value, 'callbackHandler') && $value->callbackHandler($value->xml, $this, $setting)){
 			    return $value;
 		    }
             
@@ -204,13 +206,13 @@ class XmlItem{
 				case 'callback':					
 					if(isset($this->coreEvents->callbacks[$value->id])){					
 						$cb = $this->coreEvents->callbacks[$value->id];
-						$cb = $this->coreEvents->processScache($cb);						
-						CoreEvents::$cache[$value->id]['callback'] = $this->coreEvents->mkArray($cb,'json', true);						
-						$this->coreEvents->callbacks[$this->id][$value->id] = CoreEvents::$cache[$value->id];
+						$cb = $this->coreEvents->processScache($cb);
+                        $cache->cache[$value->id]['callback'] = $this->coreEvents->mkArray($cb, 'json', true);						
+						$this->coreEvents->callbacks[$this->id][$value->id] = $cache->cache[$value->id];
 						$value->delete();
 					} 
                     else{
-						$this->coreEvents->callbacks[$this->id][$value->id][] = CoreEvents::$cache[$value->id];
+						$this->coreEvents->callbacks[$this->id][$value->id][] = $cache->cache[$value->id];
 						$value->delete();
 					}					
 					return;
@@ -222,18 +224,18 @@ class XmlItem{
 		
 		if(in_array($this->coreEvents->lastCmd, $this->api)){
 			if(is_object($value)){
-				$this->coreEvents->callbacks[$this->id][$value->id] = CoreEvents::$cache[$value->id];
+				$this->coreEvents->callbacks[$this->id][$value->id] = $cache->cache[$value->id];
 			} 
             else{
-				$this->coreEvents->callbacks[$this->id][$value] = CoreEvents::$cache[$value];
+				$this->coreEvents->callbacks[$this->id][$value] = $cache->cache[$value];
 			}
 		} 
         else{
-			$event = CoreEvents::$cache[$this->id];
+			$event = $cache->cache[$this->id];
 			$event[$setting] = $value;
-			CoreEvents::$cache[$this->id] = $event;
+			$cache->cache[$this->id] = $event;
 			if($setting == 'waitFor'){
-				CoreEvents::$cache[$value]['onwait'][$this->id] = $this->xml();
+				$cache->cache[$value]['onwait'][$this->id] = $this->xml();
 				$this->delete();
 			}
 			$this->coreEvents->simpleCommit();

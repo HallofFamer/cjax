@@ -16,7 +16,7 @@
 *   Website: http://cjax.sourceforge.net                     $      
 *   Email: cjxxi@msn.com    
 *   Date: 2/12/2007                           $     
-*   File Last Changed:  04/18/2016           $     
+*   File Last Changed:  06/16/2016           $     
 **####################################################################################################    */
 
 namespace CJAX\Plugins\Uploader\Controllers;
@@ -167,8 +167,8 @@ class Uploader extends AJAXController{
      * @return void
      */      
 	public function flush(){
-		CoreEvents::$lastCache = [];
-		CoreEvents::$cache = [];
+        $cache = $this->ajax->getCache();
+        $cache->flushAll();
 	}
 	
   	/**

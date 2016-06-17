@@ -16,7 +16,7 @@
 *   Website: http://cjax.sourceforge.net                     $      
 *   Email: cjxxi@msn.com    
 *   Date: 2/12/2007                           $     
-*   File Last Changed:  04/05/2016            $     
+*   File Last Changed:  06/16/2016            $     
 **####################################################################################################    */   
 
 /**
@@ -27,6 +27,34 @@ namespace CJAX\Core;
 
 class Framework Extends CoreEvents{
 	    
+	/*
+	 * hold an object with some formattig helpers
+	 * not meant to be added to the package but it was added at some point
+	 * @return Format
+	 */
+	public $format;
+    
+	public $event = "onClick";    
+    
+	/**
+	 *
+	 * Force the system to adapt to a loading or not loading state.
+	 * @var bool
+	 */
+	public $loading = false;    
+    
+	public $post = [];    
+    
+	/**
+	 * Set the text to show when the page is loading
+	 * this replaces the "loading.."
+	 *
+	 *
+	 * @var mixed $text
+	 */
+	public $text = null;    
+    
+    
 	public function click($elementId, $actions = []){
         return ($actions)? $this->exec($elementId, $actions): $this->__call('click', $elementId);
 	}
@@ -171,7 +199,7 @@ class Framework Extends CoreEvents{
 	 * @param $event
 	 */
 	public function exec($selector, $actions, $event = "click"){
-		if(!$this->getCache()){
+		if(!$this->cache->getCache()){
 			return false;
 		}
 		if(is_array($selector)){
@@ -186,7 +214,7 @@ class Framework Extends CoreEvents{
 		$_actions = [];
 
 		if($actions && is_array($actions)){			
-			$cache = CoreEvents::$cache;
+			$cache = $this->cache->getCache();
 			$_actions = $this->execActions($actions, $selector);
 			return $this->addEventTo($selector, $_actions, $event);
 		}
@@ -210,7 +238,7 @@ class Framework Extends CoreEvents{
 			return $this->addEventTo($selector, [$actions->id => $item],$event);
 		} 
         else{
-			$_actions = CoreEvents::$cache[$actions];
+			$_actions = $this->cache->get($actions);
 			$_actions['event'] = $event;
 			$this->removeLastCache(1);
 			return $this->addEventTo($selector, [$actions => $_actions],$event);
@@ -218,7 +246,7 @@ class Framework Extends CoreEvents{
 	}
 	
     private function execActions($actions, $selector){
-        $_actions = [];
+        $execActions = [];
         foreach($actions as $k => $v){
             if(is_object($v) && ($v instanceof XmlItem || $v instanceof Plugin)){
                 if($v instanceof Plugin){
@@ -232,10 +260,10 @@ class Framework Extends CoreEvents{
                 if(isset($this->callbacks[$v->id]) && $this->callbacks[$v->id]){
                     $v->attach($this->callbacks[$v->id]);
                     foreach($this->callbacks[$v->id] as $k2 => $v2){
-                        unset(CoreEvents::$cache[$k2]);
+                        $this->cache->remove($k2);
                     }
                 }
-                $_actions[$v->id] = $v->xml();
+                $execActions[$v->id] = $v->xml();
                 $v->delete();
             } 
             else{
@@ -243,11 +271,11 @@ class Framework Extends CoreEvents{
                     //some functions return the ajax object?
                     continue;
                 }
-                $_actions[$v] = CoreEvents::$cache[$v];
-                unset(CoreEvents::$cache[$v]);
+                $execActions[$v] = $this->cache->get($v);
+                $this->cache->remove($v);
             }
         }
-        return $_actions;        
+        return $execActions;        
     }
     
 	/**
@@ -304,7 +332,6 @@ class Framework Extends CoreEvents{
 				$out['post'] = true;
 			}
 		}
-
 		if($containerId){
             $out['container_id'] = $containerId;
         }
@@ -492,6 +519,15 @@ class Framework Extends CoreEvents{
 	}
 
 	/**
+	 * Optional text, replaces the "loading.." text when an ajax call is placed
+	 *
+	 * @param unknown_type $ms
+	 */
+	public function text($ms = ''){
+		$this->text = $ms;
+	}    
+    
+	/**
 	 * Display a message in the middle of the screen
 	 *
 	 * @param string $data
@@ -647,7 +683,7 @@ class Framework Extends CoreEvents{
 	}    
     
 	public function __call($method, $args){
-		$params = range('a','z');
+		$params = range('a', 'z');
 		$pParams = [];
 		if($args){
 			if(!is_array($args)){
@@ -676,8 +712,8 @@ class Framework Extends CoreEvents{
 			return $plugin;
 		} 
         else{
-			$data = ['do' => '_fn', 'fn' => $method, 'fn_data' => $pParams];			
-			$item = $this->xmlItem($this->xml($data),'fn');
+			$data = ['do' => '_fn', 'fn' => $method, 'fn_data' => $pParams];	
+			$item = $this->xmlItem($this->xml($data), 'fn');
 			$item->selector = $method;
 			return $item;
 		}
