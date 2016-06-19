@@ -30,8 +30,6 @@ $overlay = $ajax->overLay('resources/html/test_form.html');
 //surging from $overlay ensures that it is ran after the html has been generated.
 $overlay->validate('button1','ajax.php?overlayvalidation/form', $rules);
 
-//die("cache<pre>".print_r(CoreEvents::$cache,1). "cbs<pre>".print_r(CoreEvents::$callbacks,1));
-
 //ensure that it validation is ran after the html form is generated.
 //$overlay->callback = $ajax->validate('button1','ajax.php?overlayvalidation/form', $rules);
 

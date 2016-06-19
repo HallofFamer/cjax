@@ -1,7 +1,23 @@
 
 # ChangeLog
 
-## CJAX 6.0 - TBD
+## CJAX 6.0 Beta 2 - June 18, 2016
+
+- Added CJAXException class as CJAX's primary error/exception handler
+- Added Initializer class, it has all the logic of initializing CJAX singleton object
+- Added PluginManager class, which is responsible for handling collection of all plugins
+- Added plugin Dracula(Dragula) for CJAX
+- Added API documentation for CJAX in PHPDocumentator style
+- Updated CJAX core library class hierachy, unnecessary inheritance now becomes composition instead
+- Updated Cache class to handle CJAX internal data storage, the class is no longer empty
+- Updated Plugin class to make it lightweight, and focus on a specific plugin instance
+- Updated readme.md, changelog.md to appropriate markdown style for GitHub
+- Renamed Framework class to DomEvents class, and moves certain responsibility to CoreEvents
+- Removed CJAXSingleton and InstanceFactory classes, as they are never used
+- Other fixes and improvements.
+
+
+## CJAX 6.0 Beta 1 - April 8, 2016
 
 - Namespace, closure and short array syntax used in the framework, PHP version now requires 5.4.0+
 - Fixed strict standard errors resulted from calling instance methods statically for PHP 5.5 and 5.6 compatibility
@@ -11,28 +27,25 @@
 - Added event classes that represent valid javascript event objects to use in AJAX controllers
 - Added support for Mouse events
 - Added support for Drag-Drop events
-- Added plugin Dracula(Dragula) for CJAX
-- Added documentation for CJAX API in PHPDocumentator style
 - Updated folder structure for CJAX
 - Updated examples and Added new examples for Mouse and Drag-Drop events
-- Updated readme.md, changelog.md
 - Updated versions for third party libraries such as sizzle
-- Removed unused and deprecated files, classes and code
+- Removed arc.php and chat.php files from examples, as they are never used
 - Other fixes and improvements.
 
 
-## CJAX 5.8 - Oct 6, 2013
+## CJAX 5.8 - October 6, 2013
 
 - Updated examples and readme.md.
 - Other fixes and improvements.
 
 
-## CJAX 5.7 - Oct 3, 2013
+## CJAX 5.7 - October 3, 2013
 
 - Advanced selectors (Sizzle, JQuery selectors allowed)
 - Fixed issue when passing multiple url values
 - Fixed issue in processing that was introduced in previous release
-- Added support for main properties for tables tr,td,thead,tbody, etc.
+- Added support for main properties for tables tr, td, thead, tbody, etc.
 
 
 ## CJAX 5.6 - September 19, 2013
@@ -49,7 +62,7 @@
 - Plugin uploadify now included in main release package
 - Plugin validate now included in main release package
 - Plugin autocomplete now included in main release package
-- Plugin ExamplePlugin now included in main release package
+- Plugin examplePlugin now included in main release package
 
 
 ## CJAX 5.5 - April 10, 2013
@@ -95,11 +108,11 @@
 - New usage for Exec events:
 
   ```php
-	$ajax->click($element_id, $actions);
-	$ajax->change($element_id, $actions);
-	$ajax->keyup($element_id, $actions);
-	$ajax->keydown($element_id, $actions);
-	$ajax->blur($element_id, $actions);
+	$ajax->click($elementId, $actions);
+	$ajax->change($elementId, $actions);
+	$ajax->keyup($elementId, $actions);
+	$ajax->keydown($elementId, $actions);
+	$ajax->blur($elementId, $actions);
   ```
 	
 	This is alternative replacement wrapper of the clasic:
@@ -308,7 +321,7 @@
   OR imports() - in contrast, waits for the previous files in list to fully load before loading the next one.
 
 	```php
-	$ajax->imports(array("path/To/Your/file2.js","path/To/Your/file3.js",path/To/Your/file1.css"));
+	$ajax->imports(["path/To/Your/file2.js","path/To/Your/file3.js",path/To/Your/file1.css"]);
 	```
 
 	For plugins - they all inherit local scope, say:
@@ -334,7 +347,7 @@
 	is required all the processing is built in. Recognizes most errors. Suports custom settings in $ajax->upload(), 
 	the API documentation has be updated, see API for more info. 
 - $ajax->form() parameter form_id is no longer required if used in context of $ajax->Exec(), the form is automatically pulled from
-	the event_element_id parent form, (the first parameter in $ajax->Exec(). You can still specify the form_id but is no longer required.
+	the event_elementId parent form, (the first parameter in $ajax->Exec(). You can still specify the form_id but is no longer required.
 - $ajax->call()  and $ajax->form() now shared  some of the  same source code, this helps to keep consistancy and illiminate some redundancy.
 
 
@@ -404,7 +417,7 @@
 	Usage Example:
 
 	```php
-	$flags = array('FLAG_WAIT'=> CJAX::FLAG_NO_WAIT, 'FLAG_ELEMENT_GETTER'=> CJAX::FLAG_ELEMENT_BY_ID);	
+	$flags = ['FLAG_WAIT' => CJAX::FLAG_NO_WAIT, 'FLAG_ELEMENT_GETTER' => CJAX::FLAG_ELEMENT_BY_ID];	
 	$ajax->setFlags(flags, 3);
 	```
 

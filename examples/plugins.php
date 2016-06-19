@@ -12,7 +12,7 @@ require_once "ajax.php";
 <body>
 <h2>Plugins</h2>
 <?php 
-echo $ajax->format->_dialog("
+echo $ajax->format->output("
 <h3>Download Developer Sample Plugins</h3>
 <a target='_blank' href='http://sourceforge.net/projects/cjax/files/API/Developers.ExamplePlugin_1.1.zip/download'>Developer/Example Plugin</a> - Samples Codes and documentation API, on how to create plugins.
 <br />
@@ -65,7 +65,7 @@ ob_start()
 </ul>
 
 <?php 
-echo $ajax->format->_dialog(ob_get_clean(),"Creating Plugins");
+echo $ajax->format->output(ob_get_clean(),"Creating Plugins");
 ?>
 
 <?php ob_start();?>
@@ -92,7 +92,7 @@ function hello_world(a,b,c){
 }
 ");
 
-echo $ajax->format->_dialog(ob_get_clean(),"Hello World Sample Plugin");
+echo $ajax->format->output(ob_get_clean(),"Hello World Sample Plugin");
 ?>
 
 
@@ -538,7 +538,7 @@ this.overLay('http://url/to/remote/location', {
 
 <br />
 <?php 
-echo $ajax->format->_dialog("
+echo $ajax->format->output("
 A Plugin can stand on its own  without a php class - and does not require one. However if you require more power in your plugin
 extra functions or ajax controllers, Or to overwrite plugin core functionality to customize your plugin even more
 then you might be interested in using a php class in your plugin. 
@@ -604,7 +604,7 @@ ob_start()
 </ul>
 
 <?php 
-echo $ajax->format->_dialog(ob_get_clean(),"Creating a PHP Class for plugin");
+echo $ajax->format->output(ob_get_clean(),"Creating a PHP Class for plugin");
 ?>
 
 <br />

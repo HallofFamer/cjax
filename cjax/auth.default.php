@@ -14,7 +14,7 @@
 namespace CJAX;
 use CJAX\Core\CJAX;
  
-class AjaxAuth{
+class Auth{
 	
 	/*
 	 * This function aims at covering the user authentification, 
@@ -26,7 +26,7 @@ class AjaxAuth{
 	 * 
 	 * If the authentication is valid or do not require authentication, return true.
 	 */
-	public function validate($controller = null, $function = null, $args = array()){
+	public function validate($controller = null, $function = null, $args = []){
 		return true;
 	}
 	
@@ -61,7 +61,7 @@ class AjaxAuth{
 	 * $args array
 	 * $requesObj object or null.  If a cotroller exists for this request the controller object is passed.
 	 */
-	public function intercept($controller = null, $function = null , $args = array(), $requestObj = null){
+	public function intercept($controller = null, $function = null , $args = [], $requestObj = null){
 		return false;
 	}
 }

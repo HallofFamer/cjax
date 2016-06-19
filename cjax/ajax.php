@@ -16,21 +16,44 @@
 *   Website: http://cjax.sourceforge.net                     $      
 *   Email: cjxxi@msn.com    
 *   Date: 2/12/2007                           $     
-*   File Last Changed:  04/18/2016            $     
+*   File Last Changed:  06/18/2016            $     
 **####################################################################################################    */   
 
 require_once __DIR__."/autoloader.php";
-use CJAX\AjaxAuth;
+use CJAX\Auth;
 use CJAX\Core\CJAX; 
-use CJAX\Core\CoreEvents;
+use CJAX\Core\CJAXException;
 use CJAX\Core\Ext;
- 
+
+/**
+ * The AJAX class that initializes and handles AJAX requests with CJAX.
+ * @category CJAX
+ * @author CJ Galindo <cjxxi@msn.com>
+ * @copyright (c) 2008, CJ Galindo
+ * @link https://github.com/ajaxboy/cjax
+ * @version 6.0
+ * @since 1.0
+ * @final
+ */
+
 final class AJAX{
-	
+    
+	/**
+	 * The ajax property, stores an instance of CJAX for operations.
+     * @access private
+	 * @var CJAX
+	 */    	
     private $ajax;
     
     
+	/**
+     * The constructor for AJAX class, initializes an AJAX request for CJAX.
+	 * @param string  $controller
+     * @access public
+     * @return AJAX
+     */	    
 	public function __construct($controller){
+        $this->configErrorReporting();
 		$this->ajax = CJAX::getInstance();
 		$controller = $rawClass = preg_replace('/:.*/', '', $controller);
 		$function = isset($_REQUEST['function'])? $_REQUEST['function']: null;		
@@ -40,16 +63,16 @@ final class AJAX{
 		$requestObject = null;
 		$altController = null;
 		
-        $this->_validate($controller, $function);      	
-		$args = $this->_params();
+        $this->validateInput($controller, $function);      	
+		$args = $this->filterParams();
 		if($controller == '_crossdomain'){
             $method = new ReflectionMethod($this->ajax, 'crossdomain');
-			return $this->_response($method->invokeArgs($this->ajax, $this->_event($method, $args)));
+			return $this->getResponse($method->invokeArgs($this->ajax, $this->fetchEvent($method, $args)));
 		}	
         if($plugin = $this->ajax->plugin($controller, true)){ 
             if(method_exists($plugin, $function)){
                 $method = new ReflectionMethod($plugin, $function);
-                return $this->_response($method->invokeArgs($plugin, $this->_event($method, $args)));
+                return $this->getResponse($method->invokeArgs($plugin, $this->fetchEvent($method, $args)));
             } 
             else{
                 $altController = $plugin->controllerFile;
@@ -59,29 +82,57 @@ final class AJAX{
             }
         }
 
-		$isFile = $this->_files($controller, $altController);	
-        $requestObject = ($isFile)? $this->_controller($controller, $function): $requestObject;	
-        if($this->_auth($controller, $function, $args, $requestObject)){
+		$isFile = $this->loadFiles($controller, $altController);	
+        $requestObject = ($isFile)? $this->createController($controller, $function): $requestObject;	
+        if($this->authenticate($controller, $function, $args, $requestObject)){
             return;
         }
     
         $function = ($function)? $function: $rawClass;
-        $this->_exists($isFile, $controller, $rawClass, $requestObject, $controller, $function);        
+        $this->checkController($isFile, $rawClass, $requestObject, $controller, $function);        
         $method = new ReflectionMethod($requestObject, $function);
-        $this->_response($method->invokeArgs($requestObject, $this->_event($method, $args)));
+        $this->getResponse($method->invokeArgs($requestObject, $this->fetchEvent($method, $args)));
 	}
     
+	/**
+     * The abort method, ends AJAX request with an error message.
+     * @param string  $err
+     * @access public
+     * @return void
+     */	    
 	public function abort($err){
 		$this->ajax->error($err);
 		exit($err);
 	}
     
-    private function _validate($controller, $function){
+ 	/**
+     * The configErrorReporting method, configures error reporting for CJAX.
+     * @access private
+     * @return int
+     */	    
+    private function configErrorReporting(){
+		@ini_set('display_errors', 1);
+		@ini_set('log_errors', 1);
+		$level = ini_get('error_reporting');
+		if($level > 30719 || $level == 2048){
+			@ini_set('error_reporting', $level-E_STRICT);
+			$level = ini_get('error_reporting');
+		}
+		return $level;        
+    }
+    
+ 	/**
+     * The validateInput method, checks if controller and function input parameters are valid.
+     * @param string  $controller
+     * @param string  $function
+     * @access private
+     * @return void
+     */	     
+    private function validateInput($controller, $function){
 		if(preg_match("/[^a-zA-Z0-9_]/", $controller)){
 			$this->abort("Invalid Controller: {$controller}");
 		}
 		if($function && preg_match("/[^a-zA-Z0-9_]/", $function)){
-			//if function is empty, it still passes.
 			$this->abort("Invalid Function: {$function}");
 		} 
 		if(file_exists($f = CJAX_HOME.'/'.'includes.php')){
@@ -92,14 +143,24 @@ final class AJAX{
 		}          
     }
     
-    private function _exists($isFile, $class, $rawClass, $requestObject, $controller, $function){
+ 	/**
+     * The checkController method, checks if controller and its function are available.
+     * @param bool  $isFile
+     * @param string  $rawClass
+     * @param object  $requestObject
+     * @param string  $controller
+     * @param string  $function
+     * @access private
+     * @return void
+     */	     
+    private function checkController($isFile, $rawClass, $requestObject, $controller, $function){
 		if(!$isFile){
 			header("Content-disposition:inline; filename='{$controller}.php'");
 			header("HTTP/1.0 404 Not Found");
 			header("Status: 404 Not Found");
 			$this->abort("Controller File: {$controller}.php not found");
 		}
-		if(!$class){
+		if(!$controller){
 			$this->abort("Controller Class \"{$rawClass}\" could not be found.");
 		}
 		if(!method_exists($requestObject, $function)){
@@ -107,11 +168,20 @@ final class AJAX{
 		}        
     }
     
-    private function _auth($controller, $function, $args, $requestObject){
+ 	/**
+     * The authenticate method, attempts to authenticate AJAX requests if necessary.
+     * @param string  $controller
+     * @param string  $function
+     * @param array  $args
+     * @param object  $requestObject
+     * @access private
+     * @return bool
+     */	      
+    private function authenticate($controller, $function, $args, $requestObject){
 		if(file_exists($f = CJAX_HOME.'/auth.php')){
 			require_once $f;
 			if(class_exists('AjaxAuth')){
-				$auth = new AjaxAuth;
+				$auth = new Auth;
 				if(!$auth->validate($controller, $function, $args, $requestObject)) {
 					$auth->authError();
                     return true;
@@ -120,9 +190,9 @@ final class AJAX{
             else{
 				$this->abort("Class AjaxAuth was not found.");
 			}
-			if(method_exists($auth, 'intercept') && $_response = $auth->intercept($controller, $function , $args, $requestObject)){
-				if(is_array($_response) || is_object($_response)){
-					$this->_response($_response);
+			if(method_exists($auth, 'intercept') && $response = $auth->intercept($controller, $function , $args, $requestObject)){
+				if(is_array($response) || is_object($response)){
+					$this->getResponse($response);
 				}
 				return true;
 			}
@@ -130,7 +200,14 @@ final class AJAX{
         return false;        
     }
     
-    private function _event($method, $args){
+ 	/**
+     * The fetchEvent method, adds event arg to AJAX request parameter if necessary.
+     * @param ReflectionMethod  $method
+     * @param array  $args
+     * @access private
+     * @return array
+     */	    
+    private function fetchEvent($method, $args){
         $parameters = $method->getParameters();
         if($parameters){
             $parameterClass = $parameters[0]->getClass();
@@ -141,15 +218,27 @@ final class AJAX{
         return $args;        
     }
     
-	private function _response($response){
+ 	/**
+     * The getResponse method, prints an AJAX response to the screen.
+     * @param array|object  $response
+     * @access private
+     * @return void
+     */	        
+	private function getResponse($response){
 		if($response && (is_array($response) || is_object($response))){
-            $coreEvents = new CoreEvents;
 			header('Content-type: application/json; charset=utf-8');
-			print $coreEvents->jsonEncode($response);
+			print $this->ajax->jsonEncode($response);
 		}		
 	}
 	
-	private function _files($controller, $altController = null){
+ 	/**
+     * The loadFiles method, loads files given controller name.
+     * @param string  $controller
+     * @param string  $altController
+     * @access private
+     * @return void
+     */	          
+	private function loadFiles($controller, $altController = null){
 		if($altController){
 			$files[] = $altController;
 		}
@@ -161,7 +250,7 @@ final class AJAX{
 		}
 		
 		$files[] = "{$ajaxCd}/{$controller}.php";
-		$files[] = "{$this->ajax->controllerDir}/{$ajaxCd}/{$controller}.php";
+		$files[] = "{$this->ajax->coreEvents->controllerDir}/{$ajaxCd}/{$controller}.php";
 		$files[] = CJAX_ROOT."/{$ajaxCd}/{$controller}.php";
 		
 		do{
@@ -171,8 +260,13 @@ final class AJAX{
 			}
 		}while(next($files));
 	}
-	
-	private function _params(){
+
+ 	/**
+     * The filterParams method, acquires parameters from AJAX request.
+     * @access private
+     * @return array
+     */	        
+	private function filterParams(){
 		$args = [];
 		$argCount = count(array_keys($_REQUEST)) - 3;
 		foreach(range('a','z') as $k => $v){
@@ -208,8 +302,14 @@ final class AJAX{
 		return $args;
 	}
 	
-	
-	private function _controller($class, $function){
+ 	/**
+     * The createController method, instantiates an AJAX controller object.
+     * @param string  $class
+     * @param string  $function
+     * @access private
+     * @return AJAXController
+     */	     	
+	private function createController($class, $function){
 		if(!$class){
 			return false;
 		}
@@ -224,24 +324,44 @@ final class AJAX{
 	    return new $class($this->ajax);
 	}
     
+ 	/**
+     * Static method main, it serves as a centralized entry point for AJAX requests by CJAX.
+     * @access public
+     * @return void
+     */	     
     public static function main(){
-        $base = realpath(__DIR__.'/..');
-        defined('CJAX_ROOT') or define('CJAX_ROOT', $base);
-        defined('AJAX_BASE') or define('AJAX_BASE', "{$base}/cjax/");
-        defined('CJAX_HOME') or define('CJAX_HOME', "{$base}/cjax");
-        defined('CJAX_CORE') or define('CJAX_CORE', "{$base}/cjax/core");   
-        define('AJAX_CONTROLLER',1);
-        if(!defined('AJAX_CD')){
-	        define('AJAX_CD', 'controllers');
-        }  
+        try{
+            $base = realpath(__DIR__.'/..');
+            defined('CJAX_ROOT') or define('CJAX_ROOT', $base);
+            defined('AJAX_BASE') or define('AJAX_BASE', "{$base}/cjax/");
+            defined('CJAX_HOME') or define('CJAX_HOME', "{$base}/cjax");
+            defined('CJAX_CORE') or define('CJAX_CORE', "{$base}/cjax/core");   
+            define('AJAX_CONTROLLER',1);
+            if(!defined('AJAX_CD')){
+                define('AJAX_CD', 'controllers');
+            }  
 
-        $ajax = CJAX::getInstance();
-        $ajax->initiateRequest();
-        $ajax->initiatePlugins();
-        $controller = $ajax->input('controller');
-        if($controller){
-	        new self($controller);
-        }   
+            $ajax = CJAX::getInstance();
+            $ajax->request->handleRequest();
+            $ajax->pluginManager->initiate();
+            $controller = $ajax->input('controller');
+            if($controller){
+                new self($controller);
+            }   
+        }
+        catch(CJAXException $cje){
+            $exitMessage = $cje->getMessage();
+            $ajax = CJAX::getInstance();
+            if($ajax->config->debug){
+                $exitMessage = "Exception: {$exitMessage} @ ";
+                $trace = $cje->getTrace();
+                if(!empty($trace[0]['class'])){
+                    $exitMessage .= "{$trace[0]['class']}->";
+                }
+                $exitMessage .= "{$trace[0]['function']}();";
+            }
+            exit($exitMessage);
+        }
     }
 }
 

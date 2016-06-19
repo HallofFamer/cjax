@@ -22,7 +22,6 @@
 //extend plugin to inheric generic plugin properties
 
 namespace CJAX\Plugin\ExamplePlugin;
-use CJAX\Core\CoreEvents;
 use CJAX\Core\Plugin;
 
 class ExamplePlugin extends Plugin{
@@ -50,14 +49,14 @@ class ExamplePlugin extends Plugin{
 	 * 
 	 * @var unknown_type
 	 */
-	public $controllers_dir = 'controllers'; 
+	public $controllersDir = 'controllers'; 
 	
 	
 	/**
 	 * 
 	 * Autoload - is fired regardless of if the plugin is called or not, in page load and during ajax requests
 	 */
-	static function autoload(){
+	public static function autoload(){
 		
 	}
 	
@@ -65,7 +64,7 @@ class ExamplePlugin extends Plugin{
 	 * 
 	 * Autoload - is fired regardless of if the plugin is called or not while the page first load ( not in ajax requests)
 	 */
-	static function PageAutoload(){
+	public static function PageAutoload(){
 		
 	}	
 	
@@ -73,7 +72,7 @@ class ExamplePlugin extends Plugin{
 	 * 
 	 * Autoload - is fired during an ajax request regardless of if the plugin is called or not
 	 */
-	static function AjaxAutoload(){
+	public static function AjaxAutoload(){
 		
 	}
 	
@@ -89,9 +88,9 @@ class ExamplePlugin extends Plugin{
 	 * This function is ran on contruction - for both page load and ajax.
 	 * 
 	 * @param unknown_type $arg
-	 * @param unknown_type $ar2
+	 * @param unknown_type $arg2
 	 */
-	function ___construct($arg, $ar2){
+	public function ___construct($arg, $arg2){
 		//you may access these variables in the plugin as:
 		// this.test1 and this.test2
 		$this->test1 = ['test_1','test_2'];
@@ -117,7 +116,7 @@ class ExamplePlugin extends Plugin{
 	 * 
 	 * 
 	 */
-	function waitfor($file){
+	public function waitfor($file){
 		return parent::waitFor($file);
 	}
 	
@@ -142,7 +141,7 @@ class ExamplePlugin extends Plugin{
 	 * 
 	 * @see plugin::set()
 	 */
-	public function set($setting, $value , $instance_id = null){
+	public function set($setting, $value , $instanceId = null){
 		return parent::set($setting, $value);
 	}
 	
@@ -157,7 +156,7 @@ class ExamplePlugin extends Plugin{
 	 * @param unknown_type $arg
 	 * @param unknown_type $ar2
 	 */
-	function onLoad($arg = null, $ar2 = []){
+	public function onLoad($arg = null, $ar2 = []){
 		
 	}
 	
@@ -169,7 +168,7 @@ class ExamplePlugin extends Plugin{
 	 * 
 	 * The parameters of the contructor will be passed.
 	 */
-	function onAjaxLoad($arg = null, $ar2 = null){
+	public function onAjaxLoad($arg = null, $ar2 = null){
 		
 	}
 	
@@ -177,11 +176,11 @@ class ExamplePlugin extends Plugin{
 	/**
 	 * 
 	 * This function is ran within exec when plugin  passed as paramenter.
-	 * Serves mainly to obtain the element_id being used.
+	 * Serves mainly to obtain the elementId being used.
 	 * 
 	 * As of  5.3 +
 	 */
-	function onEvent($element_id){
+	public function onEvent($elementId){
 		
 	}
 	
@@ -191,7 +190,7 @@ class ExamplePlugin extends Plugin{
 	 * 
 	 * @see plugin::save()
 	 */
-	public  function save($setting, $value, $prefix = null){
+	public function save($setting, $value, $prefix = null){
 		return parent::save($setting, $value);
 	}
 	
@@ -199,7 +198,7 @@ class ExamplePlugin extends Plugin{
 	 * Get plugin  setting  saved with  save();
 	 * @see plugin::get()
 	 */
-	function get($setting,$prefix = null){
+	public function get($setting, $prefix = null){
 		return parent::get($setting);
 	}
 	
@@ -218,8 +217,8 @@ class ExamplePlugin extends Plugin{
 	 * only use this if you are experiecing issues with the file not being loaded on time.
 	 * 
 	 */
-	function import($file , $load_time = 0, $on_init = false){
-		return parent::import($file, $load_time);
+	public function import($file, $loadTime = 0, $onInit = false){
+		return parent::import($file, $loadTime);
 	}
 	
 	/**
@@ -233,10 +232,10 @@ class ExamplePlugin extends Plugin{
 	 * waits for the previous file to fully be loaded before importing the next,
 	 * something import does not do.
 	 * 
-	 * $this->imports(array('file.css','file2.js','file3.js'); et.
+	 * $this->imports(['file.css', 'file2.js', 'file3.js']); et.
 	 * 
 	 */
-	function imports($files = [], &$data = []){
+	public function imports($files = [], &$data = []){
 		
 	}
 	
@@ -251,7 +250,7 @@ class ExamplePlugin extends Plugin{
 	 * @param string $api - internal API name 
 	 * @param array $args
 	 */
-	function rightHandler($api, $args, $xmlObj){
+	public function rightHandler($api, $args, $xmlObj){
 		switch($api){
 			/**
 			 * To view all 'internal methods' available , see: cjax/core/classes/cjax.class.php
@@ -281,26 +280,23 @@ class ExamplePlugin extends Plugin{
 	 * 
 	 * 
 	 */
-	function callbackHandler($xmlObj_from, $xmlObj_to, $setting){
-        $coreEvents = new CoreEvents;
-		$event = CoreEvents::$cache[$xmlObj_from->id];
-		$callback = CoreEvents::$cache[$xmlObj_to->id];
+	public function callbackHandler($xmlObjFrom, $xmlObjTo, $setting){
+        $cache = $this->coreEvents->getCache();
+		$event = $cache->get($xmlObjFrom->id);
+		$callback = $cache->get($xmlObjTo->id);
 		
 		//pusha a copy of the API as callback
-		$event['callback'][$xmlObj_from->id] = $callback;
+		$event['callback'][$xmlObjFrom->id] = $callback;
 		
 		//deletes the API
-		$xmlObj_from->delete();
+		$xmlObjFrom->delete();
 		//process
 		//do changes to $event
 		
 		//push changes
-		CoreEvents::$cache[$xmlObj_to->id] = $event;
+        $cache->set($xmlObjTo->id, $event);
 		//commit changes
-		$coreEvents->simpleCommit();
-		
+		$this->coreEvents->simpleCommit();		
 		return true;
 	}
-	
-
 }

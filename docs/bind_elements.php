@@ -16,22 +16,22 @@ Cjax uses the $ajax->exec() function to bind elements to actions. Below are some
 <h4>Example</h4>
 
 Default window event is "click", since it's default you may go by without specifying it.<br />
-The following example will assign the action $ajax->call() to element "element_id" on the click event.
+The following example will assign the action $ajax->call() to element "elementId" on the click event.
 <?php echo $ajax->code("
-\$ajax->exec('element_id', \$ajax->call('url/to/action'));
+\$ajax->exec('elementId', \$ajax->call('url/to/action'));
 ");?>
 If you'd like to use a different window event then you would need to specify it
 so that the specific actions trigger  when that window event happens.
 <h4>Example</h4>
 <?php echo $ajax->code("
 //Sample #1 blur
-\$ajax->exec('element_id', \$ajax->call('url/to/action'),'blur');
+\$ajax->exec('elementId', \$ajax->call('url/to/action'),'blur');
 //Sample #2 change
-\$ajax->exec('element_id', \$ajax->call('url/to/action'),'change');
+\$ajax->exec('elementId', \$ajax->call('url/to/action'),'change');
 //Sample #3 keyup
-\$ajax->exec('element_id', \$ajax->call('url/to/action'),'keyup');
+\$ajax->exec('elementId', \$ajax->call('url/to/action'),'keyup');
 //Sample #4 keydown
-\$ajax->exec('element_id', \$ajax->call('url/to/action'),'keydown');
+\$ajax->exec('elementId', \$ajax->call('url/to/action'),'keydown');
 ");?>
 <h3>Bind Multiple Events</h3>
 Cjax also supports the ability to bind multiple actions to one single element through an array.
@@ -44,7 +44,7 @@ In the following example we are assigning a few actions to that element's click.
 <h4>Example</h4>
 <?php 
 echo $ajax->code("
-\$ajax->exec('element_id', [
+\$ajax->exec('elementId', [
 	\$ajax->overlayContent('Hello'),
 	\$ajax->alert('Hello'),
 	\$ajax->info('Hello'),

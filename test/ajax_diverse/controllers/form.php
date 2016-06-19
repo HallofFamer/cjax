@@ -4,23 +4,20 @@ use CJAX\Core\CJAX;
 
 class Form {
 	
-	function username($username)
-	{
+	public function username($username){
 		$ajax = CJAX::getInstance();
-		$ajax->user_label = array('style' => array('color' => 'green'));
+		$ajax->user_label = ['style' => ['color' => 'green']];
 		$ajax->user_label = "<b>$username</b> is available";
 	}
 	
-	function country($selected_value)
-	{
-        $ajax = CJAX::getInstance();
-        
+	public function country($selected_value){
+        $ajax = CJAX::getInstance();        
         $data = [];
         $selected = null;
         
-        switch ($selected_value) {
+        switch($selected_value){
         	case 'us':
-        		$data = array('tx'=>'Texas', 'fl'=>'Florida', 'ca' => 'California','other' => 'Other..');
+        		$data = ['tx' => 'Texas', 'fl' => 'Florida', 'ca' => 'California','other' => 'Other..'];
         		//$ajax->label_5 = "United States";
         		$selected = 'other';
         	break;
@@ -44,24 +41,22 @@ class Form {
         $ajax->change('state', $ajax->call('../../ajax.php?form/state/|state|'));//add event
 	}
 	
-	function state($selected)
-	{
-		$ajax = CJAX::getInstance();
-		
+	public function state($selected){
+		$ajax = CJAX::getInstance();		
 		$data = [];
 		
 		switch($selected){
 			case 'tx':
-				$data  = array('Dallas','Houston', 'San Antonio','other'=>'Other');
+				$data  = ['Dallas', 'Houston', 'San Antonio', 'other' => 'Other'];
 			break;
 			case 'fl':
-				$data  = array('Miami','Miami Beach', 'Palm Beach','other'=>'Other');
+				$data  = ['Miami', 'Miami Beach', 'Palm Beach', 'other'=>'Other'];
 			break;
 			case 'ca':
-				$data  = array('Los Angeles','San Diego', 'San Francisco','other'=>'Other');
+				$data  = ['Los Angeles', 'San Diego', 'San Francisco', 'other' => 'Other'];
 			break;
 			case 'other':
-				$data = array();
+				$data = [];
 			default:
 			
 		}
@@ -69,38 +64,35 @@ class Form {
 		$ajax->change('city', $ajax->call('../../ajax.php?form/city/|city|'));
 	}
 	
-	function city($selected)
-	{
+	public function city($selected){
 		if($selected=='other') {
-			$ajax = CJAX::getInstance();;
-			$ajax->select('city', array(), 'other',true);
+			$ajax = CJAX::getInstance();
+			$ajax->select('city', [], 'other',true);
 		}
 	}
 	
-    function submit($post_data)
-    {
-        $ajax = CJAX::getInstance();;
+    public function submit($post_data){
+        $ajax = CJAX::getInstance();
         $ajax->debug($post_data);
     }
     
-    function dropdown($selected_value)
-    {
-        $ajax = CJAX::getInstance();;
+    public function dropdown($selected_value){
+        $ajax = CJAX::getInstance();
         
-        switch ($selected_value) {
+        switch($selected_value) {
         	case 'classes':
         		$data = get_declared_classes();
         		$ajax->label_4 = "PHP Classes Loaded";
-        	break;
+        	    break;
         	case 'files':
         		$data = get_required_files();
         		$ajax->label_4 = "PHP Files";
-        	break;
+        	    break;
         	case 'ext':
         		$data = get_loaded_extensions();
         		$ajax->label_4 = "PHP Extensions";
         }
-        $data += array('classes'=>'PHP Clases','files'=>'PHP Files Loaded','ext'=>'PHP Extensions Loaded');
+        $data += ['classes' => 'PHP Clases', 'files' => 'PHP Files Loaded','ext' => 'PHP Extensions Loaded'];
         //propagate data to dropdown
         $ajax->select('dropdown', $data);
     }

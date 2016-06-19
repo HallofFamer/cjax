@@ -219,11 +219,11 @@ using your own controllers.
 $code = $ajax->code("
 
 \$options = [
-		'url' => 'ajax.php?upload_file/post', //submit request after files are uploaded
+		'url' => 'ajax.php?uploadfile/post', //submit request after files are uploaded
 		'suffix' => md5(time(). rand(1,10000000)), // makes files names universally unique
 		'debug' => true, //Remove if you are not debugging.
 		'success_message' => 'File(s) @files successfully uploaded.',//@files tag is replaced by files uploaded.
-		'ext' => array('jpg','gif', 'png','jpeg'),
+		'ext' => ['jpg','gif', 'png','jpeg'],
 		'no_files' => 'Please select a file.'
 	];
 	
@@ -250,7 +250,7 @@ $code = $ajax->code("
 		'suffix' => md5(time(). rand(1,10000000)), // makes files names universally unique
 		'debug' => true, //Remove if you are not debugging.
 		'success_message' => 'File(s) @files successfully uploaded.',//@files tag is replaced by files uploaded.
-		'ext' => array('jpg','gif', 'png','jpeg'),
+		'ext' => ['jpg','gif', 'png','jpeg'],
 		'no_files' => 'Please select a file.'
 	];
 
@@ -299,10 +299,7 @@ add the tag as shown above.
 			<li>image tag - an  image tag that includes the image number which will be previewed after uploaded.</li>
 		</ul>
 		
-		array(
-			"container1" => "&lt;img src='#image1#' />",
-			"container2" => "&lt;img src='#image2#' />"
-		);
+		["container1" => "&lt;img src='#image1#' />", "container2" => "&lt;img src='#image2#' />"];
 	</td>
 	<td class="td">You may use these options to make the uploader work for you.</td>
 </tr>
@@ -328,7 +325,7 @@ This does not include any custom styling or  database inserts, that would be ext
 
 <div id="myfooter">
 	<p>
-		Previous Topic:&nbsp;&nbsp;<a href="#">Previous Class</a>
+        Previous Topic:&nbsp;&nbsp;<a href="#">Previous Class</a>
 		&nbsp;&nbsp;&nbsp;&middot;&nbsp;&nbsp;
 		<a href="#top">Top of Page</a>&nbsp;&nbsp;&nbsp;&middot;&nbsp;&nbsp;
 		<a href="http://cjax.sourceforge.net/examples">Demos Home</a>&nbsp;&nbsp;&nbsp;&middot;&nbsp;&nbsp;

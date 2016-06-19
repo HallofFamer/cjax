@@ -47,7 +47,7 @@ class UploadFile extends Uploader{
 				$this->ajax->warning("Could not move file");
 			}
 		} 
-        elseif($this->ajax->request()){
+        elseif($this->ajax->request->checkRequest()){
 			$this->ajax->process("Uploading file..",1000);
 			//Ajax request
 			//PRE-POST FILE

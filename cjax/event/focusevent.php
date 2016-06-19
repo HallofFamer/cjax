@@ -15,31 +15,68 @@
 *   Written by: CJ Galindo                  
 *   Website: http://cjax.sourceforge.net                     $      
 *   Email: cjxxi@msn.com    
-*   Date: 03/13/2006                          $     
-*   File Last Changed:  03/13/2016           $     
+*   Date: 03/13/2016                          $     
+*   File Last Changed:  04/18/2016           $     
 **####################################################################################################    */ 
 
 namespace CJAX\Event;
 use StdClass;
 
+/**
+ * The FocusEvent class, representing focus-related events like focus, blur, focusin, or focusout.
+ * @category CJAX
+ * @package Event
+ * @author Ordland Euroboros <halloffamer@mysidiarpg.com>
+ * @copyright (c) 2008, CJ Galindo
+ * @link https://github.com/ajaxboy/cjax
+ * @version 6.0
+ * @since 6.0
+ * @api
+ */
+
 class FocusEvent extends Event{
 
+	/**
+	 * The component property, stores the primary component id involved in focus change. 
+     * @access protected
+	 * @var string
+	 */       
     protected $component;
     
+	/**
+	 * The oppositeComponent property, specifies the other Component involved in this focus change. 
+     * @access protected
+	 * @var string
+	 */      
     protected $oppositeComponent;
 
     
+	/**
+     * The constructor for FocusEvent class, it initializes basic focus event properties.
+	 * @param StdClass  $event
+     * @access public
+     * @return FocusEvent
+     */	     
     public function __construct(StdClass $event){
         parent::__construct($event);
         $this->component = $event->component;        
         $this->oppositeComponent = $event->oppositeComponent;
     }
  
-    
+	/**
+     * The getComponent method, returns the primary component in this focus change.
+     * @access public
+     * @return string
+     */	     
     public function getComponent(){
         return $this->component;
     }
     
+	/**
+     * The getOppositeComponent method, returns the other component in this focus change.
+     * @access public
+     * @return string
+     */    
     public function getOppositeComponent(){
         return $this->oppositeComponent;
     }   

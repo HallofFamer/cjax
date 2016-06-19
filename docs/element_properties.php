@@ -13,8 +13,8 @@ All you need is the ID of the element to be able to change/set its properties. T
 divs,spans,images , text, buttons, inputs, and other elements. You may change ANY property that is available in JavaScript for that element. 
 As long it is a valid property you will be able to change/set its value.
 <h3>Main Property</h3>
-<?php echo $ajax->code("\$ajax->element_id = 'something';");?>
-In Cjax all elements have a main property. "element_id" would be of course the id of the element you wish to interact with. 'something' is the value, each element
+<?php echo $ajax->code("\$ajax->elementId = 'something';");?>
+In Cjax all elements have a main property. "elementId" would be of course the id of the element you wish to interact with. 'something' is the value, each element
 has its main property, for example  an image's main property would be "src" so by using the statement above on an image
 it would update its src property while if it is for a div or a span it would be updating/settings its innerHTML. For checkboxes
 you may use boolean (true or false) inputs to check/uncheck.
@@ -72,12 +72,12 @@ If you intend to update other properies in that element, use an array instead.
 <br />
 Example:
 <?php echo $ajax->code("
-\$ajax->element_id = ['width' => 200,'height'=> 100];
+\$ajax->elementId = ['width' => 200,'height'=> 100];
 ");?>
 <h3>Style Properties</h3>
 To update the style property of an element follow the same logic as before:
 <?php echo $ajax->code("
-\$ajax->element_id = [
+\$ajax->elementId = [
 	'style' => [
 		'width' => '200px',
 		'height' => '100px',

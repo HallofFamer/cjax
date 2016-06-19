@@ -12,7 +12,7 @@ $vars = [
 	'x' => 'y'
 ];
 
-$ajax->post = $vars;
+$ajax->postVars($vars);
 $ajax->call("ajax.php?post/postSample",'div_response');
 ?>
 <html>

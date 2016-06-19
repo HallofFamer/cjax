@@ -1,0 +1,2534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+    <meta charset="utf-8"/>
+    <title>CJAX 6.0 Beta 2</title>
+    <meta name="author" content=""/>
+    <meta name="description" content=""/>
+
+    <link href="../css/bootstrap-combined.no-icons.min.css" rel="stylesheet">
+    <link href="../css/font-awesome.min.css" rel="stylesheet">
+    <link href="../css/prism.css" rel="stylesheet" media="all"/>
+    <link href="../css/template.css" rel="stylesheet" media="all"/>
+    
+    <!--[if lt IE 9]>
+    <script src="../js/html5.js"></script>
+    <![endif]-->
+    <script src="../js/jquery-1.11.0.min.js"></script>
+    <script src="../js/ui/1.10.4/jquery-ui.min.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    <script src="../js/jquery.smooth-scroll.js"></script>
+    <script src="../js/prism.min.js"></script>
+    <!-- TODO: Add http://jscrollpane.kelvinluck.com/ to style the scrollbars for browsers not using webkit-->
+    <script type="text/javascript">
+    function loadExternalCodeSnippets() {
+        Array.prototype.slice.call(document.querySelectorAll('pre[data-src]')).forEach(function (pre) {
+            var src = pre.getAttribute('data-src');
+            var extension = (src.match(/\.(\w+)$/) || [, ''])[1];
+            var language = 'php';
+
+            var code = document.createElement('code');
+            code.className = 'language-' + language;
+
+            pre.textContent = '';
+
+            code.textContent = 'Loading…';
+
+            pre.appendChild(code);
+
+            var xhr = new XMLHttpRequest();
+
+            xhr.open('GET', src, true);
+
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState == 4) {
+
+                    if (xhr.status < 400 && xhr.responseText) {
+                        code.textContent = xhr.responseText;
+
+                        Prism.highlightElement(code);
+                    }
+                    else if (xhr.status >= 400) {
+                        code.textContent = '✖ Error ' + xhr.status + ' while fetching file: ' + xhr.statusText;
+                    }
+                    else {
+                        code.textContent = '✖ Error: File does not exist or is empty';
+                    }
+                }
+            };
+
+            xhr.send(null);
+        });
+    }
+
+    $(document).ready(function(){
+        loadExternalCodeSnippets();
+    });
+    $('#source-view').on('shown', function () {
+        loadExternalCodeSnippets();
+    })
+</script>
+
+    <link rel="shortcut icon" href="../images/favicon.ico"/>
+    <link rel="apple-touch-icon" href="../images/apple-touch-icon.png"/>
+    <link rel="apple-touch-icon" sizes="72x72" href="../images/apple-touch-icon-72x72.png"/>
+    <link rel="apple-touch-icon" sizes="114x114" href="../images/apple-touch-icon-114x114.png"/>
+</head>
+<body>
+
+<div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+        <div class="container">
+            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                <i class="icon-ellipsis-vertical"></i>
+            </a>
+            <a class="brand" href="../index.html">CJAX 6.0 Beta 2</a>
+
+            <div class="nav-collapse">
+                <ul class="nav pull-right">
+                                        <li class="dropdown">
+                        <a href="../index.html" class="dropdown-toggle" data-toggle="dropdown">
+                            API Documentation <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                                                        <li><a href="../namespaces/CJAX.html">\CJAX</a></li>
+                                                        <li><a href="../namespaces/Controllers.html">\Controllers</a></li>
+                                                        <li><a href="../namespaces/Examples.html">\Examples</a></li>
+                                                    </ul>
+                    </li>
+                                        <li class="dropdown" id="charts-menu">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            Charts <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="../graphs/class.html">
+                                    <i class="icon-list-alt"></i>&#160;Class hierarchy diagram
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="dropdown" id="reports-menu">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            Reports <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="../reports/errors.html">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <i class="icon-list-alt"></i>&#160;Errors <span class="label label-info pull-right">342</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="../reports/markers.html">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <i class="icon-list-alt"></i>&#160;Markers <span class="label label-info pull-right">1</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="../reports/deprecated.html">
+                                                                                                                                                                                        <i class="icon-list-alt"></i>&#160;Deprecated <span class="label label-info pull-right">1</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!--<div class="go_to_top">-->
+    <!--<a href="#___" style="color: inherit">Back to top&#160;&#160;<i class="icon-upload icon-white"></i></a>-->
+    <!--</div>-->
+</div>
+
+<div id="___" class="container-fluid">
+        <section class="row-fluid">
+        <div class="span2 sidebar">
+                                <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle " data-toggle="collapse" data-target="#namespace-1497316034"></a>
+                                <a href="../namespaces/default.html" style="margin-left: 30px; padding-left: 0">\</a>
+            </div>
+            <div id="namespace-1497316034" class="accordion-body collapse in">
+                <div class="accordion-inner">
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-896128231"></a>
+                                <a href="../namespaces/CJAX.html" style="margin-left: 30px; padding-left: 0">CJAX</a>
+            </div>
+            <div id="namespace-896128231" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1208880890"></a>
+                                <a href="../namespaces/CJAX.Core.html" style="margin-left: 30px; padding-left: 0">Core</a>
+            </div>
+            <div id="namespace-1208880890" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/CJAX.Core.AJAXController.html">AJAXController</a></li>
+                                                    <li class="class"><a href="../classes/CJAX.Core.Cache.html">Cache</a></li>
+                                                    <li class="class"><a href="../classes/CJAX.Core.CJAX.html">CJAX</a></li>
+                                                    <li class="class"><a href="../classes/CJAX.Core.CJAXException.html">CJAXException</a></li>
+                                                    <li class="class"><a href="../classes/CJAX.Core.CoreEvents.html">CoreEvents</a></li>
+                                                    <li class="class"><a href="../classes/CJAX.Core.DOMEvents.html">DOMEvents</a></li>
+                                                    <li class="class"><a href="../classes/CJAX.Core.Ext.html">Ext</a></li>
+                                                    <li class="class"><a href="../classes/CJAX.Core.Format.html">Format</a></li>
+                                                    <li class="class"><a href="../classes/CJAX.Core.Initializer.html">Initializer</a></li>
+                                                    <li class="class"><a href="../classes/CJAX.Core.Plugin.html">Plugin</a></li>
+                                                    <li class="class"><a href="../classes/CJAX.Core.PluginManager.html">PluginManager</a></li>
+                                                    <li class="class"><a href="../classes/CJAX.Core.Request.html">Request</a></li>
+                                                    <li class="class"><a href="../classes/CJAX.Core.XmlItem.html">XmlItem</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1490302127"></a>
+                                <a href="../namespaces/CJAX.Event.html" style="margin-left: 30px; padding-left: 0">Event</a>
+            </div>
+            <div id="namespace-1490302127" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/CJAX.Event.ActionEvent.html">ActionEvent</a></li>
+                                                    <li class="class"><a href="../classes/CJAX.Event.DragEvent.html">DragEvent</a></li>
+                                                    <li class="class"><a href="../classes/CJAX.Event.Event.html">Event</a></li>
+                                                    <li class="class"><a href="../classes/CJAX.Event.FocusEvent.html">FocusEvent</a></li>
+                                                    <li class="class"><a href="../classes/CJAX.Event.InputEvent.html">InputEvent</a></li>
+                                                    <li class="class"><a href="../classes/CJAX.Event.KeyEvent.html">KeyEvent</a></li>
+                                                    <li class="class"><a href="../classes/CJAX.Event.MouseEvent.html">MouseEvent</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-481807853"></a>
+                                <a href="../namespaces/CJAX.Plugin.html" style="margin-left: 30px; padding-left: 0">Plugin</a>
+            </div>
+            <div id="namespace-481807853" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1269935833"></a>
+                                <a href="../namespaces/CJAX.Plugin.ExamplePlugin.html" style="margin-left: 30px; padding-left: 0">ExamplePlugin</a>
+            </div>
+            <div id="namespace-1269935833" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1881383240"></a>
+                                <a href="../namespaces/CJAX.Plugin.ExamplePlugin.Controllers.html" style="margin-left: 30px; padding-left: 0">Controllers</a>
+            </div>
+            <div id="namespace-1881383240" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/CJAX.Plugin.ExamplePlugin.Controllers.ExamplePlugin.html">ExamplePlugin</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/CJAX.Plugin.ExamplePlugin.ExamplePlugin.html">ExamplePlugin</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                    
+                    <ul>
+                                                                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1221026433"></a>
+                                <a href="../namespaces/CJAX.Plugins.html" style="margin-left: 30px; padding-left: 0">Plugins</a>
+            </div>
+            <div id="namespace-1221026433" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-923535872"></a>
+                                <a href="../namespaces/CJAX.Plugins.Autocomplete.html" style="margin-left: 30px; padding-left: 0">Autocomplete</a>
+            </div>
+            <div id="namespace-923535872" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1341885825"></a>
+                                <a href="../namespaces/CJAX.Plugins.Autocomplete.Controllers.html" style="margin-left: 30px; padding-left: 0">Controllers</a>
+            </div>
+            <div id="namespace-1341885825" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/CJAX.Plugins.Autocomplete.Controllers.Autocomplete.html">Autocomplete</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/CJAX.Plugins.Autocomplete.Autocomplete.html">Autocomplete</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1801923390"></a>
+                                <a href="../namespaces/CJAX.Plugins.Dracula.html" style="margin-left: 30px; padding-left: 0">Dracula</a>
+            </div>
+            <div id="namespace-1801923390" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1378469285"></a>
+                                <a href="../namespaces/CJAX.Plugins.Dracula.Controllers.html" style="margin-left: 30px; padding-left: 0">Controllers</a>
+            </div>
+            <div id="namespace-1378469285" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/CJAX.Plugins.Dracula.Controllers.Dracula.html">Dracula</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/CJAX.Plugins.Dracula.Dracula.html">Dracula</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-128202608"></a>
+                                <a href="../namespaces/CJAX.Plugins.Uploader.html" style="margin-left: 30px; padding-left: 0">Uploader</a>
+            </div>
+            <div id="namespace-128202608" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-549135116"></a>
+                                <a href="../namespaces/CJAX.Plugins.Uploader.Controllers.html" style="margin-left: 30px; padding-left: 0">Controllers</a>
+            </div>
+            <div id="namespace-549135116" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/CJAX.Plugins.Uploader.Controllers.Uploader.html">Uploader</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/CJAX.Plugins.Uploader.Uploader.html">Uploader</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1540696802"></a>
+                                <a href="../namespaces/CJAX.Plugins.Uploadify.html" style="margin-left: 30px; padding-left: 0">Uploadify</a>
+            </div>
+            <div id="namespace-1540696802" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1480437030"></a>
+                                <a href="../namespaces/CJAX.Plugins.Uploadify.Controllers.html" style="margin-left: 30px; padding-left: 0">Controllers</a>
+            </div>
+            <div id="namespace-1480437030" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/CJAX.Plugins.Uploadify.Controllers.Uploadify.html">Uploadify</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/CJAX.Plugins.Uploadify.uploadify.html">uploadify</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-658825682"></a>
+                                <a href="../namespaces/CJAX.Plugins.Validate.html" style="margin-left: 30px; padding-left: 0">Validate</a>
+            </div>
+            <div id="namespace-658825682" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/CJAX.Plugins.Validate.Validate.html">Validate</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                    
+                    <ul>
+                                                                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/CJAX.Auth.html">Auth</a></li>
+                                                    <li class="class"><a href="../classes/CJAX.Config.html">Config</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-2062251914"></a>
+                                <a href="../namespaces/Controllers.html" style="margin-left: 30px; padding-left: 0">Controllers</a>
+            </div>
+            <div id="namespace-2062251914" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/Controllers.Sample.html">Sample</a></li>
+                                                    <li class="class"><a href="../classes/Controllers.Test.html">Test</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1365853816"></a>
+                                <a href="../namespaces/Examples.html" style="margin-left: 30px; padding-left: 0">Examples</a>
+            </div>
+            <div id="namespace-1365853816" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1624177998"></a>
+                                <a href="../namespaces/Examples.Controllers.html" style="margin-left: 30px; padding-left: 0">Controllers</a>
+            </div>
+            <div id="namespace-1624177998" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/Examples.Controllers.AJAXLogin.html">AJAXLogin</a></li>
+                                                    <li class="class"><a href="../classes/Examples.Controllers.AjaxRequest.html">AjaxRequest</a></li>
+                                                    <li class="class"><a href="../classes/Examples.Controllers.Alert.html">Alert</a></li>
+                                                    <li class="class"><a href="../classes/Examples.Controllers.Bind.html">Bind</a></li>
+                                                    <li class="class"><a href="../classes/Examples.Controllers.Calc.html">Calc</a></li>
+                                                    <li class="class"><a href="../classes/Examples.Controllers.Captcha.html">Captcha</a></li>
+                                                    <li class="class"><a href="../classes/Examples.Controllers.ChangeValue.html">ChangeValue</a></li>
+                                                    <li class="class"><a href="../classes/Examples.Controllers.ClickAJAXRequest.html">ClickAJAXRequest</a></li>
+                                                    <li class="class"><a href="../classes/Examples.Controllers.Confirm.html">Confirm</a></li>
+                                                    <li class="class"><a href="../classes/Examples.Controllers.Countries.html">Countries</a></li>
+                                                    <li class="class"><a href="../classes/Examples.Controllers.Dragdrop.html">Dragdrop</a></li>
+                                                    <li class="class"><a href="../classes/Examples.Controllers.Dragula.html">Dragula</a></li>
+                                                    <li class="class"><a href="../classes/Examples.Controllers.Dropdown.html">Dropdown</a></li>
+                                                    <li class="class"><a href="../classes/Examples.Controllers.Flush.html">Flush</a></li>
+                                                    <li class="class"><a href="../classes/Examples.Controllers.Helper.html">Helper</a></li>
+                                                    <li class="class"><a href="../classes/Examples.Controllers.Invalidate.html">Invalidate</a></li>
+                                                    <li class="class"><a href="../classes/Examples.Controllers.KeyupUpdate.html">KeyupUpdate</a></li>
+                                                    <li class="class"><a href="../classes/Examples.Controllers.Messages.html">Messages</a></li>
+                                                    <li class="class"><a href="../classes/Examples.Controllers.Mouse.html">Mouse</a></li>
+                                                    <li class="class"><a href="../classes/Examples.Controllers.Overlay.html">Overlay</a></li>
+                                                    <li class="class"><a href="../classes/Examples.Controllers.OverlayValidation.html">OverlayValidation</a></li>
+                                                    <li class="class"><a href="../classes/Examples.Controllers.Pagination.html">Pagination</a></li>
+                                                    <li class="class"><a href="../classes/Examples.Controllers.Parameters.html">Parameters</a></li>
+                                                    <li class="class"><a href="../classes/Examples.Controllers.Post.html">Post</a></li>
+                                                    <li class="class"><a href="../classes/Examples.Controllers.RecursiveAJAX.html">RecursiveAJAX</a></li>
+                                                    <li class="class"><a href="../classes/Examples.Controllers.Search.html">Search</a></li>
+                                                    <li class="class"><a href="../classes/Examples.Controllers.SendForm.html">SendForm</a></li>
+                                                    <li class="class"><a href="../classes/Examples.Controllers.SendInput.html">SendInput</a></li>
+                                                    <li class="class"><a href="../classes/Examples.Controllers.Test.html">Test</a></li>
+                                                    <li class="class"><a href="../classes/Examples.Controllers.Update.html">Update</a></li>
+                                                    <li class="class"><a href="../classes/Examples.Controllers.UploadFile.html">UploadFile</a></li>
+                                                    <li class="class"><a href="../classes/Examples.Controllers.ValidationUploader.html">ValidationUploader</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                    
+                    <ul>
+                                                                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/AJAX.html">AJAX</a></li>
+                                                    <li class="class"><a href="../classes/Form.html">Form</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+        </div>
+    </section>
+    <section class="row-fluid">
+        <div class="span10 offset2">
+            <div class="row-fluid">
+                <div class="span8 content class">
+                    <nav>
+                                                <a href="../namespaces/CJAX.Event.html">\CJAX\Event</a> <i class="icon-level-up"></i>
+                                            </nav>
+                    <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal"><i class="icon-code"></i></a>
+
+                    <h1><small>\CJAX\Event</small>DragEvent</h1>
+                    <p><em>The DragEvent class, representing a drag and drop interaction event.</em></p>
+                    <p>DragEvent inherits from MouseEvents, therefore it contains all properties for mouse event too.</p>
+                    
+                                        
+                    <section id="summary">
+                        <h2>Summary</h2>
+                        <section class="row-fluid heading">
+                            <section class="span4">
+                                <a href="#methods">Methods</a>
+                            </section>
+                            <section class="span4">
+                                <a href="#properties">Properties</a>
+                            </section>
+                            <section class="span4">
+                                <a href="#constants">Constants</a>
+                            </section>
+                        </section>
+                        <section class="row-fluid public">
+                            <section class="span4">
+                                                                    <a href="../classes/CJAX.Event.DragEvent.html#method___construct" class="">__construct()</a><br />
+                                                                    <a href="../classes/CJAX.Event.MouseEvent.html#method_getButton" class="">getButton()</a><br />
+                                                                    <a href="../classes/CJAX.Event.MouseEvent.html#method_getClickCount" class="">getClickCount()</a><br />
+                                                                    <a href="../classes/CJAX.Event.MouseEvent.html#method_getX" class="">getX()</a><br />
+                                                                    <a href="../classes/CJAX.Event.MouseEvent.html#method_getXOnPage" class="">getXOnPage()</a><br />
+                                                                    <a href="../classes/CJAX.Event.MouseEvent.html#method_getXOnScreen" class="">getXOnScreen()</a><br />
+                                                                    <a href="../classes/CJAX.Event.MouseEvent.html#method_getY" class="">getY()</a><br />
+                                                                    <a href="../classes/CJAX.Event.MouseEvent.html#method_getYOnPage" class="">getYOnPage()</a><br />
+                                                                    <a href="../classes/CJAX.Event.MouseEvent.html#method_getYOnScreen" class="">getYOnScreen()</a><br />
+                                                                    <a href="../classes/CJAX.Event.InputEvent.html#method_getLocation" class="">getLocation()</a><br />
+                                                                    <a href="../classes/CJAX.Event.MouseEvent.html#method_getLocationOnPage" class="">getLocationOnPage()</a><br />
+                                                                    <a href="../classes/CJAX.Event.MouseEvent.html#method_getLocationOnScreen" class="">getLocationOnScreen()</a><br />
+                                                                    <a href="../classes/CJAX.Event.InputEvent.html#method_isAltDown" class="">isAltDown()</a><br />
+                                                                    <a href="../classes/CJAX.Event.InputEvent.html#method_getComponent" class="">getComponent()</a><br />
+                                                                    <a href="../classes/CJAX.Event.InputEvent.html#method_isControlDown" class="">isControlDown()</a><br />
+                                                                    <a href="../classes/CJAX.Event.InputEvent.html#method_isMetaDown" class="">isMetaDown()</a><br />
+                                                                    <a href="../classes/CJAX.Event.InputEvent.html#method_isShiftDown" class="">isShiftDown()</a><br />
+                                                                    <a href="../classes/CJAX.Event.Event.html#method_canBubble" class="">canBubble()</a><br />
+                                                                    <a href="../classes/CJAX.Event.Event.html#method_isCancelable" class="">isCancelable()</a><br />
+                                                                    <a href="../classes/CJAX.Event.Event.html#method_hasDefaultPrevented" class="">hasDefaultPrevented()</a><br />
+                                                                    <a href="../classes/CJAX.Event.Event.html#method_getPhase" class="">getPhase()</a><br />
+                                                                    <a href="../classes/CJAX.Event.Event.html#method_getSource" class="">getSource()</a><br />
+                                                                    <a href="../classes/CJAX.Event.Event.html#method_getTarget" class="">getTarget()</a><br />
+                                                                    <a href="../classes/CJAX.Event.Event.html#method_getTimeStamp" class="">getTimeStamp()</a><br />
+                                                                    <a href="../classes/CJAX.Event.Event.html#method_isTrusted" class="">isTrusted()</a><br />
+                                                                    <a href="../classes/CJAX.Event.Event.html#method_getType" class="">getType()</a><br />
+                                                                    <a href="../classes/CJAX.Event.Event.html#method___toString" class="">__toString()</a><br />
+                                                                    <a href="../classes/CJAX.Event.DragEvent.html#method_getData" class="">getData()</a><br />
+                                                                    <a href="../classes/CJAX.Event.DragEvent.html#method_getDropEffect" class="">getDropEffect()</a><br />
+                                                                    <a href="../classes/CJAX.Event.DragEvent.html#method_getEffectAllowed" class="">getEffectAllowed()</a><br />
+                                                                    <a href="../classes/CJAX.Event.DragEvent.html#method_getFiles" class="">getFiles()</a><br />
+                                                            </section>
+                            <section class="span4">
+                                                                    <em>No public properties found</em>
+                                                            </section>
+                            <section class="span4">
+                                                                    <a href="../classes/CJAX.Event.Event.html#constant_CAPTURING_PHASE" class="">CAPTURING_PHASE</a><br />
+                                                                    <a href="../classes/CJAX.Event.Event.html#constant_AT_TARGET" class="">AT_TARGET</a><br />
+                                                                    <a href="../classes/CJAX.Event.Event.html#constant_BUBBLING_PHASE" class="">BUBBLING_PHASE</a><br />
+                                                            </section>
+                        </section>
+                        <section class="row-fluid protected">
+                            <section class="span4">
+                                                                    <em>No protected methods found</em>
+                                                            </section>
+                            <section class="span4">
+                                                                    <a href="../classes/CJAX.Event.MouseEvent.html#property_button" class="">$button</a><br />
+                                                                    <a href="../classes/CJAX.Event.MouseEvent.html#property_clickCount" class="">$clickCount</a><br />
+                                                                    <a href="../classes/CJAX.Event.MouseEvent.html#property_x" class="">$x</a><br />
+                                                                    <a href="../classes/CJAX.Event.MouseEvent.html#property_xOnPage" class="">$xOnPage</a><br />
+                                                                    <a href="../classes/CJAX.Event.MouseEvent.html#property_xOnScreen" class="">$xOnScreen</a><br />
+                                                                    <a href="../classes/CJAX.Event.MouseEvent.html#property_y" class="">$y</a><br />
+                                                                    <a href="../classes/CJAX.Event.MouseEvent.html#property_yOnPage" class="">$yOnPage</a><br />
+                                                                    <a href="../classes/CJAX.Event.MouseEvent.html#property_yOnScreen" class="">$yOnScreen</a><br />
+                                                                    <a href="../classes/CJAX.Event.InputEvent.html#property_altKey" class="">$altKey</a><br />
+                                                                    <a href="../classes/CJAX.Event.InputEvent.html#property_component" class="">$component</a><br />
+                                                                    <a href="../classes/CJAX.Event.InputEvent.html#property_ctrlKey" class="">$ctrlKey</a><br />
+                                                                    <a href="../classes/CJAX.Event.InputEvent.html#property_metaKey" class="">$metaKey</a><br />
+                                                                    <a href="../classes/CJAX.Event.InputEvent.html#property_shiftKey" class="">$shiftKey</a><br />
+                                                                    <a href="../classes/CJAX.Event.Event.html#property_bubbles" class="">$bubbles</a><br />
+                                                                    <a href="../classes/CJAX.Event.Event.html#property_cancelable" class="">$cancelable</a><br />
+                                                                    <a href="../classes/CJAX.Event.Event.html#property_defaultPrevented" class="">$defaultPrevented</a><br />
+                                                                    <a href="../classes/CJAX.Event.Event.html#property_phase" class="">$phase</a><br />
+                                                                    <a href="../classes/CJAX.Event.Event.html#property_source" class="">$source</a><br />
+                                                                    <a href="../classes/CJAX.Event.Event.html#property_target" class="">$target</a><br />
+                                                                    <a href="../classes/CJAX.Event.Event.html#property_timeStamp" class="">$timeStamp</a><br />
+                                                                    <a href="../classes/CJAX.Event.Event.html#property_trusted" class="">$trusted</a><br />
+                                                                    <a href="../classes/CJAX.Event.Event.html#property_type" class="">$type</a><br />
+                                                                    <a href="../classes/CJAX.Event.DragEvent.html#property_data" class="">$data</a><br />
+                                                                    <a href="../classes/CJAX.Event.DragEvent.html#property_dropEffect" class="">$dropEffect</a><br />
+                                                                    <a href="../classes/CJAX.Event.DragEvent.html#property_effectAllowed" class="">$effectAllowed</a><br />
+                                                                    <a href="../classes/CJAX.Event.DragEvent.html#property_files" class="">$files</a><br />
+                                                            </section>
+                            <section class="span4">
+                                <em>N/A</em>
+                            </section>
+                        </section>
+                        <section class="row-fluid private">
+                            <section class="span4">
+                                                                    <em>No private methods found</em>
+                                                            </section>
+                            <section class="span4">
+                                                                    <em>No private properties found</em>
+                                                            </section>
+                            <section class="span4">
+                                <em>N/A</em>
+                            </section>
+                        </section>
+                    </section>
+                </div>
+                <aside class="span4 detailsbar">
+                                        
+                    
+                    <dl>
+                        <dt>File</dt>
+                            <dd><a href="../files/cjax.event.dragevent.html"><div class="path-wrapper">cjax\event\dragevent.php</div></a></dd>
+                                                <dt>Package</dt>
+                            <dd><div class="namespace-wrapper">Event</div></dd>
+                                                <dt>Class hierarchy</dt>
+                            <dd class="hierarchy">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+                                        <div class="namespace-wrapper"><a href="../classes/CJAX.Event.Event.html">\CJAX\Event\Event</a></div>
+                                                                    
+                                        <div class="namespace-wrapper"><a href="../classes/CJAX.Event.InputEvent.html">\CJAX\Event\InputEvent</a></div>
+                                                                    
+                                        <div class="namespace-wrapper"><a href="../classes/CJAX.Event.MouseEvent.html">\CJAX\Event\MouseEvent</a></div>
+                                                                                                    <div class="namespace-wrapper">\CJAX\Event\DragEvent</div>
+                            </dd>
+
+                        
+                        
+                        
+                                                                            <dt>See also</dt>
+                                                                                    <dd><a href="https://github.com/ajaxboy/cjax"><div class="namespace-wrapper">https://github.com/ajaxboy/cjax</div></a></dd>
+                                                    
+                                                                        </dl>
+                    <h2>Tags</h2>
+                    <table class="table table-condensed">
+                                            <tr>
+                            <th>
+                                category
+                            </th>
+                            <td>
+                                                                    <p>CJAX</p>
+                                                            </td>
+                        </tr>
+                                            <tr>
+                            <th>
+                                author
+                            </th>
+                            <td>
+                                                                    <p>Ordland Euroboros <a href="mailto:halloffamer@mysidiarpg.com">halloffamer@mysidiarpg.com</a></p>
+                                                            </td>
+                        </tr>
+                                            <tr>
+                            <th>
+                                copyright
+                            </th>
+                            <td>
+                                                                    <p>(c) 2008, CJ Galindo</p>
+                                                            </td>
+                        </tr>
+                                            <tr>
+                            <th>
+                                version
+                            </th>
+                            <td>
+                                                                    
+                                                            </td>
+                        </tr>
+                                            <tr>
+                            <th>
+                                since
+                            </th>
+                            <td>
+                                                                    
+                                                            </td>
+                        </tr>
+                                            <tr>
+                            <th>
+                                api
+                            </th>
+                            <td>
+                                                                    
+                                                            </td>
+                        </tr>
+                                        </table>
+                </aside>
+            </div>
+
+                                    <a id="constants" name="constants"></a>
+            <div class="row-fluid">
+                <div class="span8 content class">
+                    <h2>Constants</h2>
+                </div>
+                <aside class="span4 detailsbar"></aside>
+            </div>
+
+                                <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="constant_CAPTURING_PHASE" name="constant_CAPTURING_PHASE" class="anchor"></a>
+            <article id="constant_CAPTURING_PHASE" class="constant">
+                <h3 class="">CAPTURING_PHASE</h3>
+                <pre class="signature">CAPTURING_PHASE</pre>
+                <p><em>The CAPTURING_PHASE constant, defines the integer value for capturing phase event status.</em></p>
+                
+            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/CJAX.Event.Event.html"><div class="path-wrapper">\CJAX\Event\Event</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            constant
+                        </th>
+                        <td>
+                                                            
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="constant_AT_TARGET" name="constant_AT_TARGET" class="anchor"></a>
+            <article id="constant_AT_TARGET" class="constant">
+                <h3 class="">AT_TARGET</h3>
+                <pre class="signature">AT_TARGET</pre>
+                <p><em>The AT_TARGET constant, defines the integer value for at-target phase event status.</em></p>
+                
+            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/CJAX.Event.Event.html"><div class="path-wrapper">\CJAX\Event\Event</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            constant
+                        </th>
+                        <td>
+                                                            
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="constant_BUBBLING_PHASE" name="constant_BUBBLING_PHASE" class="anchor"></a>
+            <article id="constant_BUBBLING_PHASE" class="constant">
+                <h3 class="">BUBBLING_PHASE</h3>
+                <pre class="signature">BUBBLING_PHASE</pre>
+                <p><em>The BUBBLING_PHASE constant, defines the integer value for bubbling phase event status.</em></p>
+                
+            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/CJAX.Event.Event.html"><div class="path-wrapper">\CJAX\Event\Event</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            constant
+                        </th>
+                        <td>
+                                                            
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                            
+                                    <a id="properties" name="properties"></a>
+            <div class="row-fluid">
+                <div class="span8 content class">
+                    <h2>Properties</h2>
+                </div>
+                <aside class="span4 detailsbar"></aside>
+            </div>
+
+                                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_button" name="property_button" class="anchor"></a>
+            <article class="property">
+                <h3 class="protected ">$button</h3>
+                <pre class="signature">$button : integer</pre>
+                <p><em>The button property, stores a number that indicates which mouse button was pressed when a mouse event was triggered.</em></p>
+                
+
+                                <h4>Type</h4>
+                integer
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/CJAX.Event.MouseEvent.html"><div class="path-wrapper">\CJAX\Event\MouseEvent</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_clickCount" name="property_clickCount" class="anchor"></a>
+            <article class="property">
+                <h3 class="protected ">$clickCount</h3>
+                <pre class="signature">$clickCount : integer</pre>
+                <p><em>The clickCount property, stores a number that indicates how many times the mouse was clicked in the same area.</em></p>
+                
+
+                                <h4>Type</h4>
+                integer
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/CJAX.Event.MouseEvent.html"><div class="path-wrapper">\CJAX\Event\MouseEvent</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_x" name="property_x" class="anchor"></a>
+            <article class="property">
+                <h3 class="protected ">$x</h3>
+                <pre class="signature">$x : integer</pre>
+                <p><em>The x property, specifies the horizontal coordinate of mouse pointer relative to the source component.</em></p>
+                
+
+                                <h4>Type</h4>
+                integer
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/CJAX.Event.MouseEvent.html"><div class="path-wrapper">\CJAX\Event\MouseEvent</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_xOnPage" name="property_xOnPage" class="anchor"></a>
+            <article class="property">
+                <h3 class="protected ">$xOnPage</h3>
+                <pre class="signature">$xOnPage : integer</pre>
+                <p><em>The xOnPage property, specifies the horizontal coordinate of mouse pointer according to the document.</em></p>
+                
+
+                                <h4>Type</h4>
+                integer
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/CJAX.Event.MouseEvent.html"><div class="path-wrapper">\CJAX\Event\MouseEvent</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_xOnScreen" name="property_xOnScreen" class="anchor"></a>
+            <article class="property">
+                <h3 class="protected ">$xOnScreen</h3>
+                <pre class="signature">$xOnScreen : integer</pre>
+                <p><em>The xOnScreen property, specifies the horizontal coordinate of mouse pointer according to the screen.</em></p>
+                
+
+                                <h4>Type</h4>
+                integer
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/CJAX.Event.MouseEvent.html"><div class="path-wrapper">\CJAX\Event\MouseEvent</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_y" name="property_y" class="anchor"></a>
+            <article class="property">
+                <h3 class="protected ">$y</h3>
+                <pre class="signature">$y : integer</pre>
+                <p><em>The y property, specifies the vertical coordinate of mouse pointer relative to the source component.</em></p>
+                
+
+                                <h4>Type</h4>
+                integer
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/CJAX.Event.MouseEvent.html"><div class="path-wrapper">\CJAX\Event\MouseEvent</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_yOnPage" name="property_yOnPage" class="anchor"></a>
+            <article class="property">
+                <h3 class="protected ">$yOnPage</h3>
+                <pre class="signature">$yOnPage : integer</pre>
+                <p><em>The yOnPage property, specifies the vertical coordinate of mouse pointer according to the document.</em></p>
+                
+
+                                <h4>Type</h4>
+                integer
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/CJAX.Event.MouseEvent.html"><div class="path-wrapper">\CJAX\Event\MouseEvent</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_yOnScreen" name="property_yOnScreen" class="anchor"></a>
+            <article class="property">
+                <h3 class="protected ">$yOnScreen</h3>
+                <pre class="signature">$yOnScreen : integer</pre>
+                <p><em>The xOnScreen property, specifies the horizontal coordinate of mouse pointer according to the screen.</em></p>
+                
+
+                                <h4>Type</h4>
+                integer
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/CJAX.Event.MouseEvent.html"><div class="path-wrapper">\CJAX\Event\MouseEvent</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_altKey" name="property_altKey" class="anchor"></a>
+            <article class="property">
+                <h3 class="protected ">$altKey</h3>
+                <pre class="signature">$altKey : boolean</pre>
+                <p><em>The altKey property, checks if the &quot;ALT&quot; key was pressed when input event is was triggered.</em></p>
+                
+
+                                <h4>Type</h4>
+                boolean
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/CJAX.Event.InputEvent.html"><div class="path-wrapper">\CJAX\Event\InputEvent</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_component" name="property_component" class="anchor"></a>
+            <article class="property">
+                <h3 class="protected ">$component</h3>
+                <pre class="signature">$component : string</pre>
+                <p><em>The component property, stores the component id involved in this input event.</em></p>
+                
+
+                                <h4>Type</h4>
+                string
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/CJAX.Event.InputEvent.html"><div class="path-wrapper">\CJAX\Event\InputEvent</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_ctrlKey" name="property_ctrlKey" class="anchor"></a>
+            <article class="property">
+                <h3 class="protected ">$ctrlKey</h3>
+                <pre class="signature">$ctrlKey : boolean</pre>
+                <p><em>The ctrlKey property, checks if the &quot;CTRL&quot; key was pressed when input event is was triggered.</em></p>
+                
+
+                                <h4>Type</h4>
+                boolean
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/CJAX.Event.InputEvent.html"><div class="path-wrapper">\CJAX\Event\InputEvent</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_metaKey" name="property_metaKey" class="anchor"></a>
+            <article class="property">
+                <h3 class="protected ">$metaKey</h3>
+                <pre class="signature">$metaKey : boolean</pre>
+                <p><em>The metaKey property, checks if the &quot;META&quot; key was pressed when input event is was triggered.</em></p>
+                
+
+                                <h4>Type</h4>
+                boolean
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/CJAX.Event.InputEvent.html"><div class="path-wrapper">\CJAX\Event\InputEvent</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_shiftKey" name="property_shiftKey" class="anchor"></a>
+            <article class="property">
+                <h3 class="protected ">$shiftKey</h3>
+                <pre class="signature">$shiftKey : boolean</pre>
+                <p><em>The shiftKey property, checks if the &quot;SHIFT&quot; key was pressed when input event is was triggered.</em></p>
+                
+
+                                <h4>Type</h4>
+                boolean
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/CJAX.Event.InputEvent.html"><div class="path-wrapper">\CJAX\Event\InputEvent</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_bubbles" name="property_bubbles" class="anchor"></a>
+            <article class="property">
+                <h3 class="protected ">$bubbles</h3>
+                <pre class="signature">$bubbles : boolean</pre>
+                <p><em>The bubbles property, specifies if a specific event can bubble or not.</em></p>
+                
+
+                                <h4>Type</h4>
+                boolean
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/CJAX.Event.Event.html"><div class="path-wrapper">\CJAX\Event\Event</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_cancelable" name="property_cancelable" class="anchor"></a>
+            <article class="property">
+                <h3 class="protected ">$cancelable</h3>
+                <pre class="signature">$cancelable : boolean</pre>
+                <p><em>The cancelable property, specifies if a if a specific event is cancelable.</em></p>
+                
+
+                                <h4>Type</h4>
+                boolean
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/CJAX.Event.Event.html"><div class="path-wrapper">\CJAX\Event\Event</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_defaultPrevented" name="property_defaultPrevented" class="anchor"></a>
+            <article class="property">
+                <h3 class="protected ">$defaultPrevented</h3>
+                <pre class="signature">$defaultPrevented : boolean</pre>
+                <p><em>The defaultPrevented property, checks if default is prevented.</em></p>
+                
+
+                                <h4>Type</h4>
+                boolean
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/CJAX.Event.Event.html"><div class="path-wrapper">\CJAX\Event\Event</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_phase" name="property_phase" class="anchor"></a>
+            <article class="property">
+                <h3 class="protected ">$phase</h3>
+                <pre class="signature">$phase : integer</pre>
+                <p><em>The phase property, defines the event phase.</em></p>
+                
+
+                                <h4>Type</h4>
+                integer
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/CJAX.Event.Event.html"><div class="path-wrapper">\CJAX\Event\Event</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_source" name="property_source" class="anchor"></a>
+            <article class="property">
+                <h3 class="protected ">$source</h3>
+                <pre class="signature">$source : string</pre>
+                <p><em>The source property, stores the id of element that triggers the event.</em></p>
+                
+
+                                <h4>Type</h4>
+                string
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/CJAX.Event.Event.html"><div class="path-wrapper">\CJAX\Event\Event</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_target" name="property_target" class="anchor"></a>
+            <article class="property">
+                <h3 class="protected ">$target</h3>
+                <pre class="signature">$target : string</pre>
+                <p><em>The target property, stores the id of element whose event listener triggers this event.</em></p>
+                
+
+                                <h4>Type</h4>
+                string
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/CJAX.Event.Event.html"><div class="path-wrapper">\CJAX\Event\Event</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_timeStamp" name="property_timeStamp" class="anchor"></a>
+            <article class="property">
+                <h3 class="protected ">$timeStamp</h3>
+                <pre class="signature">$timeStamp : integer</pre>
+                <p><em>The timeStamp property, specifies the number of milliseconds since midnight of January 1, 1970.</em></p>
+                
+
+                                <h4>Type</h4>
+                integer
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/CJAX.Event.Event.html"><div class="path-wrapper">\CJAX\Event\Event</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_trusted" name="property_trusted" class="anchor"></a>
+            <article class="property">
+                <h3 class="protected ">$trusted</h3>
+                <pre class="signature">$trusted : boolean</pre>
+                <p><em>The trusted property, checks if the event is trusted or not.</em></p>
+                
+
+                                <h4>Type</h4>
+                boolean
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/CJAX.Event.Event.html"><div class="path-wrapper">\CJAX\Event\Event</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_type" name="property_type" class="anchor"></a>
+            <article class="property">
+                <h3 class="protected ">$type</h3>
+                <pre class="signature">$type : string</pre>
+                <p><em>The target property, defines the type of event that was triggered.</em></p>
+                
+
+                                <h4>Type</h4>
+                string
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/CJAX.Event.Event.html"><div class="path-wrapper">\CJAX\Event\Event</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_data" name="property_data" class="anchor"></a>
+            <article class="property">
+                <h3 class="protected ">$data</h3>
+                <pre class="signature">$data : mixed</pre>
+                <p><em>The data property, stores the data that is transferred during a drag and drop interaction.</em></p>
+                
+
+                                <h4>Type</h4>
+                mixed
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_dropEffect" name="property_dropEffect" class="anchor"></a>
+            <article class="property">
+                <h3 class="protected ">$dropEffect</h3>
+                <pre class="signature">$dropEffect : string</pre>
+                <p><em>The dropEffect property, defines special drag and drop effects with this event.</em></p>
+                
+
+                                <h4>Type</h4>
+                string
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_effectAllowed" name="property_effectAllowed" class="anchor"></a>
+            <article class="property">
+                <h3 class="protected ">$effectAllowed</h3>
+                <pre class="signature">$effectAllowed : string</pre>
+                <p><em>The effectAllowed property, specifies which types of operations are available.</em></p>
+                
+
+                                <h4>Type</h4>
+                string
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_files" name="property_files" class="anchor"></a>
+            <article class="property">
+                <h3 class="protected ">$files</h3>
+                <pre class="signature">$files : array</pre>
+                <p><em>The files property, contains a list of all the local files available on the data transfer.</em></p>
+                
+
+                                <h4>Type</h4>
+                array
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                            
+                                    <a id="methods" name="methods"></a>
+            <div class="row-fluid">
+                <div class="span8 content class"><h2>Methods</h2></div>
+                <aside class="span4 detailsbar"></aside>
+            </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method___construct" name="method___construct" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">__construct()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">__construct(\StdClass  <span class="argument">$event</span>) : \CJAX\Event\DragEvent</pre>
+                <p><em>The constructor for DragEvent class, it initializes basic drag event properties.</em></p>
+                <p>Child classes of InputEvent need to call this parent constructor to ensure complete initialization of event object.</p>
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>\StdClass</td>
+                                <td>$event </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    <a href="../classes/CJAX.Event.DragEvent.html">\CJAX\Event\DragEvent</a>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getButton" name="method_getButton" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">getButton()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getButton() : integer</pre>
+                <p><em>The getButton method, returns which, if any, of the mouse buttons has changed state.</em></p>
+                
+
+                
+                
+                                    <h4>Returns</h4>
+                    integer
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/CJAX.Event.MouseEvent.html"><div class="path-wrapper">\CJAX\Event\MouseEvent</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getClickCount" name="method_getClickCount" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">getClickCount()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getClickCount() : integer</pre>
+                <p><em>The getClickCount method, returns the number of mouse clicks associated with this event.</em></p>
+                
+
+                
+                
+                                    <h4>Returns</h4>
+                    integer
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/CJAX.Event.MouseEvent.html"><div class="path-wrapper">\CJAX\Event\MouseEvent</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getX" name="method_getX" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">getX()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getX() : integer</pre>
+                <p><em>The getX method, returns the horizontal x position of the event relative to the source component.</em></p>
+                
+
+                
+                
+                                    <h4>Returns</h4>
+                    integer
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/CJAX.Event.MouseEvent.html"><div class="path-wrapper">\CJAX\Event\MouseEvent</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getXOnPage" name="method_getXOnPage" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">getXOnPage()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getXOnPage() : integer</pre>
+                <p><em>The getXOnPage method, returns the horizontal x position of the event on the page.</em></p>
+                
+
+                
+                
+                                    <h4>Returns</h4>
+                    integer
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/CJAX.Event.MouseEvent.html"><div class="path-wrapper">\CJAX\Event\MouseEvent</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getXOnScreen" name="method_getXOnScreen" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">getXOnScreen()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getXOnScreen() : integer</pre>
+                <p><em>The getXOnScreen method, returns the horizontal x position of the event on the screen.</em></p>
+                
+
+                
+                
+                                    <h4>Returns</h4>
+                    integer
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/CJAX.Event.MouseEvent.html"><div class="path-wrapper">\CJAX\Event\MouseEvent</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getY" name="method_getY" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">getY()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getY() : integer</pre>
+                <p><em>The getY method, returns the vertical y position of the event relative to the source component.</em></p>
+                
+
+                
+                
+                                    <h4>Returns</h4>
+                    integer
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/CJAX.Event.MouseEvent.html"><div class="path-wrapper">\CJAX\Event\MouseEvent</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getYOnPage" name="method_getYOnPage" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">getYOnPage()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getYOnPage() : integer</pre>
+                <p><em>The getYOnPage method, returns the vertical y position of the event on the page.</em></p>
+                
+
+                
+                
+                                    <h4>Returns</h4>
+                    integer
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/CJAX.Event.MouseEvent.html"><div class="path-wrapper">\CJAX\Event\MouseEvent</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getYOnScreen" name="method_getYOnScreen" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">getYOnScreen()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getYOnScreen() : integer</pre>
+                <p><em>The getYOnScreen method, returns the vertical y position of the event on the screen.</em></p>
+                
+
+                
+                
+                                    <h4>Returns</h4>
+                    integer
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/CJAX.Event.MouseEvent.html"><div class="path-wrapper">\CJAX\Event\MouseEvent</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getLocation" name="method_getLocation" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">getLocation()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getLocation() : mixed</pre>
+                <p><em>The abstract method getLocation, finds the location of the input device associated with this event.</em></p>
+                <p>This method will need to be overriden by child classes to provide different implementations.</p>
+
+                
+                
+                                    <h4>Returns</h4>
+                    mixed
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                        <span class="label label-info">abstract</span>
+                                                <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/CJAX.Event.InputEvent.html"><div class="path-wrapper">\CJAX\Event\InputEvent</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getLocationOnPage" name="method_getLocationOnPage" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">getLocationOnPage()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getLocationOnPage() : array</pre>
+                <p><em>The getLocationOnPage method, returns the mouse cursor position of the event on the page.</em></p>
+                <p>This method fetches an array/tuple of x and y coordinates on the page.</p>
+
+                
+                
+                                    <h4>Returns</h4>
+                    array
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/CJAX.Event.MouseEvent.html"><div class="path-wrapper">\CJAX\Event\MouseEvent</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getLocationOnScreen" name="method_getLocationOnScreen" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">getLocationOnScreen()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getLocationOnScreen() : array</pre>
+                <p><em>The getLocationOnSceen method, returns the mouse cursor position of the event on the screen.</em></p>
+                <p>This method fetches an array/tuple of x and y coordinates on the screen.</p>
+
+                
+                
+                                    <h4>Returns</h4>
+                    array
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/CJAX.Event.MouseEvent.html"><div class="path-wrapper">\CJAX\Event\MouseEvent</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_isAltDown" name="method_isAltDown" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">isAltDown()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">isAltDown() : boolean</pre>
+                <p><em>The isAltDown method, returns whether or not the Alt modifier is down on this event.</em></p>
+                
+
+                
+                
+                                    <h4>Returns</h4>
+                    boolean
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/CJAX.Event.InputEvent.html"><div class="path-wrapper">\CJAX\Event\InputEvent</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getComponent" name="method_getComponent" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">getComponent()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getComponent() </pre>
+                <p><em>The getComponent method, obtains the component id associated with this input event.</em></p>
+                
+
+                
+                
+                				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/CJAX.Event.InputEvent.html"><div class="path-wrapper">\CJAX\Event\InputEvent</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            var
+                        </th>
+                        <td>
+                                                                                            
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_isControlDown" name="method_isControlDown" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">isControlDown()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">isControlDown() : boolean</pre>
+                <p><em>The isControlDown method, returns whether or not the Control modifier is down on this event.</em></p>
+                
+
+                
+                
+                                    <h4>Returns</h4>
+                    boolean
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/CJAX.Event.InputEvent.html"><div class="path-wrapper">\CJAX\Event\InputEvent</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_isMetaDown" name="method_isMetaDown" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">isMetaDown()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">isMetaDown() : boolean</pre>
+                <p><em>The isMetaDown method, returns whether or not the Meta modifier is down on this event.</em></p>
+                
+
+                
+                
+                                    <h4>Returns</h4>
+                    boolean
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/CJAX.Event.InputEvent.html"><div class="path-wrapper">\CJAX\Event\InputEvent</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_isShiftDown" name="method_isShiftDown" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">isShiftDown()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">isShiftDown() : boolean</pre>
+                <p><em>The isShiftDown method, returns whether or not the Shift modifier is down on this event.</em></p>
+                
+
+                
+                
+                                    <h4>Returns</h4>
+                    boolean
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/CJAX.Event.InputEvent.html"><div class="path-wrapper">\CJAX\Event\InputEvent</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_canBubble" name="method_canBubble" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">canBubble()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">canBubble() : boolean</pre>
+                <p><em>The canBubble method, find out if a specific event can bubble or not.</em></p>
+                
+
+                
+                
+                                    <h4>Returns</h4>
+                    boolean
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/CJAX.Event.Event.html"><div class="path-wrapper">\CJAX\Event\Event</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_isCancelable" name="method_isCancelable" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">isCancelable()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">isCancelable() : boolean</pre>
+                <p><em>The isCancelable method, find out if a specific event is cancelable.</em></p>
+                
+
+                
+                
+                                    <h4>Returns</h4>
+                    boolean
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/CJAX.Event.Event.html"><div class="path-wrapper">\CJAX\Event\Event</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_hasDefaultPrevented" name="method_hasDefaultPrevented" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">hasDefaultPrevented()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">hasDefaultPrevented() : boolean</pre>
+                <p><em>The hasDefaultPrevented method, checks whether the preventDefault() method was called for the event.</em></p>
+                
+
+                
+                
+                                    <h4>Returns</h4>
+                    boolean
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/CJAX.Event.Event.html"><div class="path-wrapper">\CJAX\Event\Event</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getPhase" name="method_getPhase" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">getPhase()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getPhase() : integer</pre>
+                <p><em>The getPhase method, returns a number that indicates which phase of the event flow is currently being evaluated.</em></p>
+                
+
+                
+                
+                                    <h4>Returns</h4>
+                    integer
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/CJAX.Event.Event.html"><div class="path-wrapper">\CJAX\Event\Event</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getSource" name="method_getSource" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">getSource()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getSource() : string</pre>
+                <p><em>The getSource method, returns the element that triggered the event.</em></p>
+                
+
+                
+                
+                                    <h4>Returns</h4>
+                    string
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/CJAX.Event.Event.html"><div class="path-wrapper">\CJAX\Event\Event</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getTarget" name="method_getTarget" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">getTarget()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getTarget() : string</pre>
+                <p><em>The getTarget method, returns the element whose event listeners triggered the event.</em></p>
+                
+
+                
+                
+                                    <h4>Returns</h4>
+                    string
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/CJAX.Event.Event.html"><div class="path-wrapper">\CJAX\Event\Event</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getTimeStamp" name="method_getTimeStamp" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">getTimeStamp()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getTimeStamp() : integer</pre>
+                <p><em>The getTimeStamp method, gets the number of milliseconds since midnight of January 1, 1970.</em></p>
+                
+
+                
+                
+                                    <h4>Returns</h4>
+                    integer
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/CJAX.Event.Event.html"><div class="path-wrapper">\CJAX\Event\Event</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_isTrusted" name="method_isTrusted" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">isTrusted()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">isTrusted() : boolean</pre>
+                <p><em>The isTrusted method, find out if a specific event is trusted.</em></p>
+                
+
+                
+                
+                                    <h4>Returns</h4>
+                    boolean
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/CJAX.Event.Event.html"><div class="path-wrapper">\CJAX\Event\Event</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getType" name="method_getType" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">getType()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getType() : string</pre>
+                <p><em>The isTrusted method, return the type of event that was triggered.</em></p>
+                
+
+                
+                
+                                    <h4>Returns</h4>
+                    string
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/CJAX.Event.Event.html"><div class="path-wrapper">\CJAX\Event\Event</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method___toString" name="method___toString" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">__toString()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">__toString() : string</pre>
+                <p><em>Magic method __toString, acquires the event&#039;s information in string format.</em></p>
+                
+
+                
+                
+                                    <h4>Returns</h4>
+                    string
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/CJAX.Event.Event.html"><div class="path-wrapper">\CJAX\Event\Event</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getData" name="method_getData" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">getData()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getData() : mixed</pre>
+                <p><em>The getData method, fetches the data transferred in this drag event.</em></p>
+                
+
+                
+                
+                                    <h4>Returns</h4>
+                    mixed
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getDropEffect" name="method_getDropEffect" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">getDropEffect()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getDropEffect() : string</pre>
+                <p><em>The getDropEffect method, gets the type of drag-and-drop operation currently selected or sets the operation to a new type.</em></p>
+                
+
+                
+                
+                                    <h4>Returns</h4>
+                    string
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getEffectAllowed" name="method_getEffectAllowed" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">getEffectAllowed()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getEffectAllowed() : string</pre>
+                <p><em>The getEffectAllowed method, provides all of the types of operations that are possible.</em></p>
+                
+
+                
+                
+                                    <h4>Returns</h4>
+                    string
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_getFiles" name="method_getFiles" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">getFiles()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">getFiles() : array</pre>
+                <p><em>The getFiles method, returns a list of all the local files available on the data transfer.</em></p>
+                
+
+                
+                
+                                    <h4>Returns</h4>
+                    array
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                                                    </div>
+    </section>
+
+    <div id="source-view" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="source-view-label" aria-hidden="true">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h3 id="source-view-label">dragevent.php</h3>
+        </div>
+        <div class="modal-body">
+            <pre data-src="../files/cjax\event\dragevent.php.txt" class="language-php line-numbers"></pre>
+        </div>
+    </div>
+
+    <footer class="row-fluid">
+        <section class="span10 offset2">
+            <section class="row-fluid">
+                <section class="span10 offset1">
+                    <section class="row-fluid footer-sections">
+                        <section class="span4">
+                                                        <h1><i class="icon-code"></i></h1>
+                            <div>
+                                <ul>
+                                                                            <li><a href="../namespaces/CJAX.html">\CJAX</a></li>
+                                                                            <li><a href="../namespaces/Controllers.html">\Controllers</a></li>
+                                                                            <li><a href="../namespaces/Examples.html">\Examples</a></li>
+                                                                    </ul>
+                            </div>
+                        </section>
+                        <section class="span4">
+                                                        <h1><i class="icon-bar-chart"></i></h1>
+                            <div>
+                                <ul>
+                                    <li><a href="../graphs/class.html">Class Hierarchy Diagram</a></li>
+                                </ul>
+                            </div>
+                        </section>
+                        <section class="span4">
+                                                        <h1><i class="icon-pushpin"></i></h1>
+                            <div>
+                                <ul>
+                                    <li><a href="../reports/errors.html">Errors</a></li>
+                                    <li><a href="../reports/markers.html">Markers</a></li>
+                                </ul>
+                            </div>
+                        </section>
+                    </section>
+                </section>
+            </section>
+            <section class="row-fluid">
+                <section class="span10 offset1">
+                    <hr />
+                    Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor </a> and authored
+                    on 
+Warning: date_default_timezone_get(): It is not safe to rely on the system's timezone settings. You are *required* to use the date.timezone setting or the date_default_timezone_set() function. In case you used any of those methods and you are still getting this warning, you most likely misspelled the timezone identifier. We selected the timezone 'UTC' for now, but please set date.timezone to select your timezone. in phar://D:/Development/PHP/Documentor/phpDocumentor.phar/vendor/twig/twig/lib/Twig/Extension/Core.php on line 89
+June 19th, 2016 at 03:31.
+                </section>
+            </section>
+        </section>
+    </footer>
+</div>
+
+</body>
+</html>

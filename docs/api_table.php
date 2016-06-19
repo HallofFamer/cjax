@@ -149,7 +149,7 @@ require_once 'ajax.php';
 	<div style="margin-left: 15px">
 		<i><b>url</b> [string]</i> - post form to a controller or url.
 		<br />
-		<i><b>ext</b> [array]</i> - extensions allowed eg: array('gif','png','pdf')
+		<i><b>ext</b> [array]</i> - extensions allowed eg: ['gif','png','pdf'].
 		<br />
 		<i><b>form_id</b> [string]</i> - you can specify the form id, will try  detect it otherwise.
 		<br />
@@ -198,7 +198,7 @@ require_once 'ajax.php';
 	$ajax->exec()
 	</td>
 	<td>
-	$element_id - required mixed[string,array]
+	$elementId - required mixed[string,array]
 	<br />
 	$actions - require mixed API
 	<br />
@@ -216,7 +216,7 @@ require_once 'ajax.php';
 	</td>
 	<td>
 		Bind APIs to elements. 
-		$element_id - you may pass more than one element by spliting the id with a vertical bar "|",
+		$elementId - you may pass more than one element by spliting the id with a vertical bar "|",
 		you may also supply  an array.
 		$actions - any API on this table such as $ajax->call() can be binded to an element. You may also supply
 		mutlple APIs in an array.
@@ -297,7 +297,7 @@ require_once 'ajax.php';
 	$ajax->update()
 	</td>
 	<td>
-	$element_id - required string
+	$elementId - required string
 	<br />
 	$data - optional string
 	</td>
@@ -347,7 +347,7 @@ require_once 'ajax.php';
 	$ajax->focus()
 	</td>
 	<td>
-	$element_id - required string
+	$elementId - required string
 	</td>
 	<td>
 		Set focus to input or element
@@ -359,7 +359,7 @@ require_once 'ajax.php';
 	$ajax->remove()
 	</td>
 	<td>
-	$element_id - required string
+	$elementId - required string
 	</td>
 	<td>
 		Remove an  element from the page

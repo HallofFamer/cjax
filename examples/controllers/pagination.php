@@ -2,6 +2,7 @@
 
 namespace Examples\Controllers;
 use CJAX\Core\AJAXController;
+use CJAX\Core\CJAXException;
 
 class Pagination extends AJAXController{
 	
@@ -16,6 +17,6 @@ class Pagination extends AJAXController{
 			$data[] = $items;
 		}
 		
-		die("<pre>".print_r($data,1));		
+		throw new CJAXException("<pre>".print_r($data,1));		
 	}
 }

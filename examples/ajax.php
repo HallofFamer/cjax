@@ -1,7 +1,9 @@
 <?php  
-    
+   
+use CJAX\Core\CJAXException;
+
 if(!file_exists($f = '../cjax/ajax.php')){
-	die(
+	throw new CJAXException(
 	"Cjax Framework was not detected in the parent directory. Make sure the framework is placed in the upper directory.
 	<br />
 	You may download the framework in the official  repository:<b>Download</b>

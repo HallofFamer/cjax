@@ -16,483 +16,490 @@
 *   Website: http://cjax.sourceforge.net                     $      
 *   Email: cjxxi@msn.com    
 *   Date: 2/12/2007                           $     
-*   File Last Changed:  04/12/2016           $     
+*   File Last Changed:  06/18/2016           $     
 **####################################################################################################    */   
 
 namespace CJAX\Core;
-use StdClass;
  
-class CoreEvents extends Format{
+/**
+ * The CoreEvents class that handles CJAX internal processes and functionality.
+ * @category CJAX
+ * @package Core
+ * @author CJ Galindo <cjxxi@msn.com>
+ * @copyright (c) 2008, CJ Galindo
+ * @link https://github.com/ajaxboy/cjax
+ * @version 6.0
+ * @since 1.0
+ */
 
-	public $a,$b,$c,$d,$e,$f,$g,$h,$i, $j;
+class CoreEvents{
+
+    /**
+     * The a-j property, stores convenient ajax data for CJAX to use.
+     * @access public
+     * @var mixed
+     */	        
+	public $a, $b, $c, $d, $e, $f, $g, $h, $i, $j;
 	
+	/**
+	 * The config property, specifies the configuration variables for CJAX.
+     * @access public
+	 * @var Config|Ext
+	 */      
 	public $config;
+    
+	/**
+	 * The cache property, stores a refernece to the Cache object.
+	 * @access public
+	 * @var Cache 
+	 */    
+    private $cache; 
+    
+	/**
+	 * The PluginManager property, stores a reference of PluginManager object.
+     * @access private
+	 * @var PluginManager
+	 */    
+    private $pluginManager;    
 
-	//acts more strict in the kind of information you provive
+	/**
+	 * The caching property, checks if disk level caching is enabled.
+     * @access public
+	 * @var string
+	 */    
+	public $caching = false;    
+    
+	/**
+	 * The callbacks property, stores a list of cached callbacks for CJAX to use.
+     * @access public
+	 * @var array
+	 */       
+	public $callbacks = [];
+    
+	/**
+	 * The controllerDir property, defines where controllers are located in a sub directory.
+	 * @access public
+	 * @var string
+	 */
+	public $controllerDir = '';         
+
+	/**
+	 * The crc32 property, defines information for CJAX's crc32 string.
+     * @access public
+	 * @var string
+	 */    	
+	public $crc32;
+
+	/**
+	 * The event property, specifies the default event for CJAX if not specified.
+     * @access public
+	 * @var string
+	 */     
+	public $event = "onClick";
+    
+	/**
+	 * The file property, specifies the full name of cjax.js file.
+     * @access public
+	 * @var string
+	 */ 
+	public $file; 
+    
+	/**
+	 * The flag property, holds the last flag set by CJAX internal processes.
+	 * @access public
+	 * @var string
+	 */        
+	public $flag = null;     
+    
+	/**
+	 * The fullPath property, defines fullPath of CJAX library.
+     * @access public
+	 * @var string
+	 */     
+	public $fullPath;    
+    
+	/**
+	 * The initExtra property, stores a list of extra parameters upon CJAX initialization.
+     * @access public
+	 * @var array
+	 */       
+	public $initExtra = [];    
+    
+	/**
+	 * The jsDir property, defines where javascript files are located in a sub directory.
+	 * @access public
+	 * @var string
+	 */    
+	public $jsDir = null;    
+    
+	/**
+	 * The lastCmd property, defines the last command/action executed for CJAX.
+     * @access public
+	 * @var string
+	 */        
+	public $lastCmd; 
+    
+	/**
+	 * The log property, specifies whether to show internal debug info.
+     * @access public
+	 * @var bool
+	 */    	
+	public $log = false;  
+    
+	/**
+	 * The method property, specifies the default way of making AJAX calls, either get or post.
+     * @access public
+	 * @var string
+	 */      
+	public $method;    
+    
+	/**
+	 * The path property, defines the path where Javascript library is located.
+     * @access public
+	 * @var string
+	 */       
+	public $path;    
+    
+	/**
+	 * The port property, defines the port number when connecting to web pages.
+     * @access public
+	 * @var 80
+	 */        
+	public $port = 80;    
+    
+ 	/**
+	 * The shutDown property, checks if system shutdown is executed.
+     * @access private
+	 * @var bool
+	 */       
+	private $shutDown = false;    
+    
+	/**
+	 * The strict property, defines whether CJAX strict mode is enabled.
+     * @access public
+	 * @var bool
+	 */     
 	public $strict = false;
-
-	public $messageId;
- 
-	public $trace = 0;
 	
+	/**
+	 * The version property, defines the version number for CJAX.
+	 * @access public
+	 * @var string
+	 */     
+	public $version = '6.0';      
+    
+	/**
+	 * The xmlObjects property, stores an object that holds referneces to XmlItem Ids.
+     * @access public
+	 * @var Ext
+	 */    
 	private $xmlObjects;
 	
-	//helper to cache callbacks
-	public static $callbacks = [];
-	
-	private static $simpleCommit;
-	
-	private static $wrapper;
-	
-	public $lastCmd;
-	
-	//is using includes.php?
-	public $includes = false;
-	
 	/**
-	 * 
-	 * For js functions
-	 * @var unknown_type
-	 */
-	public $selector;
- 	
-	/**
-	 *
-	 * Force the sytem to adapt to a loading or not loading state.
-	 * @var unknown_type
-	 */
-	public $loading = false;
-	
-	/**
-	 * 
-	 * Some hosts have issues with sessions so lets fallback on cookies
-	 * @var unknown_type
-	 */
-	public $fallback = false;
-	
-	private static $_loading;
-
-	public $post = [];
-
-	public $dir;
-
-	public $attachEvent = true;
-	
-	public $log = false; //show internal debug info
-	
-	/**
-	 * If a request variable is sent with 'session_id' name
-	 * the framework will start session with that id.
-	 * 
-	 * In case ever need sessions
+	 * The wrapper property, defines wrapper text for CJAX cache.
+     * @access private
 	 * @var string
-	 */
-	public $sessionId;
+	 */     
+	private $wrapper;
+	 
 
 	/**
-	 * default port when connecting to web pages
-	 *
-	 * @var unknown_type
-	 */
-	public $port = 80;
-
+     * The constructor for CoreEvents class, creates an instance of CoreEvents object.
+	 * @param Config|Ext  $config
+     * @param Cache  $cache
+     * @access public
+     * @return CoreEvents
+     */	        
+    public function __construct($config, Cache $cache){
+        $this->config = $config;
+        $this->cache = $cache;
+        $this->pluginManager = new PluginManager($this);        
+    }   
+    
 	/**
-	 * if controllers are located in a sub directory
-	 *
-	 * @var string
-	 */
-	public $controllerDir = '';
-
-	/*
-	 * hold an object with some formattig helpers
-	 * not meant to be added to the package but it was added at some point
-	 * @return cjaxFormat
-	 */
-	public $format;
-
+	 * The getCache method, obtains the cache instance stored in CoreEvents.
+     * @access public
+     * @return Cache
+	 */      
+    public function getCache(){
+        return $this->cache;
+    }    
+    
 	/**
-	 * Where the data is stored before the output
-	 *
-	 * @var unknown_type
-	 */
-	private static $out = [];
-
+	 * The getPluginManager method, obtains the plugin manager instance stored in CoreEvents.
+     * @access public
+     * @return PluginManager
+	 */    
+    public function getPluginManager(){
+        return $this->pluginManager;
+    }
+    
 	/**
-	 * Check whether or not to call the shutdown function
-	 *
-	 * @var boolean $_is_shutdown_called
-	 */
-	private static $_isShutdownCalled = false;
-
-	/**
-	 * store cache procedure
-	 *
-	 * @var string $cache
-	 */
-	public static $cache = [];
-	
-	public $caching = false;
-	
-	public $crc32;
-	
-	/**
-	 * 
-	 * Hold cache set for to execute last. Use flag $ajax->flag('last'); to store commands.
-	 * This makes it so that commands even if called first can be executed last.
-	 * @var unknown_type
-	 */
-	public static $lastCache = [];
-
-	/**
-	 * hold cache for actions
-	 *
-	 * @var array
-	 */
-	public static $actions = [];
-	
-	
-	/**
-	 * number of commands passed last in Exec
-	 */
-	private static $_lastExecCount = 0;
-
-	/**
-	 * specified whether to use the cache system or normal mode
-	 *
-	 * @var boolean $use_cache
-	 */
-	static $useCache;
-
-	//new alias to replace $JSevent.
-	public $event = "onClick";
-
-	/**
-	 * Set the text to show when the page is loading
-	 * this replaces the "loading.."
-	 *
-	 *
-	 * @var mixed $text
-	 */
-	public $text = null;
-
-	/*
-	 * The the CJAX console on debug mode
-	 */
-	public $debug;
-
-	/**
-	 * Get the current version of CJAX FRAMEWORK you are using
-	 *
-	 * @var string
-	 */
-	public $version = '6.0';
-
-	/**
-	 * Tells whether CJAX output has initciated or not, to void duplications
-	 *
-	 * @var boolean $is_init
-	 */
-	public $isInit;
-	
-	public $_file;//full name of the cjax.js
-	
-	public $initExtra = [];
-
-	/**
-	 * Sets the default way of making AJAX calls, it can be either get or post
-	 */
-	public $method;
-
-	/**
-	 * Stores the the waiting procedure for the next action
-	 */
-	private static $wait;
-
-	/**
-	 * Path where JavaScript Library is located
-	 *
-	 * @var string
-	 */
-	public static $path;
-	
-	/**
-	 * 
-	 * @var unknown_type
-	 */
-	public $_path;
-
-	/**
-	 * Path where JavaScript Library is located
-	 *
-	 * @var string
-	 */
-	private $jsdir = null;
-	
-	public $caller;
-
-	/*
-	 * sets up the default loading image
-	 */
-	protected static $flags = [];
-
-	public static $const = [];
-	
-	//holds he latest flag
-	public $_flag = null;
-
-	public $_flagCount = 0;
-	
+	 * The xmlItem method, creates an instance of XmlItemobject given its id and name.
+     * @param int  $xml
+     * @param string  $name
+     * @access public
+     * @return XmlItem
+	 */       
 	public function xmlItem($xml, $name){
 		if(!is_integer($xml)){
-			die("XML:{$name} ".print_r($xml,1)." is not an integer.");
+            throw new CJAXException("XML:{$name} ".print_r($xml,1)." is not an integer.");
 		}
-		$_xml = new XmlItem($this, $xml, $name);
-        $this->xmlObjects = ($this->xmlObjects)? $this->xmlObjects: new StdClass;
-		$this->xmlObjects->{$_xml->id} = $_xml;	
-		return $_xml;
+		$xmlItem = new XmlItem($this, $xml, $name);
+        $this->xmlObjects = ($this->xmlObjects)? $this->xmlObjects: new Ext;
+		$this->xmlObjects->{$xmlItem->id} = $xmlItem;	
+		return $xmlItem;
 	}
 	
-	public function camelize($string, $ucfirst = true){
-		$string = str_replace(['-', '_'], ' ', $string);
-		$string = str_replace(' ', '', ucwords($string)); 
-		return ($ucfirst)? ucfirst($string): lcfirst($string);
-	}
-	
+	/**
+	 * The xmlObject method, fetches an XmlItem object stored in CoreEvents.
+     * @param string  $id
+     * @access public
+     * @return mixed
+	 */     
 	public function xmlObject($id = null){
         return (is_null($id))? null: $this->xmlObjects->$id;
 	}
 	
+	/**
+	 * The xmlObjects method, fetches one or all of XmlItems stored in CoreEvents.
+     * @param string  $id
+     * @access public
+     * @return mixed
+	 */      
 	public function xmlObjects($id = null){
         return (is_null($id))? $this->xmlObjects: $this->xmlObjects->$id;
 	}
 	
-	public function flushCache($all = false){
-		if(!isset($_SESSION)){
-			@session_start();
-		}
-		if($all){
-			$_SESSION['cjax_x_cache'] = '';
-			@setcookie('cjax_x_cache','');
-		}
-		$_SESSION['cjax_preload'] = '';
-		$_SESSION['cjax_debug'] = '';
-		@setcookie('cjax_preload','');
-		@setcookie('cjax_debug','');
-	}
-	
-	public function flushRawCache(){
-		self::$cache = [];
-		self::$actions = [];
-		self::$lastCache = [];
-	}
-	
+	/**
+	 * The callbacks method, assigns a cache to callback array in CoreEvents.
+     * @param array  $cache
+     * @param bool  $test
+     * @access public
+     * @return array
+	 */    
 	public function callbacks($cache, $test = false){
-		if(self::$callbacks){
-			foreach(self::$callbacks as $k => $v){
-                $cb = $this->processScache($v);
+		if($this->callbacks){
+			foreach($this->callbacks as $k => $v){
+                $cb = $this->processCache($v);
 				if(!isset($cache[$k])){
 					$v[$k]['callback'] = $this->mkArray($cb,'json', true);
 				} 
                 else{
-                    $cache[$k]['callback'] = ($test)? $cb: $this->mkArray($cb,'json', true);
+                    $cache[$k]['callback'] = ($test)? $cb: $this->mkArray($cb, 'json', true);
 				}
 			}
 		}
 		return $cache;
 	}
 	
+	/**
+	 * The out method, writes the output of cache stored in CoreEvents. 
+     * @access public
+     * @return string
+	 */        
 	public function out(){
-		if(!self::$cache && !self::$actions){
+		if(!$this->cache->hasContents()){
 			return;
 		}
-		$cache = self::$cache;
-		if(!self::$cache){
-			$cache = self::$actions;
-			if(self::$lastCache){
-				$cache = array_merge($cache,self::$lastCache);
-			}
-		} 
-        else{
-			if(self::$actions){
-				$cache = array_merge($cache,self::$actions);
-			}
-			if(self::$lastCache){
-				$cache = array_merge($cache,self::$lastCache);
-			}
-		}
-		
-		$cache = $this->callbacks($cache);		
-		$_preload = null;
+		$cache = $this->callbacks($this->cache->getContents());		
+		$preload = null;        
 		foreach($cache as $k => $v){
-			if($v['do']=='_import' || $v['do']=='_imports' || isset($v['is_plugin'])) {
-				$_preload[$k] = $v;
+			if($v['do'] == '_import' || $v['do'] == '_imports' || isset($v['is_plugin'])){
+				$preload[$k] = $v;
 				if(!isset($v['is_plugin'])){
 					unset($cache[$k]);
 				}
-			}
-		}
-		if($_preload){
-			$_preload = $this->mkArray($this->processScache($_preload));
-		}
-		
-		$_cache = $this->mkArray($this->processScache($cache));
-				
-		$out  = "<xml class='cjax'>{$_cache}</xml><xml class='cjax'><preload>{$_preload}</preload></xml>";
-		if(self::$wrapper){
-			$out = str_replace('(!xml!)', $out, self::$wrapper);
-		}
-		return $out;
-	}
-	
-	public function commit(){
-		if(!self::$cache && !self::$actions){
-			return;
-		}
-		if(!self::$cache){
-			self::$cache = self::$actions;
-			if(self::$lastCache){
-				self::$cache = array_merge(self::$cache,self::$lastCache);
-			}
-		} 
-        else{
-			if(self::$actions){
-				self::$cache = array_merge(self::$cache,self::$actions);
-			}
-			if(self::$lastCache){
-				self::$cache = array_merge(self::$lastCache, self::$cache);
 			}
 		}
         
-		$ajax = CJAX::getInstance();		
-		self::$cache = $this->callbacks(self::$cache);
-		$_preload = [];
-		foreach(self::$cache as $k => $v){
-			if($v['do']=='_import' || $v['do']=='_imports' || isset($v['is_plugin'])) {
-				$_preload[$k] = $v;
-				if(!isset($v['is_plugin'])){
-					unset(self::$cache[$k]);
-				}
-			}
+		if($preload){
+			$preload = $this->mkArray($this->processCache($preload));
+		}		
+		$processedCache = $this->mkArray($this->processCache($cache));				
+		$out  = "<xml class='cjax'>{$processedCache}</xml><xml class='cjax'><preload>{$preload}</preload></xml>";
+		if($this->wrapper){
+			$out = str_replace('(!xml!)', $out, $this->wrapper);
 		}
-        $_preload = ($_preload)? $this->mkArray($this->processScache($_preload)): null;   
-		$_cache = $this->mkArray($this->processScache(self::$cache));		
-		if($ajax->config->debug){
-			$ajax->debug = true;
-		}
-		$debug = ($ajax->debug)? 1 : 0;		
-		$out = 'CJAX.process_all("'.$_cache.'","'.$_preload.'", '.$debug.', true);';		
 		return $out;
 	}
 	
+	/**
+	 * The commit method, commits changes made in CoreEvents cache and creates xml/json response.
+     * @access public
+     * @return string
+	 */        
+	public function commit(){
+		if(!$this->cache->hasContents()){
+			return;
+		}        	
+        $contents = $this->cache->getContents();
+        $this->cache->setCache($this->callbacks($contents));
+		$cache = $this->cache->getCache();
+		$preload = [];
+		foreach($cache as $k => $v){
+			if($v['do'] == '_import' || $v['do'] == '_imports' || isset($v['is_plugin'])) {
+				$preload[$k] = $v;
+				if(!isset($v['is_plugin'])){
+                    $this->cache->remove($k);
+				}
+			}
+		}
+        
+        $preload = ($preload)? $this->mkArray($this->processCache($preload)): null;   
+		$cache = $this->mkArray($this->processCache($this->cache->getCache()));		
+		$debug = ($this->config->debug)? 1 : 0;		
+		$out = 'CJAX.process_all("'.$cache.'","'.$preload.'", '.$debug.', true);';		
+		return $out;
+	}
+	
+	/**
+	 * The simpleCommit method, creates xml/json response from cache.
+     * simpleCommit does not update internal cache, only uses cache contents to create responses.
+     * @param bool  $return
+     * @access public
+     * @return mixed
+	 */       
 	public function simpleCommit($return = false){
-		$ajax = CJAX::getInstance();
-		if($ajax->fallback || $ajax->config->fallback || $ajax->caching) {
+		if($this->config->fallback || $this->caching){
 			return true;
 		}
-		$cache = self::$cache;
-		if(!$cache){
-			$cache = self::$actions;
-			if(self::$lastCache) {
-				$cache = array_merge($cache,self::$lastCache);
-			}
-		} 
-        else{
-			if(self::$actions){
-				$cache = array_merge(self::$cache,self::$actions);
-			}
-			if(self::$lastCache){
-				$cache = array_merge(self::$lastCache, $cache);
-			}
-		}
-		
-		$cache = $this->callbacks($cache);
-		
-		$_preload = [];
+        $cache = $this->callbacks($this->cache->getContents());	
+		$preload = [];
 		foreach($cache as $k => $v){
-			if(isset($v['do']) && ($v['do']=='_import' || $v['do']=='_imports' || isset($v['is_plugin']))) {
-				$_preload[$k] = $v;
+			if(isset($v['do']) && ($v['do'] == '_import' || $v['do'] == '_imports' || isset($v['is_plugin']))) {
+				$preload[$k] = $v;
 				if(!isset($v['is_plugin'])){
 					unset($cache[$k]);
 				}
 			}
-		}
-		if($_preload){
-			$_preload = $this->mkArray($this->processScache($_preload));
+		}   
+		if($preload){
+			$preload = $this->mkArray($this->processCache($preload));
 		}		
-		$_cache = $this->mkArray($this->processScache($cache));		
-		if($ajax->config->debug){
-			$ajax->debug = true;
+		$processedCache = $this->mkArray($this->processCache($cache));		
+		$debug = ($this->config->debug)? 1 : 0;	
+		if($preload){
+			$this->save('cjax_preload', $preload);
 		}
-		$debug = ($ajax->debug)? 1 : 0;
-	
-		if($_preload){
-			$this->save('cjax_preload', $_preload);
-		}
-		$this->save('cjax_x_cache', $_cache);
+		$this->save('cjax_x_cache', $processedCache);
 		if($debug){
 			$this->save('cjax_debug', $debug);
 		}
-		self::$simpleCommit = $cache;
-		return $_cache;
+		return $processedCache;
 	}
 	
 	/**
-	 * Saves the cache
-	 *
-	 * @return string
-	 */
-	public static function saveSCache(){
-		$ajax = CJAX::getInstance();
-		if($ajax->log && self::$cache){
-			die("Debug Info:<pre>".print_r(self::$cache,1)."</pre>");
+	 * The cacheWrapper method, creates cache wrapper string for AJAX responses.
+     * @param array  $wrapper
+     * @access public
+     * @return void
+	 */       
+	public function cacheWrapper($wrapper = []){
+		if(is_array($wrapper)){
+			$this->wrapper = implode('(!xml!)', $wrapper);
+		}		
+	}        
+    
+	/**
+	 * The saveCache method, saves and prints out cached response data.
+     * This method is registered as shutdown function to call before script exits.
+     * @access public
+     * @return void
+	 */        
+	public function saveCache(){
+		if($this->log && $this->cache->getCache()){
+			throw new CJAXException("Debug Info:<pre>".print_r($this->cache->getCache(), 1)."</pre>");
 		}
 		
-        $coreEvents = new self;	
-		if($coreEvents->isAjaxRequest()){			
-			print $coreEvents->out();
+		if($this->isAjaxRequest()){			
+			print $this->out();
 			return;
 		}  
         else{			
-			$out = $coreEvents->commit();
-			
-			if($ajax->config->caching){
-				if(is_array($ajax->caching) && crc32('caching=1;'.$out)!= key($ajax->caching)){
-					$coreEvents->write([$ajax->crc32 => 'caching=1;'.$out], 'cjax-'.$ajax->crc32);
+			$out = $this->commit();			
+			if($this->config->caching){
+				if(is_array($this->caching) && crc32('caching=1;'.$out)!= key($this->caching)){
+					$this->write([$this->crc32 => 'caching=1;'.$out], 'cjax-'.$this->crc32);
 				} 
-                elseif(!$ajax->caching){
-					$coreEvents->write([$ajax->crc32 => 'caching=1;'.$out], 'cjax-'.$ajax->crc32);
+                elseif(!$this->caching){
+					$this->write([$this->crc32 => 'caching=1;'.$out], 'cjax-'.$this->crc32);
 				}
 			} 
             else{
-				if($ajax->fallback || $ajax->config->fallback){					
-					$data = $coreEvents->fallbackPrint($out);			
-					print "\n<script>$data\n</script>";
+				if($this->config->fallback){					
+					$data = $this->fallbackPrint($out);			
+                    print "\n<script>{$data}\n</script>";
 				}
 			}
 		}
 	}
 	
-	public function _processScachePlugin($v,$caller = null){
+	/**
+	 * The processCache method, process cached data for ajax request.
+     * @param array  $cache
+     * @access public
+     * @return array
+	 */        
+	public function processCache($cache){
+		foreach($cache as $k => $v){
+			$v['uniqid'] = $k;
+			if(isset($v['do']) && $v['do'] == 'AddEventTo'){
+				$v = $this->processEventCache($v);
+			}
+			
+			if(isset($v['is_plugin'])){
+				$v = $this->processPluginCache($v);
+			}
+			
+			foreach($v as $k2 => $v2){
+				if(is_array($v2)){
+					$v2 = $this->mkArray($v2);
+					$v[$k2] = "<$k2>$v2</$k2>";
+					
+				} 
+                else{
+					$v[$k2] = "<$k2>$v2</$k2>";
+				}
+			}
+			$cache[$k] = "<cjax>".implode($v)."</cjax>";
+		}
+		return $cache;
+	}    
+    
+	/**
+	 * The processPluginCache method, process cached data for CJAX plugins.
+     * @param array  $v
+     * @param string  $caller
+     * @access public
+     * @return array
+	 */          
+	public function processPluginCache($v, $caller = null){
 		if($v['data'] && is_array($v['data'])){
-			$v['data'] =  $this->mkArray($v['data']);
+			$v['data'] = $this->mkArray($v['data']);
 		}
 		if(isset($v['extra'])){
-			$v['extra'] =  $this->mkArray($v['extra']);
+			$v['extra'] = $this->mkArray($v['extra']);
 		}
 		if(isset($v['onwait'])){
-			$v['onwait'] = $this->processScache($v['onwait']);
+			$v['onwait'] = $this->processCache($v['onwait']);
 		}
 		if(isset($v['callback'])){
 			$v['callback'] = $this->mkArray($v['callback']);
-		}	
-		
+		}			
 		return $v;
 	}
 	
-	public function _processScacheAddEventTo($event){
-		$keep = ['event_element_id','xml','do','event','waitFor','uniqid'];
+ 	/**
+	 * The processEventCache method, process cached data for ajax events.
+     * @param array  $event
+     * @access public
+     * @return array
+	 */     
+	public function processEventCache($event){
+		$keep = ['event_elementId', 'xml', 'do', 'event', 'waitFor', 'uniqid'];
 		foreach($event['events'] as $k => $v){
-			$v['event_element_id'] = $event['element_id'];
+			$v['event_elementId'] = $event['elementId'];
 			foreach($v as $k2 => $v2){
 				if(is_array($v2)){
 					foreach($v2 as $k3 => $v3){
@@ -505,7 +512,7 @@ class CoreEvents extends Format{
 			}
 			$v['xml'] = $this->xmlIt($v);
 			foreach($v as $_k => $_v){
-				if(in_array($_k , $keep)){
+				if(in_array($_k, $keep)){
 					continue;
 				}
 				unset($v[$_k]);
@@ -517,279 +524,291 @@ class CoreEvents extends Format{
 		return $event;
 	}
 	
-	public function processScache($_cache){
-		foreach($_cache as $k => $v){
-			$v['uniqid'] = $k;
-			if(isset($v['do']) && $v['do']=='AddEventTo'){
-				$v = $this->_processScacheAddEventTo($v);
-			}
-			
-			if(isset($v['is_plugin'])){
-				$v = $this->_processScachePlugin($v);
-			}
-			
-			foreach($v  as $k2 => $v2){
-				if(is_array($v2)){
-					$v2 = $this->mkArray($v2);
-					$v[$k2] =  "<$k2>$v2</$k2>";
-					
-				} 
-                else{
-					$v[$k2] =  "<$k2>$v2</$k2>";
-				}
-			}
-			$_cache[$k] = "<cjax>".implode($v)."</cjax>";
-		}
-		return $_cache;
-	}
-	
+ 	/**
+	 * The updateCache method, updates a given cached data given its id and new value.
+     * @param int  $instanceId
+     * @param mixed  $data
+     * @access public
+     * @return array
+	 */       
+	public function updateCache($instanceId, $data){
+        $this->cache->set($instanceId, $data);
+		$this->simpleCommit();
+	}    
+    
+ 	/**
+	 * The lastEntryId method, finds the id number for last cache.
+     * @access public
+     * @return int
+	 */      
 	public function lastEntryId(){
 		$count = 0;
-		if(self::$cache){
-			end(self::$cache);
-			$count = key(self::$cache);
-			reset(self::$cache);
+        $cache = $this->cache->getCache();
+		if($cache){
+			end($cache);
+			$count = key($cache);
+			reset($cache);
 		}		
 		return $count;
 	}
 	
-	public function lastId(){
-		return $this->lastEntryId();
-	}
-	
-	/**
-	 * 
-	 * Tells if plugin exists or not
-	 * regardless of it having a class or not
-	 * 
-	 * @param unknown_type $pluginName
-	 */
+ 	/**
+	 * The isPlugin method, checks if a given plugin exists.
+     * @param string  $pluginName
+     * @access public
+     * @return bool
+	 */      
 	public function isPlugin($pluginName){
-        $plugin = new Plugin;
-		return $plugin->isPlugin($pluginName);
+        return $this->pluginManager->isPlugin($pluginName);
 	}
-	
-	public function UpdateCache($instanceId, $data){
-		self::$cache[$instanceId] = $data;
-		$this->simpleCommit();
-	}
-	
+    
 	/**
-	 * 
-	 * gets plugin only if it has a class
-	 */
-	public function plugin($pluginName, $loadController = false){
-		if($this->isPlugin($pluginName) && $plugin = Plugin::getPluginInstance($pluginName, null, null, $loadController)){
-			return $plugin;
-		}
+	 * The import method, imports css or javascript files for CJAX to use.
+     * @param string  $file
+     * @param int  $loadTime
+     * @access public
+     * @return int
+	 */    
+	public function import($file, $loadTime = 0){
+        $data = ['do' => '_import', 'time' => (int)$loadTime, 'is_import' => 1];
+		if(!is_array($file)){
+			$data['file'] = $file;
+		} 
+        else{
+			$data = array_merge($data, $file);
+		}		
+		return $this->xml($data);
 	}
-	
-	public function initiatePlugins(){
-		return Plugin::initiatePlugins();
-	}
-	
+
 	/**
-	 * 
-	 * sets flag 
-	 */
+	 * The imports method, imports more than one file for CJAX.
+     * @param array  $files
+     * @param array  $data
+     * @access public
+     * @return int
+	 */        
+	public function imports($files = [], &$data = []){
+		$data['do'] = '_imports';
+		$data['files'] = $this->xmlIt($files, 'file');
+		$data['is_import'] = 1;
+		
+		$this->first();
+		return $this->xml($data);
+	}    
+    
+	/**
+	 * The first method, sets 'first' flag for CJAX events, alias to preload method.
+     * @access public
+     * @return void
+	 */         
 	public function first(){
 		$this->flag('first');
 	}
 	
+ 	/**
+	 * The preload method, flags command execution in high priority preload mode.
+     * @access public
+     * @return void
+	 */    
+	public function preload(){
+		$this->flag('first');
+	}       
+    
 	/**
-	 * xml outputer, allows the interaction with xml
-	 *
-	 * @param xml $xml
-     * @param string $apiName
-	 * @return string
+	 * The xml method, it is an outputer that allows the interaction with xml.
+	 * @param xml  $xml
+     * @param string  $apiName
+     * @access public
+	 * @return int
 	 */
 	public function xml($xml, $apiName  = null){
-		$ajax = CJAX::getInstance();
 		if(isset($xml['do'])){
 			$this->lastCmd = $xml['do'];
 		}
-		if($ajax->_flag){			
-			if(is_array($ajax->_flag)){
-				$xml['flag'] = $this->xmlIt($ajax->_flag);
-				$ajax->_flag = null;
+		if($this->flag){			
+			if(is_array($this->flag)){
+				$xml['flag'] = $this->xmlIt($this->flag);
+				$this->flag = null;
 			} 
-            elseif($ajax->_flag == 'first'){
-				$this->setLastCache($xml);
-				$ajax->_flag = null;
+            elseif($this->flag == 'first'){
+                $this->cache->appendLast($xml);
+				$this->flag = null;
 				return;
 			}
 		}
-		
-		$this->cache($xml);		
+		$this->cache($xml);	
 		if(!$this->isAjaxRequest()){
-			$this->simpleCommit();
+			$this->simpleCommit(); 
 		}
-		$count = $this->lastEntryId();		
+		$count = $this->lastEntryId();	
 		return $count;
 	}
 	
-	public function cacheWrapper($wrapper = []){
-		if(is_array($wrapper)){
-			self::$wrapper = implode('(!xml!)',$wrapper);
-		}		
-	}
-	
-	public function fallbackPrint($out){
-		$ajax = CJAX::getInstance();
-		$path = $ajax->_path;				
-		$data = "init = function() {
-	                 if (arguments.callee.done) return;
-	                 arguments.callee.done = true;
-	                 _cjax = function() {
-		                 $out
-	                 }
-	                 window['DOMContentLoaded'] = true;
-	                 if(typeof CJAX != 'undefined') {
-		                 _cjax();
-	                 } else {
-	                   	 window['_CJAX_PROCESS'] = function() {
-			                 _cjax();
-		                 }
-	                 }
-                 }
-                 if (document.addEventListener) {
-	                 document.addEventListener('DOMContentLoaded', init, false);
-                 } else {
-	                 /* for Internet Explorer */
-	                 /*@cc_on @*/
-	                 /*@if (@_win32)
-	                 document.write('<script defer src=\"{$path}cjax.js.php?json=1\"><'+'/script>');
-	                 /*@end @*/
-	                 window.onload = init;
-                 }";
-		return $data;
-	}
-
-	public function getCache(){
-		return self::$cache;
-	}
-
 	/**
-	 * Used for loading "fly" events
-	 *
-	 * @param string $add
-	 */
-	public function cache($add=null, $cacheId = null){
-		if(!self::$_isShutdownCalled) {
-			register_shutdown_function(['CJAX\\Core\\CoreEvents','saveSCache']);
-			self::$_isShutdownCalled = true;
-			self::$useCache = true;		
+	 * The fallbackPrint method, it is used by CJAX to fallback on a small footprint on the page to be able to pass the pending data.
+	 * @param string  $out
+     * @access public
+	 * @return string
+	 */    
+	public function fallbackPrint($out){
+		return "init = function() {
+	                if (arguments.callee.done) return;
+	                arguments.callee.done = true;
+	                _cjax = function() {
+		                $out
+	                }
+	                window['DOMContentLoaded'] = true;
+	                if(typeof CJAX != 'undefined') {
+		                _cjax();
+	                } else {
+	                   	window['_CJAX_PROCESS'] = function() {
+			                 _cjax();
+		                }
+	                }
+                }
+                if (document.addEventListener) {
+	                document.addEventListener('DOMContentLoaded', init, false);
+                } else {
+	                /* for Internet Explorer */
+	                /*@cc_on @*/
+	                /*@if (@_win32)
+	                document.write('<script defer src=\"{$this->fullPath}cjax.js.php?json=1\"><'+'/script>');
+	                /*@end @*/
+	                window.onload = init;
+                }";
+	}
+    
+ 	/**
+	 * The cache method, it is used for loading 'fly' events.
+	 * @param mixed  $value
+     * @param int  $cacheId
+     * @access public
+	 * @return string
+	 */   
+	public function cache($value = null, $cacheId = null){
+		if(!$this->shutDown){
+			register_shutdown_function([$this, "saveCache"]);
+			$this->shutDown = true;	
 		}
-		
-		if($cacheId){
-			if($cacheId=='actions'){
-				self::$actions[] = $add;
-			} 
-            else{
-				self::$cache[$cacheId] = $add;
-			}
-		} 
-        else{
-			self::$cache[] = $add;
-		}
-		if($add == null){
-			return self::$cache;
+		$this->cache->append($value, $cacheId);
+		if($value == null){
+			return $this->cache->getCache();
 		}
 	}
 	
-	public function template($templateName){
-		return file_get_contents(CJAX_HOME."/assets/templates/{$templateName}");		
-	}
-	
+ 	/**
+	 * The jsonEncode method, encodes data into json format.
+	 * @param array  $array
+     * @access public
+	 * @return object
+	 */      
 	public function jsonEncode($array){
 		return json_encode($array, JSON_FORCE_OBJECT);
 	}
 	
+ 	/**
+	 * The mkArray method, creates response data array given raw array data and tag name.
+	 * @param array  $array
+     * @param string  $tag
+     * @param bool  $double
+     * @access public
+	 * @return string
+	 */       
 	public function mkArray($array, $tag = 'json', $double = false){
 		$json = $this->encode($this->jsonEncode($array));		
         $json = ($double)? $this->encode($json): $json;	
 		return "<{$tag}>{$json}</{$tag}>";
 	}
 
-	/**
-	 * Setting up the directory where the CJAX FRAMEWORK resides
-	 *
-	 * @param string $jsdir
-	 */
-	public function js($jsdir, $force = false){
-		if($force){
-			self::$path = $jsdir;
-			return $this->jsdir = false;
-		}
-		if(!$this->jsdir && $this->jsdir !== false){
-			self::$path = $jsdir;
-			$this->jsdir = $jsdir;
-		}
-	}
-
-	/**
-	 * Outputs our FRAMEWORK to the browser
-	 * @param unknown-type $jsPath
-	 * @return unknown
-	 */
+ 	/**
+	 * The headRef method, loads cjax javascript library and outputs html for script tags.
+     * If min parameter is specified, i
+	 * @param string  $jsPath
+     * @param bool  $min
+     * @access public
+	 * @return string
+	 */      
 	public function headRef($jsPath = null, $min = false){
-		$ajax = CJAX::getInstance();
 		$file = "cjax-6.0.js";
-		if($min) {
-			$file = $this->_file;
+		if($min){
+			$file = $this->file;
 		}
 		if(is_string($min) && !is_bool($min)){
             $jsPath = ($file)? rtrim($min,'/').'/cjax/assets/js/': rtrim($min,'/'); 
 		} 
         else{
-			if($ajax->config->initUrl && preg_match("/https?/", $ajax->config->initUrl)) {
-				$jsPath = rtrim($ajax->config->initUrl,'/').'/cjax/assets/js/';
+			if($this->config->initUrl && preg_match("/https?/", $this->config->initUrl)) {
+				$jsPath = rtrim($this->config->initUrl,'/').'/cjax/assets/js/';
 			}
 		}
-		if($ajax->crc32){
-			$file .= "?crc32={$ajax->crc32}";
+		if($this->crc32){
+			$file .= "?crc32={$this->crc32}";
 		}
 		
 		if($this->config->sizzle){
 			$script[] = "<script type='text/javascript' src='{$jsPath}sizzle.min.js'></script>\n";
 		}
 		
-		if($ajax->initExtra){
+		if($this->initExtra){
 			$pluginPath = str_replace('/assets/js','/plugins',$jsPath);
-			foreach($ajax->initExtra as $k => $v) {
+			foreach($this->initExtra as $k => $v) {
                 $script[] = (isset($v['plugin_dir']))? "\t<script type='text/javascript' src='".$pluginPath.$v['plugin_dir'].'/'.$v['file']."'></script>\n"
                                                      : "\t<script type='text/javascript' src='".$v['file']."'></script>\n";
 			}
 		}
-		if($this->jsdir){
+		if($this->jsDir){
             $path = ($file)? $jsPath.$file: $jsPath;
-			$ajax->_path = $path;
+			$this->fullPath = $path;
 			$script[] = "<script defer='defer' id='cjax_lib' type='text/javascript' src='{$path}'></script>\n";
 		} 
-        elseif(self::$path){
-			if(self::$path[strlen(self::$path)-1] =='/') {
-				self::$path = substr(self::$path,0,strlen(self::$path) -1);
+        elseif($this->path){
+			if($this->path[strlen($this->path)-1] =='/') {
+				$this->path = substr($this->path, 0, strlen($this->path) -1);
 			}
-			$ajax->_path = ($this->_file)? self::$path: self::$path."/assets/js/";
-			$script[] = "<script id='cjax_lib' type='text/javascript' src='".$ajax->_path.$file."'></script>\n";
+			$this->fullPath = ($this->file)? $this->path: $this->path."/assets/js/";
+			$script[] = "<script id='cjax_lib' type='text/javascript' src='".$this->fullPath.$file."'></script>\n";
 		}
 		return implode($script);
 	}
 
 	/**
-	 * initciates the process of sending the javascript file to the application
-	 *
-	 * @param optional boolean $min - get the minimized version of javascript
+	 * The init method, initiates the process of sending the javascript file to the application.
+	 * @param bool  $min
+     * @access public
 	 * @return string
 	 */
 	public function init($min = true){
-        $this->_file = ($min && substr($min, 0, 2)=='..')
-                        ? (strpos($min,'.js') !== false) ? null: "cjax-6.0.min.js"
-                        : "cjax-6.0.min.js";
-		$this->isInit = $href = $this->headRef($this->jsdir, $min);
-		return $href;
-	}
-
+        $this->file = ($min && substr($min, 0, 2) == '..')
+                       ? (strpos($min,'.js') !== false) ? null: "cjax-6.0.min.js"
+                       : "cjax-6.0.min.js";
+		return $this->headRef($this->jsDir, $min);
+	}      
+    
+	/**
+	 * The js method, it sets up the directory where the CJAX FRAMEWORK resides.
+	 * @param string  $jsDir
+     * @param bool  $force
+     * @access public
+     * @return bool
+	 */
+	public function js($jsDir, $force = false){
+		if($force){
+			$this->path = $jsDir;
+			return $this->jsDir = false;
+		}
+		if(!$this->jsDir && $this->jsDir !== false){
+			$this->path = $jsDir;
+			$this->jsDir = $jsDir;
+		}
+	}         
+    
+	/**
+	 * The curl method, opens a curl request with given url and post data.
+	 * @param string  $url
+     * @param array  $postData
+     * @access public
+     * @return mixed
+	 */    
 	public function curl($url, $postData = []){
 		$ch = curl_init($url);
 		curl_setopt($ch, CURLOPT_URL, 'http://sourceforge.net');
@@ -799,13 +818,19 @@ class CoreEvents extends Format{
 			curl_setopt($ch,CURLOPT_POSTFIELDS, http_build_query($postData));
 		}
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER  ,1);  // RETURN THE CONTENTS OF THE CALL
-		curl_setopt ($ch, CURLOPT_TIMEOUT, 3);
+		curl_setopt($ch, CURLOPT_TIMEOUT, 3);
 		$data = curl_exec($ch);
 		$err = curl_errno($ch);
 		curl_close($ch);
 		return ($err)? $this->fsockopen($url): $data;
 	}
 	
+	/**
+	 * The remote method, creates a remote url/cross-domain request.
+	 * @param string  $url
+     * @access public
+     * @return mixed
+	 */        
 	public function remote($url){
 		$content = @file_get_contents($url);		
 		if($content !== false){			
@@ -814,9 +839,17 @@ class CoreEvents extends Format{
         return (function_exists('curl_init'))? $this->curl($url): $this->fsockopen($url);
 	}
 	
+	/**
+	 * The fsockopen method, opens a socket for ajax request.
+	 * @param string  $url
+     * @param string  $errno
+     * @param string  $errstr
+     * @access public
+     * @return mixed
+	 */      
 	public function fsockopen($url, $errno = null, $errstr = null){
 		if(!function_exists('fsockopen')){
-			die('You  need cURL or fsockopen enabled to connect to a remote server.');
+			throw new CJAXException('You  need cURL or fsockopen enabled to connect to a remote server.');
 		}
 		
 		$info = parse_url($url);
@@ -825,10 +858,10 @@ class CoreEvents extends Format{
 		$fp = @fsockopen($host,80,$errno,$errstr);
 		@stream_set_timeout($fp, 20);
 		if(!$fp){
-			die('Could not connect to remote server: '. $errstr);
+			throw new CJAXException('Could not connect to remote server: '. $errstr);
 		}
 		if($errstr){
-			die('Error:#'.$errno.' '.$errstr);
+			throw new CJAXException('Error:#'.$errno.' '.$errstr);
 		}
 
 		$base = "/";			
@@ -850,13 +883,19 @@ class CoreEvents extends Format{
 		return implode($data);
 	}
 	
+	/**
+	 * The readCache method, reads available cache for CJAX.
+	 * @param string  $crc32
+     * @access public
+     * @return string
+	 */    
 	public function readCache($crc32 = null){
         $filename = ($crc32)? $crc32: 'cjax.txt';
         $dir = ($this->config->caching)? sys_get_temp_dir(): CJAX_HOME.'/assets/cache/';
  		$dir = rtrim($dir, '/').'/';
  		$file = $dir.$filename;
  		if(is_file($file)){
- 			if(getlastmod($file) > time() + 3600) {
+ 			if(getlastmod($file) > time() + 3600){
  				return;//1 hour to regenerate
  			}
 	 		$content = file_get_contents($file);
@@ -867,23 +906,18 @@ class CoreEvents extends Format{
  		}
 	}
 	
-	public function tapCache($crc32){
-		$cache = $this->readCache('cjax-'.$crc32);
-		return ($cache)? $cache[$crc32]: null;
-	}
-	
 	/**
-	 * write to a file in file system, used as an alrernative to for cache
-	 *
-	 * @param string $content
-	 * @param string $filename
-	 */
+	 * The write method, writes to a file used as alternative for CJAX internal cache.
+	 * @param string  $content
+     * @param string  $filename
+     * @access public
+     * @return string
+	 */        
  	public function write($content, $filename = null){
  		if(!$filename){
 	 		$filename = 'cjax.txt';
  		}
- 		$ajax = CJAX::getInstance();
- 		if($ajax->config->caching && !is_writable($dir=sys_get_temp_dir())){
+ 		if($this->config->caching && !is_writable($dir = sys_get_temp_dir())){
  			$dir = CJAX_HOME.'/assets/cache/';
  		}
  		if(is_array($content)){
@@ -891,65 +925,76 @@ class CoreEvents extends Format{
  		}
  		$dir = rtrim($dir, '/').'/';
  		$file = $dir.$filename;
+        
  		if(file_exists($file) && !is_writable($file) && !chmod($filename, 0666)){
- 			echo "CJAX: Error! file ($file) is not writable, Not enough permission";
- 			exit;
+ 			throw new CJAXException("CJAX: Error! file ($file) is not writable, Not enough permission");
  		}
  		if(!$fp = @fopen($file, 'w')){
- 			echo "CJAX: Error! file ($file) is not writable, Not enough permission";
- 			exit;
+ 			throw new CJAXException("CJAX: Error! file ($file) is not writable, Not enough permission");
  		}
  		if(fwrite($fp, $content) === FALSE){
- 			echo "Cannot write to file ($file)";
- 			exit;
+ 			throw new CJAXException("Cannot write to file ($file)");
  		}
  		if(!fclose($fp)){
- 			echo "Cannot close file ($file)";
- 			exit;
+ 			throw new CJAXException("Cannot close file ($file)");
  		}
  	}
  	
 	/**
-	 * 
-	 * perform cross domain  requests
-	 * @param unknown_type $url
-	 */
-	public function crossdomain($url){
-		$response = $this->remote($url);
-		if(!$response || strpos(strtolower($response),'not found') !== false){
-			return;
+	 * The wait method, it will execute a command in a specified amouth of time.
+	 * @param int  seconds
+	 * @param bool  $milliseconds
+	 * @param bool  $expand
+     * @access public
+     * @return CoreEvents
+	 */         
+	public function wait($seconds, $milliseconds = false, $expand = true){
+		$data['timeout'] = $seconds;
+		if(is_float($seconds)){
+			$milliseconds = true;
 		}
-		print $response;
-	}
+		$data['ms'] = $milliseconds;
+		if(!$seconds){
+			$data['no_wait'] = 1;
+		} 
+        else{
+			$data['expand'] = $expand;
+		}
+		$this->flag = $data;
+		return $this;
+	}     
 
 	/**
-	 * Helper to generate flags quicker.
-	 * @param $flag_id
-	 * @param $command_count
-	 */
-	public function flag($flagId, $commandCount = 1 ,$settings = []){
+	 * The flag method, helper method to generate flags quicker.
+	 * @param int  $flagId
+	 * @param int  $commandCount
+	 * @param array  $settings
+     * @access public
+     * @return CoreEvents
+	 */        
+	public function flag($flagId, $commandCount = 1, $settings = []){
 		switch($flagId){
 			case 'wait':					
 				$settings['command_count'] = $commandCount;		
-				$this->_flag = $settings;
-				$this->_flagcount = $commandCount;
+				$this->flag = $settings;
 				break;
 			case 'first':
 			case 'last':
 			case 'no_wait':
-				$this->_flag = 'first';
+				$this->flag = 'first';
 				break;
 			default:
-				if(CJAX::getInstance()->strict){
-					die("Invalid Flag Argument Prodivided");
+				if($this->strict){
+					throw new CJAXException("Invalid Flag Argument Prodivided");
 				}
 		}
 	}
-	
+
 	/**
-	 * 
-	 * tell whether this is an ajax request or not.
-	 */
+	 * The flag method, tells whether this is an ajax request or not.
+     * @access public
+     * @return bool
+	 */            
 	public function isAjaxRequest(){
 		$request = $this->input('ajax');
 		if($request){
@@ -979,61 +1024,147 @@ class CoreEvents extends Format{
 			return true;
 		}
 	}
+
+	/**
+	 * The addEventTo method, attaches a CJAX event to DOM element.
+	 * @param string  $element
+	 * @param string|array  $actions
+	 * @param string  $event
+     * @access public
+     * @return XmlItem
+	 */
+	public function addEventTo($element, $actions, $event = 'onclick'){
+        $data = ['do' => 'AddEventTo', 'elementId' => $element, 
+                 'event' => $event, 'events' => $actions];	
+		return $this->xmlItem($this->xml($data), 'AddEventTo', 'api');
+	}     
+    
+	/**
+     * The exec method, binds any events to given elements.
+     * This method is the generic event binder that can handle any types of events.
+     * @param string  $selector
+     * @param array  $actions
+     * @param string  $event
+     * @access public
+     * @return XmlItem
+     */         
+	public function exec($selector, $actions, $event = "click"){
+		if(!$this->cache->getCache()){
+			return false;
+		}
+		if(is_array($selector)){
+			$selector = implode('|', $selector);
+		}
+		if($event){
+			if(substr($event, 0,2)  != "on" && $event != 'click'){
+				$event = "on{$event}";
+			}
+			$this->event = $event;
+		}
+		$execActions = [];
+
+		if($actions && is_array($actions)){		
+			$execActions = $this->execActions($actions, $selector);
+			return $this->addEventTo($selector, $execActions, $event);
+		}
+			
+		if($actions instanceof XmlItem || $actions instanceof Plugin){
+			if($actions instanceof Plugin){
+				$actions->elementId = $selector;
+				$actions->xml->elementId = $selector;
+				if(method_exists($actions, 'onEvent')){
+					call_user_func('onEvent', $actions, $selector);
+				}
+			}
+			
+			$item = $actions->xml();
+			$item['event'] = $event;
+			if(isset($this->callbacks[$actions->id]) && $this->callbacks[$actions->id]){
+				$item['callback'] = $this->processCache($this->callbacks[$actions->id]);
+				$item['callback'] = $this->mkArray($item['callback'],'json', true);
+			}
+			$actions->delete();
+			return $this->addEventTo($selector, [$actions->id => $item], $event);
+		} 
+        else{
+			$execActions = $this->cache->get($actions);
+			$execActions['event'] = $event;
+            $this->cache->deleteLast(1);
+			return $this->addEventTo($selector, [$actions => $execActions], $event);
+		}
+	}
 	
 	/**
-	 *  Tell whether or not the a ajax request has been placed
-	 *
-	 * Sunday August 3 2008 added functionality:
-	 *
-	 * @return boolean
-	 */
-	public function request($callback = null, &$params = null){
-	 	$r = $this->isAjaxRequest();
-	 	if($r && $callback){
-	 		if(is_array($callback)){
-	 			if(substr($callback[0],0,4)=='self'){
-	 				$arr = debug_backtrace(false);
-		 			$trace = $arr[1];
-		 			$class = $trace['class'];
-	 				$callback[0] =$class;
-	 			}
-	 			if(!$params) $params = [];
-	 			$r = call_user_func_array($callback, $params);
-	 		} 
+	 * The execActions method, executes actions for cjax request and saves to cache.
+     * @param array  $actions
+     * @param string  $selector
+     * @access private
+     * @return array
+	 */    
+    private function execActions($actions, $selector){
+        $execActions = [];
+        foreach($actions as $k => $v){
+            if(is_object($v) && ($v instanceof XmlItem || $v instanceof Plugin)){
+                if($v instanceof Plugin){
+                    $v->elementId = $selector;
+                    $v->xml->elementId = $selector;
+                    if(method_exists($v, 'onEvent')){
+                        call_user_func('onEvent', $v, $selector);
+                    }
+                }
+
+                if(isset($this->callbacks[$v->id]) && $this->callbacks[$v->id]){
+                    $v->attach($this->callbacks[$v->id]);
+                    foreach($this->callbacks[$v->id] as $k2 => $v2){
+                        $this->cache->remove($k2);
+                    }
+                }
+                $execActions[$v->id] = $v->xml();
+                $v->delete();
+            } 
             else{
-	 			$r = call_user_func($callback);
-	 		}
-	 		exit;
-	 	}
-        return ($this->isAjaxRequest())? true: false;
-	 }
-
-	public function setRequest($request = true){
-        $_GET['cjax'] = ($request)? time(): '';
-        $_REQUEST['cjax'] = ($request)? time(): '';
-	}
-
+                if(is_object($v)){
+                    continue;
+                }
+                $execActions[$v] = $this->cache->get($v);
+                $this->cache->remove($v);
+            }
+        }
+        return $execActions;        
+    }        
+    
 	/**
-	 * Encode special data to void conflicts with javascript
-	 *
-	 * @param string $data
-	 * @return encoded string
-	 */
+	 * The encode method, endodes data to be used in url.
+     * @param string  $data
+     * @access public
+     * @return array
+	 */        
 	public function encode($data){
 		return urlencode(str_replace('+', '[plus]', $data));		
 	}
 
 	/**
-	 * Converts an array into xml..
-	 */
+	 * The xmlIt method, converts an array into xml.
+     * @param array  $input
+     * @param string  $tag
+     * @access public
+     * @return string
+	 */        
 	public function xmlIt($input = [], $tag = null){
 		$new = [];
 		if(is_array($input) && $input){
             $new = $this->xmlInput($tag, $input);
-			return $xml = implode($new);
+			return implode($new);
 		}
 	}
     
+	/**
+	 * The xmlInput method, helper method to convert each input data into xml.
+     * @param string  $tag
+     * @param array  $input
+     * @access public
+     * @return array
+	 */       
     private function xmlInput($tag, $input){
         $new = [];
         foreach($input as $k => $v){
@@ -1054,13 +1185,20 @@ class CoreEvents extends Format{
         return $new;    
     }
 
+	/**
+	 * The save method, saves settings/data into PHP sessions and cookies.
+     * @param string  $setting
+     * @param mixed  $value
+     * @param bool  $useCookie
+     * @access public
+     * @return void
+	 */       
 	public function save($setting, $value = null, $useCookie = false){
-		$ajax = CJAX::getInstance();
 		if(!isset($_SESSION)){
 			@session_start();
-		}
-		if($ajax->fallback || $ajax->config->fallback){
-			if($value===null && isset($_SESSION[$setting])){
+		}       
+		if($this->config->fallback){
+			if($value === null && isset($_SESSION[$setting])){
 				unset($_SESSION[$setting]);
 				$this->cookie($setting);
 			} 
@@ -1082,208 +1220,140 @@ class CoreEvents extends Format{
         }
 	}
 	
+	/**
+	 * The cookie method, sets a cookie given its name and value.
+     * @param string  $setting
+     * @param mixed  $value
+     * @access public
+     * @return void
+	 */        
 	public function cookie($setting, $value = null){
         ($value === null)? @setcookie($setting, $value, time()-(3600*1000), '/')
                          : @setcookie($setting, $value, null, '/');
 	}
 
+	/**
+	 * The input method, fetches and filters input with given value.
+     * @param mixed  $value
+     * @access public
+     * @return string
+	 */        
+ 	public function input($value = 'cjax'){
+		$v = isset($_REQUEST[$value])? $_REQUEST[$value] : (isset($_GET[$value])? $_GET[$value]: null);		
+		if(!$v && isset($_COOKIE[$value]) && $_COOKIE[$value]){
+			$v = $_COOKIE[$value];
+		}
+        
+		if(is_array($v)){
+			foreach($v as $k => $kv){
+                $return[$k] = (is_array($kv))? $kv: addslashes($kv);
+			}
+			return $return;
+		}
+		return addslashes($v);		
+	}
+
+	/**
+	 * The get method, acquires session or cookie value.
+     * If the parameter $getAsObject is true, array values will be converted into objects.
+     * @param string  $setting
+     * @param bool  $getAsObject
+     * @access public
+     * @return mixed
+	 */
+	public function get($setting, $getAsObject = false){
+		$value = null;
+		if(isset($_SESSION[$setting])){
+			$value = $_SESSION[$setting];
+		} 
+        elseif(isset($_COOKIE[$setting])){
+			$value = $_COOKIE[$setting];
+		}
+        
+		if(is_array($value) && $getAsObject){
+			$value = new Ext($value);
+		} 
+        elseif($getAsObject){
+			$value = new Ext;
+		}
+		return $value;
+	}   
+    
+	/**
+	 * The getSetting method, gets raw data stored in session or cookie.
+     * @param string  $setting
+     * @access public
+     * @return mixed
+	 */        
 	public function getSetting($setting){
 		return $this->get($setting);
 	}
-	
-	public function setLastCache($add = null, $cacheId = null){
-		if($cacheId){
-			self::$lastCache[$cacheId] = $add;
-		} 
-        else{
-			array_push(self::$lastCache,$add);
-		}
-	}
 
 	/**
-	 * 
-	 * remove cache
-	 * @param mixed $cacheId
-	 */
-	public function removeExecCache($cacheId){
-		if(is_array($cacheId)){
-			foreach($cacheId as $k){
-				unset(self::$cache[$k]);
-			}
-		} 
-        elseif(isset(self::$cache[$cacheId])){
-			unset(self::$cache[$cacheId]);
-		}
+	 * The removeCache method, removes data from internal cache and commits this change.
+     * @param int  $cacheId
+     * @access public
+     * @return void
+	 */       
+	public function removeCache($cacheId){
+        $this->cache->remove($cacheId);
 		$this->simpleCommit();
 	}
-	
-	/**
-	 * 
-	 * remove cache
-	 * @param int $count
-	 */
-	public function removeLastCache($count){
-		do{
-			$count--;
-			end(self::$cache);
-			unset(self::$cache[key(self::$cache)]);			
-		}while($count);
-	}
-	
-	/**
-	 * 
-	 * remove cache
-	 * @param mixed $cacheId
-	 */
-	public function removeCache($cacheId){
-		unset(self::$cache[$cacheId]);
-	}
-
-	public function warning($msg = "Invalid Input", $seconds = 4){
-		$ajax = CJAX::getInstance();
-		return $ajax->message($ajax->format->message($msg, Format::CSS_WARNING),$seconds);
-	}
-
-	public function success($msg = "Success!", $seconds = 3){
-		$ajax = CJAX::getInstance();
-		return $ajax->message($ajax->format->message($msg, Format::CSS_SUCCESS));
-	}
-
-	/*
-	 * Show loading indicator
-	 */
-	public function loading($msg = "Loading..."){
-		$ajax = CJAX::getInstance();
-		return $ajax->message($ajax->format->message($msg, Format::CSS_SUCCESS));
-	}
-
-	public function process($msg = "Processing...", $seconds = 3){
-		$ajax = CJAX::getInstance();
-		return $ajax->message($ajax->format->message($msg, Format::CSS_PROCESS), $seconds);
-	}
-
-	public function info($msg = null, $seconds = 3){
-		$ajax = CJAX::getInstance();
-		return $ajax->message($ajax->format->message($msg, Format::CSS_INFO),$seconds);
-	}
-
-	public function error($msg = "Error!", $seconds = 15){
-		$ajax = CJAX::getInstance();
-		return $ajax->message($ajax->format->message($msg, Format::CSS_ERROR), $seconds);
-	}
-	
-	public function _lastExecCount($count = 0){
-		if($count){
-			self::$_lastExecCount = $count;
-		}
-		return self::$_lastExecCount;
-	}
 
 	/**
-	 * Yet to implement
-	 *
-	 * @param string $errno
-	 * @param string $errstr
-	 * @param string $errfile
-	 * @param string $errline
-	 * @return string
-	 */
-	public function CJAXErrorHandler($errno, $errstr, $errfile, $errline){
-		switch($errno){
-			case E_USER_ERROR:
-				echo "<b>CJAX:</b> [$errno] $errstr<br />\n";
-				echo "  Fatal error on line $errline in file $errfile";
-				echo ", PHP " . PHP_VERSION . " (" . PHP_OS . ")<br />\n";
-				echo "Aborting...<br />\n";
-				exit(1);
-			    break;
-			case E_USER_WARNING:
-				echo "<b>Cjax WARNING</b> [$errno] $errstr<br />\n";
-				break;
-			case E_USER_NOTICE:
-				echo "<b>Cjax NOTICE</b> [$errno] $errstr<br />\n";
-			break;
-			default:
-				echo "Unknown error type: [$errno] $errstr<br />\n";
-			break;
-		}
-		/* Don't execute PHP internal error handler */
-		return true;
-	}
-
-	public function CJAXExceptionHandler(){
-
-	}
-
-	public function clearCache(){
-		//$old_err = set_error_handler(['self', 'CJAXErrorHandler']);
-		if(!isset($_SESSION)){
-			@session_start();
-		}
-		unset($_SESSION['cjax_x_cache']);
-			
-		if(!headers_sent()){
-			@setcookie('cjax_x_cache','');
-		}
-	}
-	
-	public function initiate($ajax){
-		if(isset($_REQUEST['session_id'])){
-			session_id($_REQUEST['session_id']);
-			@session_start();
-		} 
-        elseif(!$ajax->config->fallback && !isset($_SESSION)){
-		    @session_start();
-		}
-	}
-
-	/**
-	 * Optional text, replaces the "loading.." text when an ajax call is placed
-	 *
-	 * @param unknown_type $ms
-	 */
-	public function text($ms = ''){
-		$this->text = $ms;
-	}
-
-	/**
-	 * CJAX is bein called from within a child directory then you will need to specify
-	 * the url where CJAX is located (eg. http://yoursite.com/cjax)
-	 *
-	 * @param string $path [CJAX URL]
-	 */
+	 * The path method, specifies the path/url for where CJAX is located in a child/sub-directory. 
+     * @param string  $path
+     * @access public
+     * @return void
+	 */         
 	public function path($path){
-		self::$path = $path;
+		$this->path = $path;
 	}
 
-	public static function remotePath(){
+	/**
+	 * The remotepPath method, obtains the remote path information for CJAX library. 
+     * @access public
+     * @return string
+	 */      
+	public function remotePath(){
 		return 'http://'.$_SERVER['HTTP_HOST'].dirname($_SERVER["SCRIPT_NAME"]).'/cjax';
 	}
 
-	public static function getFile($file = null){
-		return self::connect($_SERVER['HTTP_HOST'],(isset($_SERVER['SERVER_PORT'])? $_SERVER['SERVER_PORT']:80), $file, true);
+	/**
+	 * The getFile method, finds and opens a given file given its name.
+     * @param string  $file
+     * @access public
+     * @return string
+	 */     
+	public function getFile($file = null){
+		return $this->connect($_SERVER['HTTP_HOST'],(isset($_SERVER['SERVER_PORT'])? $_SERVER['SERVER_PORT']:80), $file, true);
 	}
 
-	public static function connect($file = null, $port = 80, $local = false){
-		$ajax = CJAX::getInstance();
-
+ 	/**
+	 * The connect method, connects to a remote or local server and loads a given file.
+     * @param string  $file
+     * @param int  $port
+     * @param bool  local
+     * @access public
+     * @return string
+	 */    
+	public function connect($file = null, $port = 80, $local = false){
 		if(!$port){
-			$port = $ajax->port;
+			$port = $this->port;
 			if(!$port){
 				$port = 80;
 			}
 		}
 		if(!function_exists('fsockopen')){
-			die('no fsockopen: be sure that php function fsockopen is enabled.');
+			throw new CJAXException('no fsockopen: be sure that php function fsockopen is enabled.');
 		}
-		
-		
+				
 		$fp = @fsockopen($host, $port, $errno, $errstr);
 		if(!$fp){
 			return false;
 		}
 		if($errstr){
-			die('error:'.$errstr);
+			throw new CJAXException('error:'.$errstr);
 		}
         
 		$base = "/";
@@ -1302,84 +1372,5 @@ class CoreEvents extends Format{
 		}
 		fclose($fp);
 		return implode($data);
-	}
-	
-	public function input($value = 'cjax'){
-		$v = isset($_REQUEST[$value])? $_REQUEST[$value] : (isset($_GET[$value])? $_GET[$value]: null);		
-		if(!$v && isset($_COOKIE[$value]) && $_COOKIE[$value]){
-			$v = $_COOKIE[$value];
-		}
-        
-		if(is_array($v)){
-			foreach($v as $k => $kv){
-                $return[$k] = (is_array($kv))? $kv: addslashes($kv);
-			}
-			return $return;
-		}
-		return addslashes($v);		
-	}
-
-	/*
-	 * Get session or cookie value
-	 */
-	public function get($setting, $getAsObject = false){
-		$value = null;
-		if(isset($_SESSION[$setting])){
-			$value = $_SESSION[$setting];
-		} 
-        elseif(isset($_COOKIE[$setting])){
-			$value = $_COOKIE[$setting];
-		}
-        
-		if(is_array($value) && $getAsObject){
-			$value = new Ext($value);
-		} 
-        elseif($getAsObject){
-			$value = new Ext;
-		}
-		return $value;
-	}
-	
-	public function code($data, $tags = true){	
-		@ini_set('highlight.string', "#DD0000"); // Set each colour for each part of the syntax
-		@ini_set('highlight.comment', "#FF8000"); // Suppression has to happen as some hosts deny access to ini_set and there is no way of detecting this
-		@ini_set('highlight.keyword', "#007700");
-		@ini_set('highlight.default', "#0000BB");
-		@ini_set('highlight.html', "#0000BB");
-			
-		$data = str_replace("\n\n", "\n", $data);	
-		$data = ($tags)? highlight_string("<?php \n" . $data . "\n?>", true)
-                       : highlight_string($data, true); 		
-		return '<div id="code_highlighted">'.$data."</div>";
-	}
-	
-	public function jsCode($data, $tags = false, $output = null){ 		
-		@ini_set('highlight.string', "#DD0000"); // Set each colour for each part of the syntax
-		@ini_set('highlight.comment', "#FF8000"); // Suppression has to happen as some hosts deny access to ini_set and there is no way of detecting this
-		@ini_set('highlight.keyword', "green");
-		@ini_set('highlight.default', "#0000BB");
-		@ini_set('highlight.html', "#0000BB");
-
-		$data =  "<script>". highlight_string("\n" . $data ."\n")."</script>"; 		
-        return ($tags)? str_replace(['?php', '?&gt;'], ['script type="text/javascript">', '&lt;/script&gt;'], $output)
-                      : str_replace(['&lt;?php', '?&gt;'], ['', ''], $data);
-	}
-	
-	public static function errorHandlingConfig(){
-		/**Error Handling**/
-		@ini_set('display_errors', 1);
-		@ini_set('log_errors', 1);
-		$level = ini_get('error_reporting');
-		if($level > 30719 || $level == 2048){
-			@ini_set('error_reporting', $level-E_STRICT);
-			$_level = ini_get('error_reporting');
-			if($_level > 30719 || $_level ==2048){
-				die("Cjax requirements not met. Strict Stardards must be turned off in your php.ini.");
-			} 
-            else{
-				$level = $_level;
-			}
-		}
-		return $level;
 	}
 }
