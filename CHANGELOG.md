@@ -12,7 +12,7 @@
 - Updated Cache class to handle CJAX internal data storage, the class is no longer empty
 - Updated Plugin class to make it lightweight, and focus on a specific plugin instance
 - Updated readme.md, changelog.md to appropriate markdown style for GitHub
-- Renamed Framework class to DomEvents class, and moves certain responsibility to CoreEvents
+- Renamed Framework class to DomEvents class, and moved certain responsibility to CoreEvents
 - Removed CJAXSingleton and InstanceFactory classes, as they are never used
 - Other fixes and improvements.
 
