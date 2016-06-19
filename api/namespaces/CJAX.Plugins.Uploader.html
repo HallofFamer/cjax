@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+    <meta charset="utf-8"/>
+    <title>CJAX 6.0 Beta 2</title>
+    <meta name="author" content=""/>
+    <meta name="description" content=""/>
+
+    <link href="../css/bootstrap-combined.no-icons.min.css" rel="stylesheet">
+    <link href="../css/font-awesome.min.css" rel="stylesheet">
+    <link href="../css/prism.css" rel="stylesheet" media="all"/>
+    <link href="../css/template.css" rel="stylesheet" media="all"/>
+    
+    <!--[if lt IE 9]>
+    <script src="../js/html5.js"></script>
+    <![endif]-->
+    <script src="../js/jquery-1.11.0.min.js"></script>
+    <script src="../js/ui/1.10.4/jquery-ui.min.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    <script src="../js/jquery.smooth-scroll.js"></script>
+    <script src="../js/prism.min.js"></script>
+    <!-- TODO: Add http://jscrollpane.kelvinluck.com/ to style the scrollbars for browsers not using webkit-->
+    
+    <link rel="shortcut icon" href="../images/favicon.ico"/>
+    <link rel="apple-touch-icon" href="../images/apple-touch-icon.png"/>
+    <link rel="apple-touch-icon" sizes="72x72" href="../images/apple-touch-icon-72x72.png"/>
+    <link rel="apple-touch-icon" sizes="114x114" href="../images/apple-touch-icon-114x114.png"/>
+</head>
+<body>
+
+<div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+        <div class="container">
+            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                <i class="icon-ellipsis-vertical"></i>
+            </a>
+            <a class="brand" href="../index.html">CJAX 6.0 Beta 2</a>
+
+            <div class="nav-collapse">
+                <ul class="nav pull-right">
+                                        <li class="dropdown">
+                        <a href="../index.html" class="dropdown-toggle" data-toggle="dropdown">
+                            API Documentation <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                                                        <li><a href="../namespaces/CJAX.html">\CJAX</a></li>
+                                                        <li><a href="../namespaces/Controllers.html">\Controllers</a></li>
+                                                        <li><a href="../namespaces/Examples.html">\Examples</a></li>
+                                                    </ul>
+                    </li>
+                                        <li class="dropdown" id="charts-menu">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            Charts <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="../graphs/class.html">
+                                    <i class="icon-list-alt"></i>&#160;Class hierarchy diagram
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="dropdown" id="reports-menu">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            Reports <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="../reports/errors.html">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <i class="icon-list-alt"></i>&#160;Errors <span class="label label-info pull-right">342</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="../reports/markers.html">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <i class="icon-list-alt"></i>&#160;Markers <span class="label label-info pull-right">1</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="../reports/deprecated.html">
+                                                                                                                                                                                        <i class="icon-list-alt"></i>&#160;Deprecated <span class="label label-info pull-right">1</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!--<div class="go_to_top">-->
+    <!--<a href="#___" style="color: inherit">Back to top&#160;&#160;<i class="icon-upload icon-white"></i></a>-->
+    <!--</div>-->
+</div>
+
+<div id="___" class="container-fluid">
+        <section class="row-fluid">
+        <div class="span2 sidebar">
+                                <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle " data-toggle="collapse" data-target="#namespace-1152838108"></a>
+                                <a href="../namespaces/default.html" style="margin-left: 30px; padding-left: 0">\</a>
+            </div>
+            <div id="namespace-1152838108" class="accordion-body collapse in">
+                <div class="accordion-inner">
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1111647800"></a>
+                                <a href="../namespaces/CJAX.html" style="margin-left: 30px; padding-left: 0">CJAX</a>
+            </div>
+            <div id="namespace-1111647800" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1682669733"></a>
+                                <a href="../namespaces/CJAX.Core.html" style="margin-left: 30px; padding-left: 0">Core</a>
+            </div>
+            <div id="namespace-1682669733" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/CJAX.Core.AJAXController.html">AJAXController</a></li>
+                                                    <li class="class"><a href="../classes/CJAX.Core.Cache.html">Cache</a></li>
+                                                    <li class="class"><a href="../classes/CJAX.Core.CJAX.html">CJAX</a></li>
+                                                    <li class="class"><a href="../classes/CJAX.Core.CJAXException.html">CJAXException</a></li>
+                                                    <li class="class"><a href="../classes/CJAX.Core.CoreEvents.html">CoreEvents</a></li>
+                                                    <li class="class"><a href="../classes/CJAX.Core.DOMEvents.html">DOMEvents</a></li>
+                                                    <li class="class"><a href="../classes/CJAX.Core.Ext.html">Ext</a></li>
+                                                    <li class="class"><a href="../classes/CJAX.Core.Format.html">Format</a></li>
+                                                    <li class="class"><a href="../classes/CJAX.Core.Initializer.html">Initializer</a></li>
+                                                    <li class="class"><a href="../classes/CJAX.Core.Plugin.html">Plugin</a></li>
+                                                    <li class="class"><a href="../classes/CJAX.Core.PluginManager.html">PluginManager</a></li>
+                                                    <li class="class"><a href="../classes/CJAX.Core.Request.html">Request</a></li>
+                                                    <li class="class"><a href="../classes/CJAX.Core.XmlItem.html">XmlItem</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-326120412"></a>
+                                <a href="../namespaces/CJAX.Event.html" style="margin-left: 30px; padding-left: 0">Event</a>
+            </div>
+            <div id="namespace-326120412" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/CJAX.Event.ActionEvent.html">ActionEvent</a></li>
+                                                    <li class="class"><a href="../classes/CJAX.Event.DragEvent.html">DragEvent</a></li>
+                                                    <li class="class"><a href="../classes/CJAX.Event.Event.html">Event</a></li>
+                                                    <li class="class"><a href="../classes/CJAX.Event.FocusEvent.html">FocusEvent</a></li>
+                                                    <li class="class"><a href="../classes/CJAX.Event.InputEvent.html">InputEvent</a></li>
+                                                    <li class="class"><a href="../classes/CJAX.Event.KeyEvent.html">KeyEvent</a></li>
+                                                    <li class="class"><a href="../classes/CJAX.Event.MouseEvent.html">MouseEvent</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-171610143"></a>
+                                <a href="../namespaces/CJAX.Plugin.html" style="margin-left: 30px; padding-left: 0">Plugin</a>
+            </div>
+            <div id="namespace-171610143" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1992296036"></a>
+                                <a href="../namespaces/CJAX.Plugin.ExamplePlugin.html" style="margin-left: 30px; padding-left: 0">ExamplePlugin</a>
+            </div>
+            <div id="namespace-1992296036" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1034284572"></a>
+                                <a href="../namespaces/CJAX.Plugin.ExamplePlugin.Controllers.html" style="margin-left: 30px; padding-left: 0">Controllers</a>
+            </div>
+            <div id="namespace-1034284572" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/CJAX.Plugin.ExamplePlugin.Controllers.ExamplePlugin.html">ExamplePlugin</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/CJAX.Plugin.ExamplePlugin.ExamplePlugin.html">ExamplePlugin</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                    
+                    <ul>
+                                                                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1735280791"></a>
+                                <a href="../namespaces/CJAX.Plugins.html" style="margin-left: 30px; padding-left: 0">Plugins</a>
+            </div>
+            <div id="namespace-1735280791" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-931934297"></a>
+                                <a href="../namespaces/CJAX.Plugins.Autocomplete.html" style="margin-left: 30px; padding-left: 0">Autocomplete</a>
+            </div>
+            <div id="namespace-931934297" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1337698473"></a>
+                                <a href="../namespaces/CJAX.Plugins.Autocomplete.Controllers.html" style="margin-left: 30px; padding-left: 0">Controllers</a>
+            </div>
+            <div id="namespace-1337698473" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/CJAX.Plugins.Autocomplete.Controllers.Autocomplete.html">Autocomplete</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/CJAX.Plugins.Autocomplete.Autocomplete.html">Autocomplete</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-144494484"></a>
+                                <a href="../namespaces/CJAX.Plugins.Dracula.html" style="margin-left: 30px; padding-left: 0">Dracula</a>
+            </div>
+            <div id="namespace-144494484" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-454074620"></a>
+                                <a href="../namespaces/CJAX.Plugins.Dracula.Controllers.html" style="margin-left: 30px; padding-left: 0">Controllers</a>
+            </div>
+            <div id="namespace-454074620" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/CJAX.Plugins.Dracula.Controllers.Dracula.html">Dracula</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/CJAX.Plugins.Dracula.Dracula.html">Dracula</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1618195593"></a>
+                                <a href="../namespaces/CJAX.Plugins.Uploader.html" style="margin-left: 30px; padding-left: 0">Uploader</a>
+            </div>
+            <div id="namespace-1618195593" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1950831619"></a>
+                                <a href="../namespaces/CJAX.Plugins.Uploader.Controllers.html" style="margin-left: 30px; padding-left: 0">Controllers</a>
+            </div>
+            <div id="namespace-1950831619" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/CJAX.Plugins.Uploader.Controllers.Uploader.html">Uploader</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/CJAX.Plugins.Uploader.Uploader.html">Uploader</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1399303381"></a>
+                                <a href="../namespaces/CJAX.Plugins.Uploadify.html" style="margin-left: 30px; padding-left: 0">Uploadify</a>
+            </div>
+            <div id="namespace-1399303381" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-941377954"></a>
+                                <a href="../namespaces/CJAX.Plugins.Uploadify.Controllers.html" style="margin-left: 30px; padding-left: 0">Controllers</a>
+            </div>
+            <div id="namespace-941377954" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/CJAX.Plugins.Uploadify.Controllers.Uploadify.html">Uploadify</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/CJAX.Plugins.Uploadify.uploadify.html">uploadify</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1104857333"></a>
+                                <a href="../namespaces/CJAX.Plugins.Validate.html" style="margin-left: 30px; padding-left: 0">Validate</a>
+            </div>
+            <div id="namespace-1104857333" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/CJAX.Plugins.Validate.Validate.html">Validate</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                    
+                    <ul>
+                                                                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/CJAX.Auth.html">Auth</a></li>
+                                                    <li class="class"><a href="../classes/CJAX.Config.html">Config</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-1726581380"></a>
+                                <a href="../namespaces/Controllers.html" style="margin-left: 30px; padding-left: 0">Controllers</a>
+            </div>
+            <div id="namespace-1726581380" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/Controllers.Sample.html">Sample</a></li>
+                                                    <li class="class"><a href="../classes/Controllers.Test.html">Test</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-122555557"></a>
+                                <a href="../namespaces/Examples.html" style="margin-left: 30px; padding-left: 0">Examples</a>
+            </div>
+            <div id="namespace-122555557" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                                                    <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-target="#namespace-564881046"></a>
+                                <a href="../namespaces/Examples.Controllers.html" style="margin-left: 30px; padding-left: 0">Controllers</a>
+            </div>
+            <div id="namespace-564881046" class="accordion-body collapse ">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/Examples.Controllers.AJAXLogin.html">AJAXLogin</a></li>
+                                                    <li class="class"><a href="../classes/Examples.Controllers.AjaxRequest.html">AjaxRequest</a></li>
+                                                    <li class="class"><a href="../classes/Examples.Controllers.Alert.html">Alert</a></li>
+                                                    <li class="class"><a href="../classes/Examples.Controllers.Bind.html">Bind</a></li>
+                                                    <li class="class"><a href="../classes/Examples.Controllers.Calc.html">Calc</a></li>
+                                                    <li class="class"><a href="../classes/Examples.Controllers.Captcha.html">Captcha</a></li>
+                                                    <li class="class"><a href="../classes/Examples.Controllers.ChangeValue.html">ChangeValue</a></li>
+                                                    <li class="class"><a href="../classes/Examples.Controllers.ClickAJAXRequest.html">ClickAJAXRequest</a></li>
+                                                    <li class="class"><a href="../classes/Examples.Controllers.Confirm.html">Confirm</a></li>
+                                                    <li class="class"><a href="../classes/Examples.Controllers.Countries.html">Countries</a></li>
+                                                    <li class="class"><a href="../classes/Examples.Controllers.Dragdrop.html">Dragdrop</a></li>
+                                                    <li class="class"><a href="../classes/Examples.Controllers.Dragula.html">Dragula</a></li>
+                                                    <li class="class"><a href="../classes/Examples.Controllers.Dropdown.html">Dropdown</a></li>
+                                                    <li class="class"><a href="../classes/Examples.Controllers.Flush.html">Flush</a></li>
+                                                    <li class="class"><a href="../classes/Examples.Controllers.Helper.html">Helper</a></li>
+                                                    <li class="class"><a href="../classes/Examples.Controllers.Invalidate.html">Invalidate</a></li>
+                                                    <li class="class"><a href="../classes/Examples.Controllers.KeyupUpdate.html">KeyupUpdate</a></li>
+                                                    <li class="class"><a href="../classes/Examples.Controllers.Messages.html">Messages</a></li>
+                                                    <li class="class"><a href="../classes/Examples.Controllers.Mouse.html">Mouse</a></li>
+                                                    <li class="class"><a href="../classes/Examples.Controllers.Overlay.html">Overlay</a></li>
+                                                    <li class="class"><a href="../classes/Examples.Controllers.OverlayValidation.html">OverlayValidation</a></li>
+                                                    <li class="class"><a href="../classes/Examples.Controllers.Pagination.html">Pagination</a></li>
+                                                    <li class="class"><a href="../classes/Examples.Controllers.Parameters.html">Parameters</a></li>
+                                                    <li class="class"><a href="../classes/Examples.Controllers.Post.html">Post</a></li>
+                                                    <li class="class"><a href="../classes/Examples.Controllers.RecursiveAJAX.html">RecursiveAJAX</a></li>
+                                                    <li class="class"><a href="../classes/Examples.Controllers.Search.html">Search</a></li>
+                                                    <li class="class"><a href="../classes/Examples.Controllers.SendForm.html">SendForm</a></li>
+                                                    <li class="class"><a href="../classes/Examples.Controllers.SendInput.html">SendInput</a></li>
+                                                    <li class="class"><a href="../classes/Examples.Controllers.Test.html">Test</a></li>
+                                                    <li class="class"><a href="../classes/Examples.Controllers.Update.html">Update</a></li>
+                                                    <li class="class"><a href="../classes/Examples.Controllers.UploadFile.html">UploadFile</a></li>
+                                                    <li class="class"><a href="../classes/Examples.Controllers.ValidationUploader.html">ValidationUploader</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                    
+                    <ul>
+                                                                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/AJAX.html">AJAX</a></li>
+                                                    <li class="class"><a href="../classes/Form.html">Form</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+        </div>
+    </section>
+    <section class="row-fluid">
+        <div class="span10 offset2">
+            <div class="row-fluid">
+                <div class="span8 content namespace">
+                    <nav>
+                                                <a href="../namespaces/CJAX.Plugins.html">\CJAX\Plugins</a>
+                                            </nav>
+                    <h1><small>\CJAX\Plugins</small>Uploader</h1>
+
+                                        <h2>Namespaces</h2>
+                    <table class="table table-hover">
+                                                    <tr>
+                                <td><a href="../namespaces/CJAX.Plugins.Uploader.Controllers.html">Controllers</a></td>
+                            </tr>
+                                            </table>
+                    
+                    
+                    
+                                        <h2>Classes</h2>
+                    <table class="table table-hover">
+                                            <tr>
+                            <td><a href="../classes/CJAX.Plugins.Uploader.Uploader.html">Uploader</a></td>
+                            <td><em>The Uploader class, it provides public API for plugin Uploader.</em></td>
+                        </tr>
+                                        </table>
+                                    </div>
+
+                <aside class="span4 detailsbar">
+                    <dl>
+                        <dt>Namespace hierarchy</dt>
+                        <dd class="hierarchy">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+                                    <div class="namespace-wrapper"><a href="../namespaces/default.html">\</a></div>
+                                                            
+                                    <div class="namespace-wrapper"><a href="../namespaces/CJAX.html">\CJAX</a></div>
+                                                            
+                                    <div class="namespace-wrapper"><a href="../namespaces/CJAX.Plugins.html">\CJAX\Plugins</a></div>
+                                                                                        <div class="namespace-wrapper">\CJAX\Plugins\Uploader</div>
+                        </dd>
+                    </dl>
+                </aside>
+            </div>
+
+            
+            
+        </div>
+    </section>
+
+    <footer class="row-fluid">
+        <section class="span10 offset2">
+            <section class="row-fluid">
+                <section class="span10 offset1">
+                    <section class="row-fluid footer-sections">
+                        <section class="span4">
+                                                        <h1><i class="icon-code"></i></h1>
+                            <div>
+                                <ul>
+                                                                            <li><a href="../namespaces/CJAX.html">\CJAX</a></li>
+                                                                            <li><a href="../namespaces/Controllers.html">\Controllers</a></li>
+                                                                            <li><a href="../namespaces/Examples.html">\Examples</a></li>
+                                                                    </ul>
+                            </div>
+                        </section>
+                        <section class="span4">
+                                                        <h1><i class="icon-bar-chart"></i></h1>
+                            <div>
+                                <ul>
+                                    <li><a href="../graphs/class.html">Class Hierarchy Diagram</a></li>
+                                </ul>
+                            </div>
+                        </section>
+                        <section class="span4">
+                                                        <h1><i class="icon-pushpin"></i></h1>
+                            <div>
+                                <ul>
+                                    <li><a href="../reports/errors.html">Errors</a></li>
+                                    <li><a href="../reports/markers.html">Markers</a></li>
+                                </ul>
+                            </div>
+                        </section>
+                    </section>
+                </section>
+            </section>
+            <section class="row-fluid">
+                <section class="span10 offset1">
+                    <hr />
+                    Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor </a> and authored
+                    on 
+Warning: date_default_timezone_get(): It is not safe to rely on the system's timezone settings. You are *required* to use the date.timezone setting or the date_default_timezone_set() function. In case you used any of those methods and you are still getting this warning, you most likely misspelled the timezone identifier. We selected the timezone 'UTC' for now, but please set date.timezone to select your timezone. in phar://D:/Development/PHP/Documentor/phpDocumentor.phar/vendor/twig/twig/lib/Twig/Extension/Core.php on line 89
+June 19th, 2016 at 03:31.
+                </section>
+            </section>
+        </section>
+    </footer>
+</div>
+
+</body>
+</html>

@@ -82,7 +82,7 @@ class Uploader extends Plugin{
 				$event['postCallback'][$sender->id] = $callback;
 				$sender->delete();
 				
-				$callbacks = $this->coreEvents->processScache($event['postCallback']);
+				$callbacks = $this->coreEvents->processCache($event['postCallback']);
 				$callbacks = $this->coreEvents->mkArray($callbacks,'json', true);
 				$event['postCallback'] =  "<cjax>{$callbacks}</cjax>";	
                 $cache->set($receiver->id, $event);

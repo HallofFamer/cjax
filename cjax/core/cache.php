@@ -16,7 +16,7 @@
 *   Website: http://cjax.sourceforge.net                     $      
 *   Email: cjxxi@msn.com    
 *   Date: 2/12/2007                           $     
-*   File Last Changed:  06/16/2016           $     
+*   File Last Changed:  06/18/2016           $     
 **####################################################################################################    */ 
 
 namespace CJAX\Core;
@@ -68,7 +68,7 @@ class Cache{
      * The constructor for Cache class, creates an instance of Cache object.
 	 * @param bool  $caching
      * @access public
-     * @return Plugin
+     * @return Cache
      */	     
     public function __construct($caching){
         $this->caching = $caching;

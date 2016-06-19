@@ -42,7 +42,7 @@ require_once "../../autoloader.php";
 
 use CJAX\Core\CJAX;
 $ajax = CJAX::getInstance();
-$ajax->initiateRequest();
+$ajax->request->handleRequest();
 
 function tryAgain(){
 	usleep(1000);
@@ -86,4 +86,4 @@ else{
 		print $source;
 	}
 }
-$ajax->flushCache();
+$ajax->clear();

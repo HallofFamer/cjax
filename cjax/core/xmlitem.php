@@ -16,7 +16,7 @@
 *   Website: http://cjax.sourceforge.net                     $      
 *   Email: cjxxi@msn.com    
 *   Date: 2/12/2007                           $     
-*   File Last Changed:  06/16/2016            $     
+*   File Last Changed:  06/18/2016            $     
 **####################################################################################################    */  
 
 
@@ -120,7 +120,7 @@ class XmlItem{
      */	    
 	public function attach($callbacks){
 		$xml = $this->xml();
-		$cb = $this->coreEvents->processScache($callbacks);
+		$cb = $this->coreEvents->processCache($callbacks);
 		$xml['stack'] = $this->coreEvents->mkArray($cb);
         $cache = $this->coreEvents->getCache();
         $cache->set($this->id, $xml);
@@ -148,7 +148,7 @@ class XmlItem{
      */	        
 	public function delete(){
 		if(!is_null($this->id)){
-			$this->coreEvents->execCache($this->id);
+			$this->coreEvents->removeCache($this->id);
 		}
 	}
 	
@@ -206,7 +206,7 @@ class XmlItem{
 				case 'callback':					
 					if(isset($this->coreEvents->callbacks[$value->id])){					
 						$cb = $this->coreEvents->callbacks[$value->id];
-						$cb = $this->coreEvents->processScache($cb);
+						$cb = $this->coreEvents->processCache($cb);
                         $cache->cache[$value->id]['callback'] = $this->coreEvents->mkArray($cb, 'json', true);						
 						$this->coreEvents->callbacks[$this->id][$value->id] = $cache->cache[$value->id];
 						$value->delete();

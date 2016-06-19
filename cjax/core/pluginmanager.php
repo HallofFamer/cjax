@@ -16,7 +16,7 @@
 *   Website: http://cjax.sourceforge.net                     $      
 *   Email: cjxxi@msn.com    
 *   Date: 2/12/2007                           $     
-*   File Last Changed:  04/22/2016           $     
+*   File Last Changed:  06/18/2016           $     
 **####################################################################################################    */ 
 
 namespace CJAX\Core;
@@ -233,7 +233,7 @@ final class PluginManager{
 	public function trigger($event, $params = []){	
 		if($this->classes){
 			foreach($this->classes as $k => $v){
-                $plugin = $this->coreEvents->plugin($v);			
+                $plugin = $this->plugin($v);			
 				if(!$plugin || !$this->hasClass($k)){
 					continue;
 				}
@@ -283,6 +283,19 @@ final class PluginManager{
 			$pluginName = $this->name;
 		}
 		return $this->dirs[$pluginName];
+	}    
+    
+	/**
+     * The plugin method, fetches a plugin given its name.
+     * @param string  $pluginName
+     * @param bool  $loadController
+	 * @access public
+	 * @return Plugin
+	 */
+	public function plugin($pluginName, $loadController = false){
+		if($this->isPlugin($pluginName) && $plugin = $this->getPlugin($pluginName, null, null, $loadController)){
+			return $plugin;
+		}
 	}    
     
 	/**

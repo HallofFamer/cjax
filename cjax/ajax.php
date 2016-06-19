@@ -16,7 +16,7 @@
 *   Website: http://cjax.sourceforge.net                     $      
 *   Email: cjxxi@msn.com    
 *   Date: 2/12/2007                           $     
-*   File Last Changed:  06/16/2016            $     
+*   File Last Changed:  06/18/2016            $     
 **####################################################################################################    */   
 
 require_once __DIR__."/autoloader.php";
@@ -53,6 +53,7 @@ final class AJAX{
      * @return AJAX
      */	    
 	public function __construct($controller){
+        $this->configErrorReporting();
 		$this->ajax = CJAX::getInstance();
 		$controller = $rawClass = preg_replace('/:.*/', '', $controller);
 		$function = isset($_REQUEST['function'])? $_REQUEST['function']: null;		
@@ -103,6 +104,22 @@ final class AJAX{
 		$this->ajax->error($err);
 		exit($err);
 	}
+    
+ 	/**
+     * The configErrorReporting method, configures error reporting for CJAX.
+     * @access private
+     * @return int
+     */	    
+    private function configErrorReporting(){
+		@ini_set('display_errors', 1);
+		@ini_set('log_errors', 1);
+		$level = ini_get('error_reporting');
+		if($level > 30719 || $level == 2048){
+			@ini_set('error_reporting', $level-E_STRICT);
+			$level = ini_get('error_reporting');
+		}
+		return $level;        
+    }
     
  	/**
      * The validateInput method, checks if controller and function input parameters are valid.
@@ -233,7 +250,7 @@ final class AJAX{
 		}
 		
 		$files[] = "{$ajaxCd}/{$controller}.php";
-		$files[] = "{$this->ajax->controllerDir}/{$ajaxCd}/{$controller}.php";
+		$files[] = "{$this->ajax->coreEvents->controllerDir}/{$ajaxCd}/{$controller}.php";
 		$files[] = CJAX_ROOT."/{$ajaxCd}/{$controller}.php";
 		
 		do{
@@ -325,8 +342,8 @@ final class AJAX{
             }  
 
             $ajax = CJAX::getInstance();
-            $ajax->initiateRequest();
-            $ajax->initiatePlugins();
+            $ajax->request->handleRequest();
+            $ajax->pluginManager->initiate();
             $controller = $ajax->input('controller');
             if($controller){
                 new self($controller);

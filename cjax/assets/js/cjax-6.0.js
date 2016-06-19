@@ -4216,7 +4216,7 @@ function CJAX_FRAMEWORK() {
 				CJAX.importFile(CJAX.base+'assets/js/cjax.js.php?preload='+Math.random());
 			}
 		}
-		var nav=navigator.userAgent.toLowerCase();
+		var nav = navigator.userAgent.toLowerCase();
 		this.ie	= ((nav.indexOf("msie") != -1) && (nav.indexOf("opera") == -1));
 
 		if(CJAX.ie) {

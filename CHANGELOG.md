@@ -1,21 +1,23 @@
 
 # ChangeLog
 
-## CJAX 6.0 Beta 2 - TBD
+## CJAX 6.0 Beta 2 - June 18, 2016
 
 - Added CJAXException class as CJAX's primary error/exception handler
+- Added Initializer class, it has all the logic of initializing CJAX singleton object
 - Added PluginManager class, which is responsible for handling collection of all plugins
 - Added plugin Dracula(Dragula) for CJAX
 - Added API documentation for CJAX in PHPDocumentator style
 - Updated CJAX core library class hierachy, unnecessary inheritance now becomes composition instead
+- Updated Cache class to handle CJAX internal data storage, the class is no longer empty
 - Updated Plugin class to make it lightweight, and focus on a specific plugin instance
 - Updated readme.md, changelog.md to appropriate markdown style for GitHub
-- Removed ajax() function, use CJAX::getInstance() singleton method instead
+- Renamed Framework class to DomEvents class, and moves certain responsibility to CoreEvents
 - Removed CJAXSingleton and InstanceFactory classes, as they are never used
 - Other fixes and improvements.
 
 
-## CJAX 6.0 Beta 1 - Apr 8, 2016
+## CJAX 6.0 Beta 1 - April 8, 2016
 
 - Namespace, closure and short array syntax used in the framework, PHP version now requires 5.4.0+
 - Fixed strict standard errors resulted from calling instance methods statically for PHP 5.5 and 5.6 compatibility
@@ -32,13 +34,13 @@
 - Other fixes and improvements.
 
 
-## CJAX 5.8 - Oct 6, 2013
+## CJAX 5.8 - October 6, 2013
 
 - Updated examples and readme.md.
 - Other fixes and improvements.
 
 
-## CJAX 5.7 - Oct 3, 2013
+## CJAX 5.7 - October 3, 2013
 
 - Advanced selectors (Sizzle, JQuery selectors allowed)
 - Fixed issue when passing multiple url values

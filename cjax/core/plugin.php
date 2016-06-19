@@ -213,7 +213,7 @@ class Plugin{
 	/**
      * The xml method, mirrors XmlItem's xml() method.
      * @access public
-     * @return object
+     * @return int
      */     
 	public function xml(){
 		return $this->coreEvents->xmlObjects($this->id)->xml();

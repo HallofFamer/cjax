@@ -160,4 +160,29 @@ class Format{
 		}
         return "<div class='cjax_message cjax_message_type{$css}'>{$text}</div>\n";
 	}	
+    
+	public function code($data, $tags = true){	
+		@ini_set('highlight.string', "#DD0000"); // Set each colour for each part of the syntax
+		@ini_set('highlight.comment', "#FF8000"); // Suppression has to happen as some hosts deny access to ini_set and there is no way of detecting this
+		@ini_set('highlight.keyword', "#007700");
+		@ini_set('highlight.default', "#0000BB");
+		@ini_set('highlight.html', "#0000BB");
+			
+		$data = str_replace("\n\n", "\n", $data);	
+		$data = ($tags)? highlight_string("<?php \n" . $data . "\n?>", true)
+                       : highlight_string($data, true); 		
+		return '<div id="code_highlighted">'.$data."</div>";
+	}
+    
+	public function jsCode($data, $tags = false, $output = null){ 		
+		@ini_set('highlight.string', "#DD0000"); // Set each colour for each part of the syntax
+		@ini_set('highlight.comment', "#FF8000"); // Suppression has to happen as some hosts deny access to ini_set and there is no way of detecting this
+		@ini_set('highlight.keyword', "green");
+		@ini_set('highlight.default', "#0000BB");
+		@ini_set('highlight.html', "#0000BB");
+
+		$data =  "<script>". highlight_string("\n" . $data ."\n")."</script>"; 		
+        return ($tags)? str_replace(['?php', '?&gt;'], ['script type="text/javascript">', '&lt;/script&gt;'], $output)
+                      : str_replace(['&lt;?php', '?&gt;'], ['', ''], $data);
+	}    
 }
