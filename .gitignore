@@ -1,3 +1,6 @@
 /api/
 /nbproject/
 /test/
+
+tests/_output/*
+tests/_output/*
