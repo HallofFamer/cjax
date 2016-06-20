@@ -16,14 +16,15 @@
 *   Website: http://cjax.sourceforge.net                     $      
 *   Email: cjxxi@msn.com    
 *   Date: 2/12/2007                           $     
-*   File Last Changed:  06/18/2016            $     
+*   File Last Changed:  06/20/2016            $     
 **####################################################################################################    */   
 
+namespace CJAX;
 require_once __DIR__."/autoloader.php";
-use CJAX\Auth;
 use CJAX\Core\CJAX; 
 use CJAX\Core\CJAXException;
 use CJAX\Core\Ext;
+use ReflectionMethod;
 
 /**
  * The AJAX class that initializes and handles AJAX requests with CJAX.

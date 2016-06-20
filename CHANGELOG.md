@@ -1,6 +1,12 @@
 
 # ChangeLog
 
+## CJAX 6.0 Beta 3 - TBD
+
+- Added Unit Testing for CJAX through CodeCeption
+- Updated examples and readme.md
+- Updated API documentaton for CJAX to make it more informative
+
 ## CJAX 6.0 Beta 2 - June 18, 2016
 
 - Added CJAXException class as CJAX's primary error/exception handler
@@ -31,13 +37,13 @@
 - Updated examples and Added new examples for Mouse and Drag-Drop events
 - Updated versions for third party libraries such as sizzle
 - Removed arc.php and chat.php files from examples, as they are never used
-- Other fixes and improvements.
+- Other fixes and improvements
 
 
 ## CJAX 5.8 - October 6, 2013
 
-- Updated examples and readme.md.
-- Other fixes and improvements.
+- Updated examples and readme.md
+- Other fixes and improvements
 
 
 ## CJAX 5.7 - October 3, 2013
@@ -45,7 +51,7 @@
 - Advanced selectors (Sizzle, JQuery selectors allowed)
 - Fixed issue when passing multiple url values
 - Fixed issue in processing that was introduced in previous release
-- Added support for main properties for tables tr, td, thead, tbody, etc.
+- Added support for main properties for tables tr, td, thead, tbody, etc
 
 
 ## CJAX 5.6 - September 19, 2013
