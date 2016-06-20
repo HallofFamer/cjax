@@ -21,7 +21,7 @@ $ajax->click("button1",$ajax->call("ajax.php?update/updateBox"));
 </style>
 </head>
 <body>
-<input type='submit' id='button1' name='button1' value='Update box below with content'>
+<input type='button' id='button1' name='button1' value='Update box below with content'>
 
 <div class='box' id='content1'></div>
 <br />
