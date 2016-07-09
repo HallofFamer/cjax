@@ -1,4 +1,3 @@
-
 /* global data, DragEvent, MouseEvent, KeyboardEvent, FocusEvent, x, eventtype, _id, xfile, CKEDITOR  */
 
 /** ################################################################################################**   
@@ -3201,17 +3200,17 @@ function CJAX_FRAMEWORK() {
 			elem_name =  elem.name;
 			elem_value = elem.value;
 			elem_len = elem.length;
+            elem_async = elem.hasAttribute('async');
 			if(!elem_type)continue;
 			if(elem_type=='file' && include_files) {
 				CJAX.files = true;
 			}
 			if(elem_id && elem_name)elem_id = elem_name;
 			if(!elem_id && elem_name)elem_id = elem_name;
-			
 			if(!elem_id) {
 				continue;
 			}
-			
+
 			//Try to detect CKEDITOR
 			try{
 				if (elem_id && typeof CKEDITOR !='undefined' && typeof eval("CKEDITOR.instances."+elem_id) != 'undefined') {
@@ -3286,6 +3285,7 @@ function CJAX_FRAMEWORK() {
 			}
 			
 			url += splitter;
+            elem_id = (elem_async) ? 'a[' + elem_id + ']' : elem_id;
 			url += elem_id + assign + encodeURI(elem_value);
 			assign = '=';
 		}

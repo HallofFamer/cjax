@@ -60,18 +60,18 @@ class SendForm{
 			<label class="description" for="element_2">Name </label>
 	
 			<span>
-				<input id="a[name]" name="a[name]" class="element text" maxlength="255" size="8" value=""/>
+				<input id="first_name" name="first_name" class="element text" maxlength="255" size="8" value="" async />
 				<label>First</label>
 			</span>
 			<span>
-				<input id="a[last_name]" name="a[last_name]" class="element text" maxlength="255" size="14" value=""/>
+				<input id="last_name" name="last_name" class="element text" maxlength="255" size="14" value="" async />
 				<label>Last</label>
 			</span> 
 		</li>		<li id="li_4" >
 
 		<label class="description" for="element_4">Drop Down </label>
 		<div>
-		<select class="element select medium" id="a[drop_down]" name="a[drop_down]"> 
+		<select class="element select medium" id="drop_down" name="drop_down" async> 
 			<option value="" selected="selected"></option>
 			<option value="1" >First option</option>
 			<option value="2" >Second option</option>
@@ -83,13 +83,13 @@ class SendForm{
 		<li id="li_1" >
 		<label class="description" for="element_1">Country </label>
 		<div>
-			<input id="a[country]" name="a[country]" class="element text medium" type="text" maxlength="255" value=""/> 
+			<input id="country" name="country" class="element text medium" type="text" maxlength="255" value="" async /> 
 		</div> 
 		</li>		<li id="li_3" >
 		<label class="description" for="element_3">State </label>
 
 		<div>
-			<input id="a[state]" name="a[state]" class="element text medium" type="text" maxlength="255" value=""/> 
+			<input id="state" name="state" class="element text medium" type="text" maxlength="255" value="" async /> 
 		</div> 
 		</li>
 			

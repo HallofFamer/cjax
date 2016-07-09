@@ -1,9 +1,9 @@
-
 # ChangeLog
 
 ## CJAX 6.0 Beta 3 - TBD
 
 - Added Unit Testing for CJAX through CodeCeption
+- Added new way to handle AJAX form submission with async attribute
 - Updated examples and readme.md
 - Updated API documentaton for CJAX to make it more informative
 
