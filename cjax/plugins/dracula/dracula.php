@@ -68,7 +68,7 @@ class Dracula extends Plugin{
      * @return void
      */       
 	public function onLoad($containers = null, $options = [], $events = []){	
-		$this->import('dragula-3.6/dragula.min.js', 0, true);
+		$this->import('dragula-3.7/dragula.min.js', 0, true);
         if($containers){
             $this->drake($containers, $options, $events);
         }

@@ -16,7 +16,7 @@
  * 
  */
 
-CJAX.importFile(CJAX.pBase + 'dracula/dragula-3.6/dragula.min.css');
+CJAX.importFile(CJAX.pBase + 'dracula/dragula-3.7/dragula.min.css');
 
 function dracula(containers, options, events){
 

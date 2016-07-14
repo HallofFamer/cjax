@@ -5,6 +5,7 @@
 - Added Unit Testing for CJAX through CodeCeption
 - Added new way to handle AJAX form submission with async attribute
 - Added new functionality addClass/removeClass/toggleClass to alter class attribute for elements
+- Updated plugin Dracula to version 3.7.1
 - Updated examples and readme.md
 - Updated API documentaton for CJAX to make it more informative
 
