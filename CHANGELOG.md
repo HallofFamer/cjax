@@ -8,6 +8,7 @@
 - Updated plugin Dracula to version 3.7.1
 - Updated examples and readme.md
 - Updated API documentaton for CJAX to make it more informative
+- Other fixes and improvements.
 
 ## CJAX 6.0 Beta 2 - June 18, 2016
 
