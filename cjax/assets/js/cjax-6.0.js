@@ -123,7 +123,7 @@ function CJAX_FRAMEWORK() {
 					data.replace = true;
 					return CJAX.Execfn('append', element, data);
 				}
-			break;
+			    break;
 			case 'before':
 			case 'prepend':
 				if(data.b[0]=='#') {
@@ -137,11 +137,11 @@ function CJAX_FRAMEWORK() {
 				} else {
 					CJAX.lib.fnCall(element,{prepend: data.b});
 				}
-			break;
+			    break;
 			case 'flush':
 				//clear event listerners from an element
 				CJAX._EventCache.flushElement(element);
-			break;
+			    break;
 			case 'insert':
 				if(data.b[0]=='#') {
 					data.b = data.b.replace(/^\#/,'');
@@ -163,7 +163,7 @@ function CJAX_FRAMEWORK() {
 				} else {
 					CJAX.lib.fnCall(element,{insert: data.b},data);
 				}
-			break;
+			    break;
 			case 'append':
 				if(data.b[0]=='#') {
 					data.b = data.b.replace(/^\#/,'');
@@ -177,13 +177,46 @@ function CJAX_FRAMEWORK() {
 				} else {
 					CJAX.lib.fnCall(element,{append: data.b});
 				}
-			break;
+			    break;
+            case 'addClass':
+                if(typeof data.b === 'object'){
+                   for (var i in data.b){
+                       elementClass = (data.b[i][0]=='.')?data.b[i].substring(1):data.b[i];
+                       element.classList.add(elementClass);
+                   }
+                } else {
+                    elementClass = (data.b[0]=='.')?data.b.substring(1):data.b;
+                    element.classList.add(elementClass);
+                }
+                break;
+            case 'removeClass':
+                if(typeof data.b === 'object'){
+                   for (var i in data.b){
+                       elementClass = (data.b[i][0]=='.')?data.b[i].substring(1):data.b[i];
+                       element.classList.remove(elementClass);
+                   }
+                } else {
+                    elementClass = (data.b[0]=='.')?data.b.substring(1):data.b;
+                    element.classList.remove(elementClass);
+                }
+                break;
+            case 'toggleClass':
+                if(typeof data.b === 'object'){
+                   for (var i in data.b){
+                       elementClass = (data.b[i][0]=='.')?data.b[i].substring(1):data.b[i];
+                       element.classList.toggle(elementClass);
+                   }
+                } else {
+                    elementClass = (data.b[0]=='.')?data.b.substring(1):data.b;
+                    element.classList.toggle(elementClass);
+                }
+                break;
 			case 'hide':
 				element.style.display = 'none'; 
-			break;
+		    	break;
 			case 'show':
 				element.style.display = 'block'; 
-			break;
+			    break;
 			default:
 				CJAX.lib.fnCall(element,{_raw_fn: data.b});
 		}
