@@ -59,9 +59,9 @@ echo $ajax->code("
 \$ajax->toggleClass('#box', '.redbox');
 
 
-\$ajax->addClasses('#box2', ['.redbox', '.blueback']);
-\$ajax->removelasses('#box2', ['.redbox', '.blueback']);
-\$ajax->toggleClasses('#box2', ['.redbox', '.blueback']);
+\$ajax->addClass('#box2', ['.redbox', '.blueback']);
+\$ajax->removeClass('#box2', ['.redbox', '.blueback']);
+\$ajax->toggleClass('#box2', ['.redbox', '.blueback']);
 ");?>
 <p>Note: The dot(.) sign in front of class name is optional, but this notation is recommended to distinguish it as class name, rather than an element id.</p>
 </body>
