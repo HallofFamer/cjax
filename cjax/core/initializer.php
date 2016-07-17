@@ -129,7 +129,7 @@ final class Initializer{
 		
 		if($this->ajax->config->caching && isset($_SERVER['REQUEST_URI'])){
 			$this->ajax->coreEvents->crc32 = crc32($_SERVER['REQUEST_URI']);
-			$cache = $this->ajax->readCache('cjax-'.$this->ajax->coreEvents->crc32);
+			$cache = $this->ajax->cache->read('cjax-'.$this->ajax->coreEvents->crc32);
 			$this->ajax->coreEvents->caching = $cache;
 		}
 		if($this->ajax->config->debug){

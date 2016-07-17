@@ -16,7 +16,7 @@
 *   Website: http://cjax.sourceforge.net                     $      
 *   Email: cjxxi@msn.com    
 *   Date: 2/12/2007                           $     
-*   File Last Changed:  06/18/2016           $     
+*   File Last Changed:  07/16/2016           $     
 **####################################################################################################    */   
 
 namespace CJAX\Core;
@@ -882,30 +882,7 @@ class CoreEvents{
 		fclose($fp);		
 		return implode($data);
 	}
-	
-	/**
-	 * The readCache method, reads available cache for CJAX.
-	 * @param string  $crc32
-     * @access public
-     * @return string
-	 */    
-	public function readCache($crc32 = null){
-        $filename = ($crc32)? $crc32: 'cjax.txt';
-        $dir = ($this->config->caching)? sys_get_temp_dir(): CJAX_HOME.'/assets/cache/';
- 		$dir = rtrim($dir, '/').'/';
- 		$file = $dir.$filename;
- 		if(is_file($file)){
- 			if(getlastmod($file) > time() + 3600){
- 				return;//1 hour to regenerate
- 			}
-	 		$content = file_get_contents($file);
-	 		if($content){
-	 			$content = unserialize($content);
-	 		}
-	 		return $content;
- 		}
-	}
-	
+
 	/**
 	 * The write method, writes to a file used as alternative for CJAX internal cache.
 	 * @param string  $content

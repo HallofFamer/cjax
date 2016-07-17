@@ -16,7 +16,7 @@
 *   Website: http://cjax.sourceforge.net                     $      
 *   Email: cjxxi@msn.com    
 *   Date: 2/12/2007                           $     
-*   File Last Changed:  06/18/2016           $     
+*   File Last Changed:  07/16/2016           $     
 **####################################################################################################    */   
 
 namespace CJAX\Core;
@@ -838,17 +838,6 @@ class CJAX{
                     'select_text' => $selectText, 'value' => $value];
 		return $this->coreEvents->xml($options);
 	}
-
-	/**
-	 * The readCache method, reads available cache for CJAX.
-	 * @param string  $crc32
-     * @access public
-     * @return string
-     * @api
-	 */    
- 	public function readCache($crc32 = null){
-        return $this->coreEvents->readCache($crc32);
-    }   
     
 	/**
 	 * The remove method, it will remove an specified element from the page
@@ -914,18 +903,6 @@ class CJAX{
 	 */    
 	public function success($msg = "Success!", $seconds = 3){
         return $this->message($this->format->message($msg, Format::CSS_SUCCESS));
-	}    
-    
-	/**
-	 * The tapCache method, acquires available cache for CJAX.
-	 * @param string  $crc32
-     * @access public
-     * @return string
-     * @api
-	 */       
-	public function tapCache($crc32){
-		$cache = $this->readCache('cjax-'.$crc32);
-		return ($cache)? $cache[$crc32]: null;
 	}    
     
 	/**

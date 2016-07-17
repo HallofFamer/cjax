@@ -16,7 +16,7 @@
 *   Website: http://cjax.sourceforge.net                     $      
 *   Email: cjxxi@msn.com    
 *   Date: 2/12/2007                           $     
-*   File Last Changed:  04/18/2016           $     
+*   File Last Changed:  07/16/2016           $     
 **####################################################################################################    */   
 
 /**
@@ -57,7 +57,7 @@ if(isset($_REQUEST['json'])){
 } 
 else{
 	if($ajax->config->caching && isset($_REQUEST['crc32'])){
-		$source = $ajax->tapCache($_REQUEST['crc32']);
+		$source = $ajax->cache->tap($_REQUEST['crc32']);
 	} 
     else{
 		$debug = $ajax->get('cjax_debug')? 1:0;

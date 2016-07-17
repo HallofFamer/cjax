@@ -154,17 +154,17 @@ class Cache{
     
 	/**
      * The appendLast method, adds a given data to the last cache given its id.
-     * @param mixed  $add
+     * @param mixed  $value
      * @param int  $cacheId
      * @access public
      * @return void
      */      
-	public function appendLast($add = null, $cacheId = null){
+	public function appendLast($value = null, $cacheId = null){
 		if($cacheId){
-			$this->lastCache[$cacheId] = $add;
+			$this->lastCache[$cacheId] = $value;
 		} 
         else{
-			array_push($this->lastCache, $add);
+			array_push($this->lastCache, $value);
 		}
 	}       
     
